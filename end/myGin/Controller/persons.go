@@ -3,6 +3,7 @@ package controller
 import (
 	database "Example/Database"
 	model "Example/Model"
+	"bytes"
 	"fmt"
 	"log"
 	"net/http"
@@ -64,5 +65,56 @@ func AddPerson(context *gin.Context) {
 	name := p.FirstName + " " + p.LastName
 	context.JSON(http.StatusOK, gin.H{
 		"message": fmt.Sprintf(" %s 成功创建", name),
+	})
+
+}
+
+func UpdatePerson(context *gin.Context) {
+	var (
+		p      model.Person
+		buffer bytes.Buffer
+	)
+
+	id := context.Query("id")
+	Id, err := strconv.Atoi(id)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = context.Bind(&p)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	p.Id = Id
+	rows, err := p.Update(database.MysqlDB)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println(rows)
+	buffer.WriteString(p.FirstName)
+	buffer.WriteString(" ")
+	buffer.WriteString(p.LastName)
+	name := buffer.String()
+
+	context.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("成功更新到%s", name),
+	})
+}
+
+func DeletePerson(context *gin.Context) {
+	id := context.Query("id")
+
+	Id, err := strconv.ParseInt(id, 10, 10)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	p := model.Person{Id: int(Id)}
+	rows, err := p.Del(database.MysqlDB)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println("delete rows: ", rows)
+
+	context.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("成功删除用户：%s", id),
 	})
 }

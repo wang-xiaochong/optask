@@ -17,6 +17,9 @@ func InitRouter(e *gin.Engine) {
 		person.GET("/persons", controller.Persons)
 		person.GET("/person", controller.GetPersonByID)
 		person.POST("/add", controller.AddPerson)
+		person.PUT("/update", controller.UpdatePerson)
+		person.DELETE("/delete", controller.DeletePerson)
+
 	}
 
 	js := e.Group("/js")
