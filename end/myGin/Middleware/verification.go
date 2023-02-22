@@ -1,14 +1,12 @@
 package middleware
 
-import (
-	// database "Example/Database"
-	// model "Example/Model"
-	// utils "Example/Utils"
-	// "context"
+// database "Example/Database"
+// model "Example/Model"
+// utils "Example/Utils"
+// "context"
 
-	// "github.com/gin-gonic/gin"
-	// "go.mongodb.org/mongo-driver/bson"
-)
+// "github.com/gin-gonic/gin"
+// "go.mongodb.org/mongo-driver/bson"
 
 // Verification 权限判断
 // func Verification() func(c *gin.Context) {
@@ -56,6 +54,6 @@ import (
 // 			c.Abort()
 // 			return
 // 		}
-		
+
 // 	}
 // }

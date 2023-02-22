@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
@@ -26,7 +27,7 @@ func Login(c *gin.Context, user model.Login) {
 	if err != nil {
 		utils.Return(c, utils.NOT_EXIST, err.Error())
 		return
-	} 
+	}
 	//密码加密进行比较
 	err = bcrypt.CompareHashAndPassword([]byte(one.Password), []byte(user.Password+one.Salt))
 	if err != nil {
@@ -34,7 +35,7 @@ func Login(c *gin.Context, user model.Login) {
 		utils.Return(c, utils.LOGIN_FAIL, err.Error())
 		return
 	}
-	token, err := utils.GenToken(one,reqIP)
+	token, err := utils.GenToken(one, reqIP)
 	if err != nil {
 		utils.Return(c, utils.SYS_BUSY, err.Error())
 		return
@@ -62,7 +63,7 @@ func UserInsert(c *gin.Context, user model.User) {
 	if err == nil {
 		utils.Return(c, utils.HAS_EXIST, err)
 		return
-	} 
+	}
 	salt := fmt.Sprintf("%d", rand.Int31())
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password+salt), bcrypt.DefaultCost) //加密处理
 	encodePWD := string(hash)
@@ -79,8 +80,9 @@ func UserInsert(c *gin.Context, user model.User) {
 	utils.Return(c, utils.SUCCESS, insertOneResult)
 	return
 }
+
 // UserUpdate 用户信息更新
-func UserUpdate(c *gin.Context,user model.User)  {
-	utils.UpdateOne(c,"user",user,"_id",user.ID)
+func UserUpdate(c *gin.Context, user model.User) {
+	utils.UpdateOne(c, "user", user, "_id", user.ID)
 	return
 }
