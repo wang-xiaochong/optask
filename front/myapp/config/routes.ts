@@ -52,6 +52,20 @@ export default [
     component: './TableList',
   },
   {
+    name: 'project.project-list',
+    icon: 'table',
+    path: '/project/list',
+    component: './Project',
+    // layout: false,
+  },
+  {
+    name: 'task.task-list',
+    icon: 'table',
+    path: '/ptask/list',
+    component: './Task',
+    // layout: false,
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },
