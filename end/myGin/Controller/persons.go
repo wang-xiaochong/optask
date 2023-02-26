@@ -5,7 +5,6 @@ import (
 	model "Example/Model"
 	"bytes"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -16,7 +15,7 @@ func Persons(context *gin.Context) {
 	p := model.Person{}
 	persons, err := p.GetAll(database.MysqlDB)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	context.JSON(http.StatusOK, gin.H{
 		"result": persons,
@@ -30,7 +29,7 @@ func GetPersonByID(context *gin.Context) {
 
 	Id, err := strconv.Atoi(id)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	p := model.Person{
 		Id: Id,
@@ -54,12 +53,12 @@ func AddPerson(context *gin.Context) {
 	var p model.Person
 	err := context.Bind(&p)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 
 	Id, err := p.Add(database.MysqlDB)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	fmt.Println(Id)
 	name := p.FirstName + " " + p.LastName
@@ -78,16 +77,16 @@ func UpdatePerson(context *gin.Context) {
 	id := context.Query("id")
 	Id, err := strconv.Atoi(id)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	err = context.Bind(&p)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	p.Id = Id
 	rows, err := p.Update(database.MysqlDB)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	fmt.Println(rows)
 	buffer.WriteString(p.FirstName)
@@ -105,12 +104,12 @@ func DeletePerson(context *gin.Context) {
 
 	Id, err := strconv.ParseInt(id, 10, 10)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	p := model.Person{Id: int(Id)}
 	rows, err := p.Del(database.MysqlDB)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	fmt.Println("delete rows: ", rows)
 

@@ -9,7 +9,6 @@ import (
 	res "Example/Utils/response"
 	"encoding/json"
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +22,7 @@ func GetCurrentUser(context *gin.Context) {
 	}
 	ustring, err := redis.GetKey(keys.REACT_APP_REDIS_USERINFO_ID_ + reqIP)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	err = json.Unmarshal([]byte(ustring), &u)
 	res.Return(context, utils.SUCCESS, u)
@@ -34,7 +33,7 @@ func GetAllUsers(context *gin.Context) {
 	p := user.UserInfo{}
 	users, err := p.GetAll(database.MysqlDB)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	res.Return(context, utils.SUCCESS, users)
 
@@ -50,7 +49,7 @@ func GetUserInfoById(context *gin.Context) {
 
 	Id, err := strconv.Atoi(id)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	p := user.UserInfo{
 		Id: &Id,
@@ -72,12 +71,12 @@ func MyLogin(context *gin.Context) {
 	)
 	err := context.Bind(&l)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 
 	id, err := l.Login(database.MysqlDB)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	fmt.Println(id)
 	res.Return(context, utils.SUCCESS, id)
@@ -87,12 +86,12 @@ func MyLogin(context *gin.Context) {
 // 	var p model.Person
 // 	err := context.Bind(&p)
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 
 // 	Id, err := p.Add(database.MysqlDB)
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	fmt.Println(Id)
 // 	name := p.FirstName + " " + p.LastName
@@ -111,16 +110,16 @@ func MyLogin(context *gin.Context) {
 // 	id := context.Query("id")
 // 	Id, err := strconv.Atoi(id)
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	err = context.Bind(&p)
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	p.Id = Id
 // 	rows, err := p.Update(database.MysqlDB)
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	fmt.Println(rows)
 // 	buffer.WriteString(p.FirstName)
@@ -138,12 +137,12 @@ func MyLogin(context *gin.Context) {
 
 // 	Id, err := strconv.ParseInt(id, 10, 10)
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	p := model.Person{Id: int(Id)}
 // 	rows, err := p.Del(database.MysqlDB)
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	fmt.Println("delete rows: ", rows)
 

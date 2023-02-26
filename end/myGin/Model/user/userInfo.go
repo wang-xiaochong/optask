@@ -74,7 +74,7 @@ func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {
 // 	}
 // 	id, err := rs.LastInsertId()
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	Id = int(id)
 // 	defer stmt.Close()
@@ -84,15 +84,15 @@ func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {
 // func (p *UserInfo) Update(db *sql.DB) (rows int, err error) {
 // 	stmt, err := db.Prepare("update person set first_name=?,last_name=? where id=?")
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	rs, err := stmt.Exec(p.FirstName, p.LastName, p.Id)
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	row, err := rs.RowsAffected()
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	rows = int(row)
 // 	defer stmt.Close()
@@ -102,15 +102,15 @@ func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {
 // func (p *UserInfo) Del(db *sql.DB) (rows int, err error) {
 // 	stmt, err := db.Prepare("delete from person where id=?")
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	rs, err := stmt.Exec(p.Id)
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	row, err := rs.RowsAffected()
 // 	if err != nil {
-// 		log.Fatalln(err)
+// 		fmt.Println(err)
 // 	}
 // 	rows = int(row)
 // 	defer stmt.Close()

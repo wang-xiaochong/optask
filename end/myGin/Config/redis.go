@@ -10,9 +10,10 @@ type RedisConfig struct {
 func GetRedisConfig() *RedisConfig {
 
 	ret := &RedisConfig{
-		RemoteIP:     "localhost",
+		RemoteIP:     "43.138.81.135",
 		RemotePort:   "6379",
 		DialDatabase: 1,
+		Password:     "sdl@admin",
 	}
 	return ret
 }

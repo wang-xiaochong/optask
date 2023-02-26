@@ -3,7 +3,6 @@ package model
 import (
 	"database/sql"
 	"fmt"
-	"log"
 )
 
 // Person 自定义Person类
@@ -49,7 +48,7 @@ func (p *Person) Add(db *sql.DB) (Id int, err error) {
 	}
 	id, err := rs.LastInsertId()
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	Id = int(id)
 	defer stmt.Close()
@@ -59,15 +58,15 @@ func (p *Person) Add(db *sql.DB) (Id int, err error) {
 func (p *Person) Update(db *sql.DB) (rows int, err error) {
 	stmt, err := db.Prepare("update person set first_name=?,last_name=? where id=?")
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	rs, err := stmt.Exec(p.FirstName, p.LastName, p.Id)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	row, err := rs.RowsAffected()
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	rows = int(row)
 	defer stmt.Close()
@@ -77,15 +76,15 @@ func (p *Person) Update(db *sql.DB) (rows int, err error) {
 func (p *Person) Del(db *sql.DB) (rows int, err error) {
 	stmt, err := db.Prepare("delete from person where id=?")
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	rs, err := stmt.Exec(p.Id)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	row, err := rs.RowsAffected()
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	rows = int(row)
 	defer stmt.Close()
