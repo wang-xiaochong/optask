@@ -1,8 +1,8 @@
-package router
+package Router
 
 import (
 	controller "Example/Controller"
-	middleware "Example/Middleware"
+	userInfo "Example/Controller/userInfo"
 	utils "Example/Utils"
 
 	"github.com/gin-gonic/gin"
@@ -11,8 +11,18 @@ import (
 // InitRouter 加入路由访问路径
 func InitRouter(e *gin.Engine) {
 	e.Use(utils.CORS(utils.Options{Origin: "*"}))
+	pre := e.Group("/api")
 
-	person := e.Group("/person")
+	user := pre.Group("/user")
+	{
+		user.GET("/getAllUserInfo", userInfo.GetAllUsers)
+		user.GET("/getUserInfoById", userInfo.GetUserInfoById)
+		// user.POST("/add", controller.AddPerson)
+		// user.PUT("/update", controller.UpdatePerson)
+		// user.DELETE("/delete", controller.DeletePerson)
+
+	}
+	person := pre.Group("/person")
 	{
 		person.GET("/persons", controller.Persons)
 		person.GET("/person", controller.GetPersonByID)
@@ -21,33 +31,10 @@ func InitRouter(e *gin.Engine) {
 		person.DELETE("/delete", controller.DeletePerson)
 
 	}
-
-	js := e.Group("/js")
-	{
-		js.GET("/userInfo", controller.JsUser)
-		js.GET("/lessonInfo", controller.JsLesson)
-	}
-
-	example := e.Group("/example")
-	{
-		example.GET("/search", controller.Search)
-		example.POST("/add", controller.Add)
-		example.PUT("/update", controller.Update)
-		example.DELETE("/delete", controller.Delete)
-	}
-	user := e.Group("/user")
-	{
-		user.GET("/findAll", controller.FindAllUser)
-		user.GET("/findByN", controller.FindAllUserByName)
-		user.POST("/login", controller.Login)
-		user.POST("/insert", controller.UserInsert)
-		user.PUT("/update", controller.UserUpdate)
-		user.DELETE("/delete", controller.UserDelete)
-	}
 	// 中间件拦截示例
-	e.GET("/cookie", utils.SetCK)
-	e.GET("/home", middleware.AuthMiddleWare(), controller.Home)
-	e.GET("/home2", middleware.JWTAuthMiddleware(), middleware.TokenCheck(), controller.Home2)
+	pre.GET("/cookie", utils.SetCK)
+	// pre.GET("/home", middleware.AuthMiddleWare(), controller.Home)
+	// pre.GET("/home2", middleware.JWTAuthMiddleware(), middleware.TokenCheck(), controller.Home2)
 }
 
 // SetupRouter 初始化路由

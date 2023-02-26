@@ -11,6 +11,5 @@ require (
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/pkg/errors v0.9.1
-	go.mongodb.org/mongo-driver v1.8.3
-	golang.org/x/crypto v0.0.0-20220131195533-30dcbda58838
+	golang.org/x/crypto v0.0.0-20220131195533-30dcbda58838 // indirect
 )

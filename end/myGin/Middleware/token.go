@@ -1,10 +1,12 @@
 package middleware
 
 import (
-	model "Example/Model"
+	model "Example/Model/user"
 	redis "Example/Redis"
 	utils "Example/Utils"
+	res "Example/Utils/response"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +16,7 @@ import (
 // // JWTAuthMiddleware 基于JWT的认证中间件
 
 // One 半全局用户信息
-var One model.User
+var One model.UserInfo
 
 // JWTAuthMiddleware 获取接收到的token并解析
 func JWTAuthMiddleware() func(c *gin.Context) {
@@ -24,7 +26,7 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 		// 这里的具体实现方式要依据你的实际业务情况决定
 		authHeader := c.Request.Header.Get("Authorization") // 获取请求头中的数据
 		if authHeader == "" {
-			utils.Return(c, utils.TOKEN_MISSING, "Token丢失")
+			res.Return(c, utils.TOKEN_MISSING, "Token丢失")
 			// 不进行下面的请求处理了！
 			c.Abort()
 			return
@@ -32,7 +34,7 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 		//按空格分割
 		parts := strings.SplitN(authHeader, " ", 2)
 		if !(len(parts) == 2 && parts[0] == "Beaver") {
-			utils.Return(c, utils.Token_Faild, "")
+			res.Return(c, utils.Token_Faild, "")
 			// 不进行下面的请求处理了！
 			c.Abort()
 			return
@@ -40,7 +42,7 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 		// parts[1]是获取到的tokenString，我们使用之前定义好的解析JWT的函数来解析它
 		mc, err := utils.ParseToken(parts[1])
 		if err != nil {
-			utils.Return(c, utils.TOKEN_INVALID, "")
+			res.Return(c, utils.TOKEN_INVALID, "")
 			// 不进行下面的请求处理了！
 			c.Abort()
 			return
@@ -62,11 +64,11 @@ func TokenCheck() func(c *gin.Context) {
 		if reqIP == "::1" {
 			reqIP = "127.0.0.1"
 		}
-		redisToken, err := redis.GetKey(One.ID.Hex() + reqIP)
-		var tmp model.User
+		redisToken, err := redis.GetKey(strconv.Itoa(One.Id) + reqIP)
+		var tmp model.UserInfo
 		mc, err := utils.ParseToken(redisToken)
 		if err != nil {
-			utils.Return(c, utils.TOKEN_EXPIRE, err.Error())
+			res.Return(c, utils.TOKEN_EXPIRE, err.Error())
 			// 不进行下面的请求处理了！
 			c.Abort()
 			return
@@ -76,7 +78,7 @@ func TokenCheck() func(c *gin.Context) {
 			c.Next()
 			return
 		}
-		utils.Return(c, utils.TOKEN_INVALID, "Token不匹配")
+		res.Return(c, utils.TOKEN_INVALID, "Token不匹配")
 		c.Abort()
 	}
 }

@@ -1,10 +1,11 @@
 package utils
 
 import (
-	model "Example/Model"
+	model "Example/Model/user"
 	redis "Example/Redis"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -43,7 +44,7 @@ func SetSession(c *gin.Context) {
 // MyClaims 自定义签名
 type MyClaims struct {
 	//Name string `json:"name" form:"name"`
-	User model.User `json:"user"`
+	User model.UserInfo `json:"user"`
 	jwt.StandardClaims
 }
 
@@ -56,7 +57,7 @@ const TokenExpireDuration = time.Hour * 24
 var JWTSecret = []byte("GarfieldIsAHero!")
 
 // GenToken 生成Token
-func GenToken(user model.User, reqIP string) (string, error) {
+func GenToken(user model.UserInfo, reqIP string) (string, error) {
 
 	c := MyClaims{
 		user,
@@ -70,7 +71,7 @@ func GenToken(user model.User, reqIP string) (string, error) {
 	// 使用指定的secret签名并获取完整的编码后的字符串token
 	encodeToken, _ := token.SignedString(JWTSecret)
 	//将token根据用户ID存于redis中
-	err := redis.SetKey(user.ID.Hex()+reqIP, encodeToken)
+	err := redis.SetKey(strconv.Itoa(user.Id)+reqIP, encodeToken)
 	if err != nil {
 		fmt.Println("Token failed to insert redis")
 	}
