@@ -41,4 +41,5 @@ func Return(c *gin.Context, code int, data interface{}) {
 		"msg":     utils.GetMsg(code),
 		"data":    data,
 	})
+	return
 }

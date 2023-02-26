@@ -71,7 +71,7 @@ func GenToken(user model.UserInfo, reqIP string) (string, error) {
 	// 使用指定的secret签名并获取完整的编码后的字符串token
 	encodeToken, _ := token.SignedString(JWTSecret)
 	//将token根据用户ID存于redis中
-	err := redis.SetKey(strconv.Itoa(user.Id)+reqIP, encodeToken)
+	err := redis.SetKey(strconv.Itoa(*user.Id)+reqIP, encodeToken)
 	if err != nil {
 		fmt.Println("Token failed to insert redis")
 	}

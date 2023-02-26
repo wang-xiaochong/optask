@@ -10,21 +10,31 @@ type UserInfo struct {
 	// Id        int    `json:"id"`
 	// FirstName string `json:"first_name" form:"first_name"`
 	// LastName  string `json:"last_name" form:"last_name"`
-	Id       int    `json:"id"`                       //唯一识别、主键自增
-	Account  string `json:"account" form:"account"`   //登录账号
-	Password string `json:"password" form:"password"` //登录密码（加密）
-	Avatar   string `json:"avatar" form:"avatar"`     //头像
-	Name     string `json:"name" form:"name"`         //真实姓名
-	Email    string `json:"email" form:"email"`       //电子邮件
-	Phone    int    `json:"phone" form:"phone"`       //电话
-	RoleInfo int    `json:"roleInfo" form:"roleInfo"` //对应角色ID
-	Salt     string `json:"salt"   form:"salt" `      //盐，用于加密
+	Id       *int    `json:"id" form:"id"`             //唯一识别、主键自增
+	Account  *string `json:"account" form:"account"`   //登录账号
+	Password *string `json:"password" form:"password"` //登录密码（加密）
+	Avatar   *string `json:"avatar" form:"avatar"`     //头像
+	Name     *string `json:"name" form:"name"`         //真实姓名
+	Email    *string `json:"email" form:"email"`       //电子邮件
+	Phone    *int    `json:"phone" form:"phone"`       //电话
+	RoleInfo *int    `json:"roleInfo" form:"roleInfo"` //对应角色ID
+	Salt     *string `json:"salt"   form:"salt" `      //盐，用于加密
 }
 
 // Login 模型
 type Login struct {
-	Account  string `  form:"account" json:"account"  `
-	Password string `  form:"password" json:"password" `
+	Account  *string `  form:"account" json:"account"  `
+	Password *string `  form:"password" json:"password" `
+}
+
+func (l *Login) Login(db *sql.DB) (id int, err error) {
+	row := db.QueryRow("select id from userInfo where account=?&&password=?", *&l.Account, *l.Password)
+	err = row.Scan(&id)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	return
 }
 
 func (p *UserInfo) GetAll(db *sql.DB) (userInfos []UserInfo, err error) {
@@ -43,10 +53,11 @@ func (p *UserInfo) GetAll(db *sql.DB) (userInfos []UserInfo, err error) {
 	return
 }
 
-func (p *UserInfo) Get(db *sql.DB) (user UserInfo, err error) {
-	row := db.QueryRow("select id,account,name,avatar,email,phone from userInfo where id=?", p.Id)
-	err = row.Scan(&user.Id, &user.Name, &user.Avatar, &user.Email, &user.Phone)
+func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {
+	row := db.QueryRow("select id,account,name,avatar,email,phone,salt from userInfo where id=?", p.Id)
+	err = row.Scan(&user.Id, &user.Account, &user.Name, &user.Avatar, &user.Email, &user.Phone, &user.Salt)
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	return

@@ -1,0 +1,5 @@
+package keys
+
+var (
+	REACT_APP_REDIS_USERINFO_ID_ = "REACT_APP_REDIS_USERINFO_ID_"
+)

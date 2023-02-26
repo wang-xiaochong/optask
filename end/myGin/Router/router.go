@@ -15,11 +15,14 @@ func InitRouter(e *gin.Engine) {
 
 	user := pre.Group("/user")
 	{
+		user.GET("/getCurrentUser", userInfo.GetCurrentUser)
 		user.GET("/getAllUserInfo", userInfo.GetAllUsers)
 		user.GET("/getUserInfoById", userInfo.GetUserInfoById)
+		user.POST("/login",userInfo.MyLogin)
 		// user.POST("/add", controller.AddPerson)
 		// user.PUT("/update", controller.UpdatePerson)
 		// user.DELETE("/delete", controller.DeletePerson)
+		
 
 	}
 	person := pre.Group("/person")
@@ -37,7 +40,7 @@ func InitRouter(e *gin.Engine) {
 	// pre.GET("/home2", middleware.JWTAuthMiddleware(), middleware.TokenCheck(), controller.Home2)
 }
 
-// SetupRouter 初始化路由
+// SetupRouter 初始化路
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 	return r

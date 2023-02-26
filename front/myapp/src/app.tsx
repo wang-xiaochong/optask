@@ -11,7 +11,6 @@ import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
-const { REACT_APP_ENV } = process.env;
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -36,6 +35,7 @@ export async function getInitialState(): Promise<{
   // 如果不是登录页面，执行
   const { location } = history;
   if (location.pathname !== loginPath) {
+    // const currentUser = await fetchUserInfo();
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
@@ -139,12 +139,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
  * @doc https://umijs.org/docs/max/request#配置
  */
-export const request: RequestConfig =
-  REACT_APP_ENV === 'development' || REACT_APP_ENV === 'production'
-    ? {
-        ...errorConfig,
-        baseURL: REACT_APP_BASEURL,
-      }
-    : {
-        ...errorConfig,
-      };
+// export const request: RequestConfig =
+//   REACT_APP_ENV === 'development' || REACT_APP_ENV === 'production'
+//     ? {
+//         ...errorConfig,
+//         baseURL: REACT_APP_BASEURL,
+//       }
+//     : {
+//         ...errorConfig,
+//       };
+export const request: RequestConfig = {
+  ...errorConfig,
+  baseURL: REACT_APP_BASEURL,
+};

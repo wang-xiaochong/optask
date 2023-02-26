@@ -1,8 +1,6 @@
 package redis
 
 import (
-	redisConfig "Example/Config"
-	"fmt"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
@@ -18,10 +16,10 @@ func Setup() *redis.Pool {
 		IdleTimeout: 240 * time.Second,
 
 		Dial: func() (redis.Conn, error) {
-			var redisConfig = redisConfig.GetRedisConfig()
-			var redisString = fmt.Sprintf("%v:%v", redisConfig.RemoteIP, redisConfig.RemotePort)
-			c, err := redis.Dial("tcp", redisString, redis.DialDatabase(redisConfig.DialDatabase)) //本地无密码连接
-			// c,err := redis.Dial("tcp","82.156.109.119:6379",redis.DialDatabase(1),redis.DialPassword("密码"))
+			// var redisConfig = redisConfig.GetRedisConfig()
+			// var redisString = fmt.Sprintf("%v:%v", redisConfig.RemoteIP, redisConfig.RemotePort)
+			// c, err := redis.Dial("tcp", redisString, redis.DialDatabase(redisConfig.DialDatabase)) //本地无密码连接
+			c, err := redis.Dial("tcp", "82.156.109.119:6379", redis.DialDatabase(1), redis.DialPassword("sdl@admin"))
 			if err != nil {
 				// fmt.Println("Redis连接失败")
 				return nil, err
