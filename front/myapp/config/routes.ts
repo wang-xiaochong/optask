@@ -61,8 +61,17 @@ export default [
   {
     name: 'task.task-list',
     icon: 'table',
-    path: '/ptask/list',
+    path: '/task/list',
     component: './Task',
+    // layout: false,
+  },
+  {
+    name: 'wiki.wiki-list',
+    icon: 'table',
+    path: '/wiki/list',
+    component: './Wiki',
+    // hideInMenu: true,
+    // hideChildrenInMenu: true,
     // layout: false,
   },
   {

@@ -63,6 +63,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
+    menuDataRender: (menuData) => {
+      return menuData.filter((item) => item.name !== 'wiki.wiki-list');
+    },
     // waterMarkProps: {
     //   content: initialState?.currentUser?.name,
     // },
@@ -125,6 +128,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </>
       );
     },
+
     ...initialState?.settings,
   };
 };
