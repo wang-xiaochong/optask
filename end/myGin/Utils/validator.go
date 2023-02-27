@@ -2,9 +2,10 @@ package utils
 
 import (
 	"fmt"
-	"github.com/go-playground/validator/v10"
 	"log"
 	"strconv"
+
+	"github.com/go-playground/validator/v10"
 )
 
 var validate = validator.New()
@@ -25,17 +26,17 @@ func NotAdmin(f validator.FieldLevel) bool {
 
 // Sex 性别限制
 func Sex(f validator.FieldLevel) bool {
-	return f.Field().String()=="男"||f.Field().String() =="女"||f.Field().String()==""
+	return f.Field().String() == "男" || f.Field().String() == "女" || f.Field().String() == ""
 }
 
 // StringNumber 数字字符串限制
 func StringNumber(f validator.FieldLevel) bool {
-	role, err := strconv.ParseInt( f.Field().String(), 10, 64)
-	if err != nil{
+	role, err := strconv.ParseInt(f.Field().String(), 10, 64)
+	if err != nil {
 		log.Println(err)
 		return false
 	}
-	return  role<10 &&  role>=0
+	return role < 10 && role >= 0
 }
 
 // CheckData 验证函数
@@ -44,9 +45,13 @@ func CheckData(data interface{}) error {
 	err := validate.Struct(data)
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
-			fmt.Println("参数错误:",err) //Key: 'Users.Passwd' Error:Field validation for 'Passwd' failed on the 'min' tag
+			fmt.Println("参数错误:", err) //Key: 'Users.Passwd' Error:Field validation for 'Passwd' failed on the 'min' tag
 		}
 		return err
 	}
 	return nil
+}
+
+func typeof(v interface{}) string {
+	return fmt.Sprintf("%T", v)
 }

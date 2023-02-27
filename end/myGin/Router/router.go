@@ -18,11 +18,11 @@ func InitRouter(e *gin.Engine) {
 		user.GET("/getCurrentUser", userInfo.GetCurrentUser)
 		user.GET("/getAllUserInfo", userInfo.GetAllUsers)
 		user.GET("/getUserInfoById", userInfo.GetUserInfoById)
-		user.POST("/login",userInfo.MyLogin)
+		user.POST("/login", userInfo.MyLogin)
+		user.POST("/logout", userInfo.MyLogout)
 		// user.POST("/add", controller.AddPerson)
 		// user.PUT("/update", controller.UpdatePerson)
 		// user.DELETE("/delete", controller.DeletePerson)
-		
 
 	}
 	person := pre.Group("/person")

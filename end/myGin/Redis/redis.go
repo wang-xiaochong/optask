@@ -46,32 +46,29 @@ func GetRedisPool() *redis.Pool {
 // SetKey 设置键值
 func SetKey(key string, value string) error {
 	var Conn = GetRedisPool().Get()
-	//defer Conn.Close()
+	defer Conn.Close()
 	_, err := Conn.Do("set", key, value, "ex", 24*60*60)
-	if err != nil {
-		return err
-	}
-	return nil
+
+	return err
+
 }
 
 // GetKey 获取键值
-func GetKey(key string) (string, error) {
+func GetKey(key string) (ret string, err error) {
 	var Conn = GetRedisPool().Get()
-	//defer Conn.Close()
-	ret, err := redis.String(Conn.Do("get", key))
-	if err != nil {
-		return ret, err
-	}
-	return ret, nil
+	defer Conn.Close()
+	ret, err = redis.String(Conn.Do("get", key))
+	return ret, err
 }
 
 // DelKey 删除键值
-func DelKey(key string) (string, error) {
+func DelKey(key string) (ret bool, err error) {
 	var Conn = GetRedisPool().Get()
-	//defer Conn.Close()
-	ret, err := redis.String(Conn.Do("del", key))
+	defer Conn.Close()
+	// ret, err = redis.String(Conn.Do("del", key))
+	ret, err = redis.Bool(Conn.Do("del", key))
 	if err != nil {
-		return ret, err
+		fmt.Println("err:", err)
 	}
-	return ret, nil
+	return ret, err
 }

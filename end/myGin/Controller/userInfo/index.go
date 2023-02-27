@@ -22,10 +22,27 @@ func GetCurrentUser(context *gin.Context) {
 	}
 	ustring, err := redis.GetKey(keys.REACT_APP_REDIS_USERINFO_ID_ + reqIP)
 	if err != nil {
+		fmt.Println("ustring:", ustring)
+		fmt.Println(err)
+		res.Return(context, utils.SYS_BUSY, u)
+	} else {
+		err = json.Unmarshal([]byte(ustring), &u)
+		res.Return(context, utils.SUCCESS, u)
+	}
+
+	// context.JSON(http.StatusOK, result)
+}
+
+func MyLogout(context *gin.Context) {
+	reqIP := context.ClientIP()
+	if reqIP == "::1" {
+		reqIP = "127.0.0.1"
+	}
+	ustring, err := redis.DelKey(keys.REACT_APP_REDIS_USERINFO_ID_ + reqIP)
+	if err != nil {
 		fmt.Println(err)
 	}
-	err = json.Unmarshal([]byte(ustring), &u)
-	res.Return(context, utils.SUCCESS, u)
+	res.Return(context, utils.SUCCESS, ustring)
 	// context.JSON(http.StatusOK, result)
 }
 
@@ -78,7 +95,6 @@ func MyLogin(context *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(id)
 	res.Return(context, utils.SUCCESS, id)
 }
 

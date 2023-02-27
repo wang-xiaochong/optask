@@ -32,15 +32,14 @@ func (l *Login) Login(db *sql.DB) (id int, err error) {
 	err = row.Scan(&id)
 	if err != nil {
 		fmt.Println(err)
-		return
 	}
-	return
+	return id, err
 }
 
 func (p *UserInfo) GetAll(db *sql.DB) (userInfos []UserInfo, err error) {
 	rows, err := db.Query("select id,account,name,avatar,email,phone from userInfo")
 	// fmt.Println("=========GetAll")
-	fmt.Println(rows)
+	// fmt.Println(rows)
 	if err != nil {
 		return
 	}
