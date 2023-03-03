@@ -28,6 +28,7 @@ func InitRouter(e *gin.Engine) {
 	task := pre.Group("/task")
 	{
 		task.GET("/getAllTaskInfo", taskInfo.GetAllTasks)
+		task.GET("/getTasksByCreatedBy", taskInfo.GetTasksByCreatedBy)
 		// myTask.GET("/getAllTaskInfo",con)
 		// person.GET("/person", controller.GetPersonByID)
 		// person.POST("/add", controller.AddPerson)

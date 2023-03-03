@@ -1,7 +1,6 @@
 package task
 
 import (
-	"fmt"
 
 	// "fmt"
 	curd "Example/Utils/curd"
@@ -43,22 +42,14 @@ type TaskInfo struct {
 // 	return id, err
 // }
 
-func (t *TaskInfo) GetAll() {
-	// rows, err := db.Query("select * from taskInfo")
-	// // fmt.Println("=========GetAll")
-	// // fmt.Println(rows)
-	// if err != nil {
-	// 	return
-	// }
-	// for rows.Next() {
-	// 	var taskInfo TaskInfo
-	// 	rows.Scan(&userInfo.Id, &userInfo.Account, &userInfo.Name, &userInfo.Avatar, &userInfo.Email, &userInfo.Phone)
-	// 	userInfos = append(userInfos, userInfo)
-	// }
-	// defer rows.Close()
-	// return
-	ret := curd.Retrieve("taskInfo", "name", "")
-	fmt.Println(ret)
+func (t *TaskInfo) GetAll() []interface{} {
+	result := curd.GetAll("taskInfo")
+	return result
+}
+
+func (t *TaskInfo) GetTasksByCreatedBy() []interface{} {
+	result := curd.Find("taskInfo", "createdBy", 1)
+	return result
 }
 
 // func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {

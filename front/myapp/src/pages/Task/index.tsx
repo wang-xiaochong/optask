@@ -1,165 +1,107 @@
-import { ProList } from '@ant-design/pro-components';
-import { Badge, Button } from 'antd';
-import React, { useState } from 'react';
+import { EllipsisOutlined } from '@ant-design/icons';
+import type { ProColumns } from '@ant-design/pro-components';
+import { LightFilter, ProFormDatePicker, ProTable } from '@ant-design/pro-components';
+import { Button } from 'antd';
 
-const dataSource = [
-  {
-    name: '实验名称1',
-    desc: '系统性的沉淀B端知识体系',
-    content: [
-      {
-        label: '模型数',
-        value: 2903,
-      },
-      {
-        label: '指标数',
-        value: 3720,
-      },
-      {
-        label: '实验状态',
-        value: '成功',
-        status: 'success',
-      },
-    ],
-  },
-  {
-    name: '实验名称2',
-    desc: '系统性的沉淀B端知识体系',
-    content: [
-      {
-        label: '模型数',
-        value: 2904,
-      },
-      {
-        label: '指标数',
-        value: 3721,
-      },
-      {
-        label: '实验状态',
-        value: '成功',
-        status: 'success',
-      },
-    ],
-  },
-  {
-    name: '实验名称3',
-    desc: '系统性的沉淀B端知识体系',
-    content: [
-      {
-        label: '模型数',
-        value: 2905,
-      },
-      {
-        label: '指标数',
-        value: 3722,
-      },
-      {
-        label: '实验状态',
-        value: '成功',
-        status: 'success',
-      },
-    ],
-  },
-];
+const TaskList = () => {
+  type TableListItem = {
+    key: number;
+    name: string;
+    containers: number;
+    creator: string;
+  };
 
-const renderBadge = (count: number, active = false) => {
+  const tableListDataSource: TableListItem[] = [];
+
+  const creators = ['付小小', '曲丽丽', '林东东', '陈帅帅', '兼某某'];
+
+  for (let i = 0; i < 5; i += 1) {
+    tableListDataSource.push({
+      key: i,
+      name: 'AppName',
+      containers: Math.floor(Math.random() * 20),
+      creator: creators[Math.floor(Math.random() * creators.length)],
+    });
+  }
+
+  const columns: ProColumns<TableListItem>[] = [
+    {
+      title: '应用名称',
+      dataIndex: 'name',
+      render: (_) => <a>{_}</a>,
+    },
+    {
+      title: '容器数量',
+      dataIndex: 'containers',
+      align: 'right',
+      sorter: (a, b) => a.containers - b.containers,
+    },
+    {
+      title: '创建者',
+      dataIndex: 'creator',
+      valueType: 'select',
+      valueEnum: {
+        all: { text: '全部' },
+        付小小: { text: '付小小' },
+        曲丽丽: { text: '曲丽丽' },
+        林东东: { text: '林东东' },
+        陈帅帅: { text: '陈帅帅' },
+        兼某某: { text: '兼某某' },
+      },
+    },
+    {
+      title: '操作',
+      key: 'option',
+      width: 120,
+      valueType: 'option',
+      render: () => [
+        <a key="link">链路</a>,
+        <a key="warn">报警</a>,
+        <a key="more">
+          <EllipsisOutlined />
+        </a>,
+      ],
+    },
+  ];
+
   return (
-    <Badge
-      count={count}
-      style={{
-        marginBlockStart: -2,
-        marginInlineStart: 4,
-        color: active ? '#1890FF' : '#999',
-        backgroundColor: active ? '#E6F7FF' : '#eee',
-      }}
-    />
-  );
-};
-
-const Project = () => {
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>('tab1');
-  return (
-    <ProList<any>
-      rowKey="name"
-      dataSource={dataSource}
-      metas={{
-        title: {
-          dataIndex: 'name',
-        },
-        description: {
-          dataIndex: 'desc',
-        },
-        content: {
-          dataIndex: 'content',
-          render: (text) => (
-            <div key="label" style={{ display: 'flex', justifyContent: 'space-around' }}>
-              {(text as any[]).map((t) => (
-                <div key={t.label}>
-                  <div style={{ color: '#00000073' }}>{t.label}</div>
-                  <div style={{ color: '#000000D9' }}>
-                    {t.status === 'success' && (
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          width: 8,
-                          height: 8,
-                          borderRadius: '50%',
-                          backgroundColor: '#52c41a',
-                          marginInlineEnd: 8,
-                        }}
-                      />
-                    )}
-                    {t.value}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ),
-        },
-        actions: {
-          render: (text, row) => [
-            <a href={row.html_url} target="_blank" rel="noopener noreferrer" key="link">
-              编辑
-            </a>,
-            <a href={row.html_url} target="_blank" rel="noopener noreferrer" key="warning">
-              复制
-            </a>,
-            <a href={row.html_url} target="_blank" rel="noopener noreferrer" key="view">
-              删除
-            </a>,
-          ],
-        },
+    <ProTable<TableListItem>
+      columns={columns}
+      request={(params, sorter, filter) => {
+        // 表单搜索项会从 params 传入，传递给后端接口。
+        console.log(params, sorter, filter);
+        return Promise.resolve({
+          data: tableListDataSource,
+          success: true,
+        });
       }}
       toolbar={{
-        menu: {
-          activeKey,
-          items: [
-            {
-              key: 'tab1',
-              label: <span>全部实验室{renderBadge(99, activeKey === 'tab1')}</span>,
-            },
-            {
-              key: 'tab2',
-              label: <span>我创建的实验室{renderBadge(32, activeKey === 'tab2')}</span>,
-            },
-          ],
-          onChange(key) {
-            setActiveKey(key);
-          },
-        },
         search: {
           onSearch: (value: string) => {
             alert(value);
           },
         },
+        filter: (
+          <LightFilter>
+            <ProFormDatePicker name="startdate" label="响应日期" />
+          </LightFilter>
+        ),
         actions: [
-          <Button type="primary" key="primary">
-            新建实验
+          <Button
+            key="primary"
+            type="primary"
+            onClick={() => {
+              alert('add');
+            }}
+          >
+            添加
           </Button>,
         ],
       }}
+      rowKey="key"
+      search={false}
     />
   );
 };
 
-export default Project;
+export default TaskList;

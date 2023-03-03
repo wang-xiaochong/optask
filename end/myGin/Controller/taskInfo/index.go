@@ -64,9 +64,23 @@ import (
 
 func GetAllTasks(context *gin.Context) {
 	t := task.TaskInfo{}
-	t.GetAll()
+	tasks := t.GetAll()
+	if tasks != nil {
+		res.Return(context, utils.SUCCESS, tasks)
+	} else {
+		res.Return(context, utils.ERROR, tasks)
+	}
+}
 
-	res.Return(context, utils.ERROR, "test")
+func GetTasksByCreatedBy(context *gin.Context) {
+	t := task.TaskInfo{}
+	tasks := t.GetTasksByCreatedBy()
+	if tasks != nil {
+		res.Return(context, utils.SUCCESS, tasks)
+	} else {
+		res.Return(context, utils.ERROR, tasks)
+	}
+
 }
 
 // func GetUserInfoById(context *gin.Context) {
