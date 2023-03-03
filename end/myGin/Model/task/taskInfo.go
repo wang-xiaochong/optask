@@ -43,8 +43,14 @@ type TaskInfo struct {
 // }
 
 func (t *TaskInfo) GetAll() []interface{} {
-	result := curd.GetAll("taskInfo")
-	return result
+	ret := curd.GetAll("taskInfo")
+	return ret
+	// sqlStr := "select name from projectInfo where " + searchKey + " like ?;"
+	// //查询数据，取所有字段
+	// rows, _ := database.GetMysqlDB().Query(sqlStr, "%"+value+"%")
+	// ret := HandleSQL(rows)
+	// return ret
+
 }
 
 func (t *TaskInfo) GetTasksByCreatedBy() []interface{} {

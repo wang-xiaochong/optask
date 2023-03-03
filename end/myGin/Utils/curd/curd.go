@@ -2,6 +2,7 @@ package curd
 
 import (
 	database "Example/Database"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 
@@ -23,6 +24,81 @@ import (
 // 	return key,value
 // }
 
+func HandleSQL(rows *sql.Rows) []interface{} {
+	//返回所有列
+	cols, _ := rows.Columns()
+	//这里表示一行所有列的值，用[]byte表示
+	vals := make([]interface{}, len(cols))
+	//这里表示一行填充数据
+	scans := make([]interface{}, len(vals))
+	//这里scans引用vals，把数据填充到[]byte里
+	for k := range vals {
+		scans[k] = &vals[k]
+	}
+	var result []interface{}
+	for rows.Next() {
+		//填充数据
+		rows.Scan(scans...)
+		//每行数据
+		row := make(map[string]interface{})
+		//把vals中的数据复制到row中
+		for k, v := range vals {
+			if v == nil {
+				row[cols[k]] = nil
+			} else {
+				switch val := (*scans[k].(*interface{})).(type) {
+				case byte:
+					row[cols[k]] = val
+					break
+				case []byte:
+					v := string(val)
+					switch v {
+					case "\x00": // 处理数据类型为bit的情况
+						row[cols[k]] = 0
+					case "\x01": // 处理数据类型为bit的情况
+						row[cols[k]] = 1
+					default:
+						row[cols[k]] = v
+						break
+					}
+					break
+				case time.Time:
+					if val.IsZero() {
+						row[cols[k]] = nil
+					} else {
+						row[cols[k]] = val.Format("2006-01-02 15:04:05")
+					}
+					break
+				default:
+					row[cols[k]] = v
+				}
+			}
+			/*接收到后都为string型
+			key := cols[k];
+			//这里把[]byte数据转成string
+			 fmt.Println("type",reflect.TypeOf(v),string(v))
+			 row[key] = string(v);
+			*/
+		}
+		//放入结果集
+		// fmt.Println(row)
+		// result[i] = row;
+		str, err := json.Marshal(row)
+		if err != nil {
+			fmt.Println(err)
+		}
+		// result = append(result, string(str))
+		var ret interface{}
+		err = json.Unmarshal([]byte(str), &ret)
+		if err != nil {
+			fmt.Println(err)
+		}
+		result = append(result, ret)
+		// result = append(result, string(str))
+	}
+	return result
+}
+
 func GetAll(collection string) []interface{} {
 	ret := Retrieve(collection, "id", "")
 	return ret
@@ -32,157 +108,18 @@ func GetAll(collection string) []interface{} {
 func Retrieve(collection string, searchKey string, value string) []interface{} {
 	sqlStr := "select * from " + collection + " where " + searchKey + " like ?;"
 	//查询数据，取所有字段
-	rows2, _ := database.GetMysqlDB().Query(sqlStr, "%"+value+"%")
-	//返回所有列
-	cols, _ := rows2.Columns()
-	//这里表示一行所有列的值，用[]byte表示
-	vals := make([]interface{}, len(cols))
-	//这里表示一行填充数据
-	scans := make([]interface{}, len(vals))
-	//这里scans引用vals，把数据填充到[]byte里
-	for k := range vals {
-		scans[k] = &vals[k]
-	}
-	var result []interface{}
-	for rows2.Next() {
-		//填充数据
-		rows2.Scan(scans...)
-		//每行数据
-		row := make(map[string]interface{})
-		//把vals中的数据复制到row中
-		for k, v := range vals {
-			if v == nil {
-				row[cols[k]] = nil
-			} else {
-				switch val := (*scans[k].(*interface{})).(type) {
-				case byte:
-					row[cols[k]] = val
-					break
-				case []byte:
-					v := string(val)
-					switch v {
-					case "\x00": // 处理数据类型为bit的情况
-						row[cols[k]] = 0
-					case "\x01": // 处理数据类型为bit的情况
-						row[cols[k]] = 1
-					default:
-						row[cols[k]] = v
-						break
-					}
-					break
-				case time.Time:
-					if val.IsZero() {
-						row[cols[k]] = nil
-					} else {
-						row[cols[k]] = val.Format("2006-01-02 15:04:05")
-					}
-					break
-				default:
-					row[cols[k]] = v
-				}
-			}
-			/*接收到后都为string型
-			            key := cols[k];
-						//这里把[]byte数据转成string
-						 fmt.Println("type",reflect.TypeOf(v),string(v))
-						 row[key] = string(v);
-			*/
-		}
-		//放入结果集
-		// fmt.Println(row)
-		// result[i] = row;
-		str, err := json.Marshal(row)
-		if err != nil {
-			fmt.Println(err)
-		}
-		// result = append(result, string(str))
-		var ret interface{}
-		err = json.Unmarshal([]byte(str), &ret)
-		if err != nil {
-			fmt.Println(err)
-		}
-		result = append(result, ret)
-		// result = append(result, string(str))
-	}
-	return result
+	rows, _ := database.GetMysqlDB().Query(sqlStr, "%"+value+"%")
+	ret := HandleSQL(rows)
+	return ret
 }
 
 // Find 单字段精确搜索
 func Find(collection string, searchKey string, value interface{}) []interface{} {
 	sqlStr := "select * from " + collection + " where " + searchKey + " =?;"
 	//查询数据，取所有字段
-	rows2, _ := database.GetMysqlDB().Query(sqlStr, value)
-	//返回所有列
-	cols, _ := rows2.Columns()
-	//这里表示一行所有列的值，用[]byte表示
-	vals := make([]interface{}, len(cols))
-	//这里表示一行填充数据
-	scans := make([]interface{}, len(vals))
-	//这里scans引用vals，把数据填充到[]byte里
-	for k := range vals {
-		scans[k] = &vals[k]
-	}
-	var result []interface{}
-	for rows2.Next() {
-		//填充数据
-		rows2.Scan(scans...)
-		//每行数据
-		row := make(map[string]interface{})
-		//把vals中的数据复制到row中
-		for k, v := range vals {
-			if v == nil {
-				row[cols[k]] = nil
-			} else {
-				switch val := (*scans[k].(*interface{})).(type) {
-				case byte:
-					row[cols[k]] = val
-					break
-				case []byte:
-					v := string(val)
-					switch v {
-					case "\x00": // 处理数据类型为bit的情况
-						row[cols[k]] = 0
-					case "\x01": // 处理数据类型为bit的情况
-						row[cols[k]] = 1
-					default:
-						row[cols[k]] = v
-						break
-					}
-					break
-				case time.Time:
-					if val.IsZero() {
-						row[cols[k]] = nil
-					} else {
-						row[cols[k]] = val.Format("2006-01-02 15:04:05")
-					}
-					break
-				default:
-					row[cols[k]] = v
-				}
-			}
-			/*接收到后都为string型
-			            key := cols[k];
-						//这里把[]byte数据转成string
-						 fmt.Println("type",reflect.TypeOf(v),string(v))
-						 row[key] = string(v);
-			*/
-		}
-		//放入结果集
-		// fmt.Println(row)
-		// result[i] = row;
-		str, err := json.Marshal(row)
-		if err != nil {
-			fmt.Println(err)
-		}
-		// result = append(result, string(str))
-		var ret interface{}
-		err = json.Unmarshal([]byte(str), &ret)
-		if err != nil {
-			fmt.Println(err)
-		}
-		result = append(result, ret)
-	}
-	return result
+	rows, _ := database.GetMysqlDB().Query(sqlStr, value)
+	ret := HandleSQL(rows)
+	return ret
 }
 
 // CreateOne 增加一条数据,相同字段值不可重复增加
