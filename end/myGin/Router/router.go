@@ -1,10 +1,10 @@
-package Router
+package router
 
 import (
 	controller "Example/Controller"
 	userInfo "Example/Controller/userInfo"
 	utils "Example/Utils"
-
+	taskInfo "Example/Controller/taskInfo"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,6 +23,16 @@ func InitRouter(e *gin.Engine) {
 		// user.POST("/add", controller.AddPerson)
 		// user.PUT("/update", controller.UpdatePerson)
 		// user.DELETE("/delete", controller.DeletePerson)
+
+	}
+	task := pre.Group("/task")
+	{
+		task.GET("/getAllTaskInfo", taskInfo.GetAllTasks)
+		// myTask.GET("/getAllTaskInfo",con)
+		// person.GET("/person", controller.GetPersonByID)
+		// person.POST("/add", controller.AddPerson)
+		// person.PUT("/update", controller.UpdatePerson)
+		// person.DELETE("/delete", controller.DeletePerson)
 
 	}
 	person := pre.Group("/person")

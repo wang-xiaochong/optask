@@ -22,7 +22,6 @@ func GetCurrentUser(context *gin.Context) {
 	}
 	ustring, err := redis.GetKey(keys.REACT_APP_REDIS_USERINFO_ID_ + reqIP)
 	if err != nil {
-		fmt.Println("ustring:", ustring)
 		fmt.Println(err)
 		res.Return(context, utils.SYS_BUSY, u)
 	} else {
@@ -51,9 +50,10 @@ func GetAllUsers(context *gin.Context) {
 	users, err := p.GetAll(database.MysqlDB)
 	if err != nil {
 		fmt.Println(err)
+		res.Return(context, utils.ERROR, users)
+	} else {
+		res.Return(context, utils.SUCCESS, users)
 	}
-	res.Return(context, utils.SUCCESS, users)
-
 	// context.JSON(http.StatusOK, gin.H{
 	// 	"result": persons,
 	// 	"count":  len(persons),
@@ -72,14 +72,19 @@ func GetUserInfoById(context *gin.Context) {
 		Id: &Id,
 	}
 	user, err := p.GetUserInfoById(database.MysqlDB)
-	userjson, _ := json.Marshal(user)
-	reqIP := context.ClientIP()
-	if reqIP == "::1" {
-		reqIP = "127.0.0.1"
+	if err != nil {
+		res.Return(context, utils.ERROR, user)
+	} else {
+		userjson, _ := json.Marshal(user)
+		reqIP := context.ClientIP()
+		if reqIP == "::1" {
+			reqIP = "127.0.0.1"
+		}
+		redis.SetKey(keys.REACT_APP_REDIS_USERINFO_ID_+reqIP, string(userjson))
+		res.Return(context, utils.SUCCESS, user)
+		// context.JSON(http.StatusOK, result)
 	}
-	redis.SetKey(keys.REACT_APP_REDIS_USERINFO_ID_+reqIP, string(userjson))
-	res.Return(context, utils.SUCCESS, user)
-	// context.JSON(http.StatusOK, result)
+
 }
 
 func MyLogin(context *gin.Context) {
@@ -94,8 +99,11 @@ func MyLogin(context *gin.Context) {
 	id, err := l.Login(database.MysqlDB)
 	if err != nil {
 		fmt.Println(err)
+		res.Return(context, utils.LOGIN_FAIL, id)
+	} else {
+		res.Return(context, utils.SUCCESS, id)
 	}
-	res.Return(context, utils.SUCCESS, id)
+
 }
 
 // func AddPerson(context *gin.Context) {
