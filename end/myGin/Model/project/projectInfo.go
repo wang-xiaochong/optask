@@ -12,13 +12,6 @@ type ProjectInfo struct {
 }
 
 func (p *ProjectInfo) GetAll() []interface{} {
-	// sqlStr := "select * from projectInfo"
-	// //查询数据，取所有字段
-	// rows, err := database.MysqlDB.Query(sqlStr)
-	// if err != nil {
-	// 	fmt.Println("GetAllErr:", err)
-	// }
-	// ret := curd.HandleSQL(rows)
 	ret := curd.GetAll("projectInfo")
 	return ret
 }

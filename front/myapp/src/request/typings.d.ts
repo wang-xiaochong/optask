@@ -8,10 +8,10 @@ declare namespace API {
     type?: string;
     status?: string;
     leval?: string;
-    createdBy?: number;
+    createdBy?: string;
     createdTime?: Date;
-    appoint?: number;
-    project?: number;
+    appoint?: string;
+    project?: string;
     taskUpdateInfo?: number;
     updateTime?: Date;
     estimatedTime?: Date;

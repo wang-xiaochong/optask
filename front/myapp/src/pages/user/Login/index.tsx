@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import { getUserInfoById, login } from '@/services/ant-design-pro/api';
+import { getUserInfoById, login } from '@/request/userInfo';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
   AlipayCircleOutlined,

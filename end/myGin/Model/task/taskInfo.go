@@ -88,6 +88,11 @@ func (t *TaskInfo) GetTasksByCreatedBy() []interface{} {
 	return result
 }
 
+func (t *TaskInfo) GetTaskByID(id string) interface{} {
+	result := curd.Find("taskInfo", "id", id)
+	return result[0]
+}
+
 // func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {
 // 	row := db.QueryRow("select id,account,name,avatar,email,phone,salt from userInfo where id=?", p.Id)
 // 	err = row.Scan(&user.Id, &user.Account, &user.Name, &user.Avatar, &user.Email, &user.Phone, &user.Salt)
