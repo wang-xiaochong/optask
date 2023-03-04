@@ -2,9 +2,11 @@ package router
 
 import (
 	controller "Example/Controller"
+	projectInfo "Example/Controller/projectInfo"
+	taskInfo "Example/Controller/taskInfo"
 	userInfo "Example/Controller/userInfo"
 	utils "Example/Utils"
-	taskInfo "Example/Controller/taskInfo"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,6 +38,11 @@ func InitRouter(e *gin.Engine) {
 		// person.DELETE("/delete", controller.DeletePerson)
 
 	}
+	project := pre.Group("/project")
+	{
+		project.GET("/getAllProjectInfo", projectInfo.GetAllProjects)
+	}
+
 	person := pre.Group("/person")
 	{
 		person.GET("/persons", controller.Persons)

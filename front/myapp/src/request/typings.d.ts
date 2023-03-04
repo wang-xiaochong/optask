@@ -22,6 +22,12 @@ declare namespace API {
     parent?: number;
   };
 
+  type ProjectInfo = {
+    id?: number;
+    name?: string;
+    parent?: number;
+  };
+
   // type CurrentUser = {
   //   name?: string;
   //   account?: string;
