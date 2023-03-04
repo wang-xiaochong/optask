@@ -3,7 +3,9 @@ package task
 import (
 
 	// "fmt"
+	database "Example/Database"
 	curd "Example/Utils/curd"
+	"fmt"
 	"time"
 )
 
@@ -19,6 +21,7 @@ type TaskInfo struct {
 	Appoint        *int       `json:"appoint" form:"appoint"`                  //指定人
 	Project        *int       `json:"project"   form:"project" `               //所属项目
 	TaskUpdateInfo *int       `json:"taskUpdateInfo"   form:"taskUpdateInfo" ` //更新信息
+	UpdateTime     *time.Time `json:"updateTime"   form:"updateTime" `         //最新更新时间
 	EstimatedTime  *time.Time `json:"estimatedTime"   form:"estimatedTime" `   //预估时间
 	ConsumeTime    *time.Time `json:"consumeTime"   form:"consumeTime" `       //已耗时间
 	LeftTime       *time.Time `json:"leftTime"   form:"leftTime" `             //剩余时间
@@ -43,14 +46,41 @@ type TaskInfo struct {
 // }
 
 func (t *TaskInfo) GetAll() []interface{} {
-	ret := curd.GetAll("taskInfo")
-	return ret
-	// sqlStr := "select name from projectInfo where " + searchKey + " like ?;"
-	// //查询数据，取所有字段
-	// rows, _ := database.GetMysqlDB().Query(sqlStr, "%"+value+"%")
-	// ret := HandleSQL(rows)
+	// ret := curd.GetAll("taskInfo")
 	// return ret
 
+	// sqlStr := "select t.*,p.name as project from taskInfo as t join projectInfo as p on t.project=p.id"
+	// //查询数据，取所有字段
+	// rows, err := database.MysqlDB.Query(sqlStr)
+	// if err != nil {
+	// 	fmt.Println("GetAllErr:", err)
+	// }
+	// ret := curd.HandleSQL(rows)
+	// return ret
+
+	sqlStr := "select t.*,p.name as project,u.name as appoint from taskInfo as t,projectInfo as p,userInfo as u where t.project=p.id and t.appoint=u.id order by t.id desc"
+	//查询数据，取所有字段
+	rows, err := database.MysqlDB.Query(sqlStr)
+	if err != nil {
+		fmt.Println("GetAllErr:", err)
+	}
+	ret := curd.HandleSQL(rows)
+
+	// // 覆盖createdBy
+	// sqlStr2 := "select u.name as createdBy from taskInfo as t, userInfo as u where t.createdBy=u.id"
+	// rows2, err := database.MysqlDB.Query(sqlStr2)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// ret2 := curd.HandleSQL(rows2)
+	// for i := 0; i < len(ret); i++ {
+	// 	ret, _ := ret[i].(map[string]interface{})
+	// 	ret2, _ := ret2[i].(map[string]interface{})
+	// 	ret["createdBy"] = ret2["createdBy"]
+	// 	// fmt.Println("isMap:", reflect.ValueOf(ret[i]).Kind() == reflect.Map)
+	// }
+	// fmt.Println("ret:", ret)
+	return ret
 }
 
 func (t *TaskInfo) GetTasksByCreatedBy() []interface{} {

@@ -66,6 +66,14 @@ export default [
     // layout: false,
   },
   {
+    // name: 'task.task-list',
+    icon: 'table',
+    path: '/task/list/2',
+    component: './Task/components/TaskDetail.tsx',
+    hideInMenu: true,
+    // layout: false,
+  },
+  {
     name: 'wiki.wiki-list',
     icon: 'table',
     path: '/wiki/list',

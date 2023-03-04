@@ -108,7 +108,7 @@ func GetAll(collection string) []interface{} {
 func Retrieve(collection string, searchKey string, value string) []interface{} {
 	sqlStr := "select * from " + collection + " where " + searchKey + " like ?;"
 	//查询数据，取所有字段
-	rows, _ := database.GetMysqlDB().Query(sqlStr, "%"+value+"%")
+	rows, _ := database.MysqlDB.Query(sqlStr, "%"+value+"%")
 	ret := HandleSQL(rows)
 	return ret
 }
@@ -117,7 +117,7 @@ func Retrieve(collection string, searchKey string, value string) []interface{} {
 func Find(collection string, searchKey string, value interface{}) []interface{} {
 	sqlStr := "select * from " + collection + " where " + searchKey + " =?;"
 	//查询数据，取所有字段
-	rows, _ := database.GetMysqlDB().Query(sqlStr, value)
+	rows, _ := database.MysqlDB.Query(sqlStr, value)
 	ret := HandleSQL(rows)
 	return ret
 }

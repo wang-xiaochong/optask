@@ -16,7 +16,7 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { FormattedMessage, history, SelectLang, useIntl, useModel } from '@umijs/max';
+import { FormattedMessage, history, useIntl, useModel } from '@umijs/max';
 import { message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -45,27 +45,27 @@ const ActionIcons = () => {
   );
 };
 
-const Lang = () => {
-  const langClassName = useEmotionCss(({ token }) => {
-    return {
-      width: 42,
-      height: 42,
-      lineHeight: '42px',
-      position: 'fixed',
-      right: 16,
-      borderRadius: token.borderRadius,
-      ':hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    };
-  });
+// const Lang = () => {
+//   const langClassName = useEmotionCss(({ token }) => {
+//     return {
+//       width: 42,
+//       height: 42,
+//       lineHeight: '42px',
+//       position: 'fixed',
+//       right: 16,
+//       borderRadius: token.borderRadius,
+//       ':hover': {
+//         backgroundColor: token.colorBgTextHover,
+//       },
+//     };
+//   });
 
-  return (
-    <div className={langClassName} data-lang>
-      {SelectLang && <SelectLang />}
-    </div>
-  );
-};
+//   return (
+//     <div className={langClassName} data-lang>
+//       {SelectLang && <SelectLang />}
+//     </div>
+//   );
+// };
 
 // const LoginMessage: React.FC<{
 //   content: string;

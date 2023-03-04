@@ -13,6 +13,7 @@ declare namespace API {
     appoint?: number;
     project?: number;
     taskUpdateInfo?: number;
+    updateTime?: Date;
     estimatedTime?: Date;
     consumeTime?: Date;
     leftTime?: Date;

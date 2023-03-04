@@ -2,6 +2,8 @@ import { getAllTaskInfo } from '@/request/taskInfo';
 import { addKeyToFnDataArray } from '@/utils/utils';
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
+// import TaskDetail from "./components/TaskDetail"
 
 // export type TableListItem = {
 //   key: number;
@@ -31,12 +33,32 @@ const columns: ProColumns<API.TaskInfo>[] = [
   {
     title: 'ID',
     dataIndex: 'id',
-    render: (_) => <a>{_}</a>,
+    render: (_) => (
+      <a>
+        <span
+          onClick={() => {
+            history.push('/task/list/2');
+          }}
+        >
+          {_}
+        </span>
+      </a>
+    ),
   },
   {
     title: '主题',
     dataIndex: 'name',
-    render: (_) => <a>{_}</a>,
+    render: (_) => (
+      <a>
+        <span
+          onClick={() => {
+            history.push('/task/list/2');
+          }}
+        >
+          {_}
+        </span>
+      </a>
+    ),
   },
   {
     title: '类型',
@@ -55,7 +77,7 @@ const columns: ProColumns<API.TaskInfo>[] = [
   },
   {
     title: '更新时间',
-    dataIndex: 'taskUpdateInfo',
+    dataIndex: 'updateTime',
     render: (_) => <a>{_}</a>,
   },
   {
@@ -87,13 +109,7 @@ const columns: ProColumns<API.TaskInfo>[] = [
     key: 'option',
     // width: 120,
     valueType: 'option',
-    render: () => [
-      <a key="link">编辑</a>,
-      // <a key="warn">报警</a>,
-      // <a key="more">
-      //   <EllipsisOutlined />
-      // </a>,
-    ],
+    render: () => [<a key="link">编辑</a>],
   },
 ];
 
