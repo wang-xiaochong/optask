@@ -5,6 +5,7 @@ import { LinkOutlined } from '@ant-design/icons';
 import { PageLoading, SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
+import { useEffect, useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
 import { currentUser as queryCurrentUser } from './request/userInfo';
@@ -51,6 +52,14 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+  const [menuItems, setMenuItems] = useState([]);
+  useEffect(() => {
+    console.log('useEffect:', initialState);
+  }, []);
+  const handleClick = () => {
+    console.log('handleClick:', handleClick);
+    setMenuItems(['/welcome']);
+  };
   return {
     actionsRender: () => [
       <TaskOptionsDropdown key="task" />,
@@ -70,7 +79,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       // useEffect(() => {
       //   console.log('useEffect:', menuData);
       // }, []);
-      return menuData.filter((item) => item.name !== 'wiki.wiki-list');
+      // let ret = [].concat(menuData);
+      menuData = menuData.filter((item) => menuItems.indexOf(item.path) !== -1);
+      console.log(menuData);
+      return menuData;
     },
     // waterMarkProps: {
     //   content: initialState?.currentUser?.name,
@@ -115,6 +127,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             <div style={{ width: '20vw', height: '100vh', backgroundColor: 'red' }}></div>
             <div style={{ flex: 1 }}>{children}</div>
           </div> */}
+          <button onClick={handleClick}>click</button>
           {children}
 
           <SettingDrawer
