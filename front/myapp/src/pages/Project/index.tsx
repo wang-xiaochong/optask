@@ -1,163 +1,121 @@
+import { getAllProjectInfo } from '@/request/projectInfo';
 import { ProList } from '@ant-design/pro-components';
-import { Badge, Button } from 'antd';
-import React, { useState } from 'react';
+import { Progress, Tag } from 'antd';
+import { useEffect, useState } from 'react';
+import { pageSize } from '../Components/unitConfig';
 
-const dataSource = [
-  {
-    name: '实验名称1',
-    desc: '系统性的沉淀B端知识体系',
-    content: [
-      {
-        label: '模型数',
-        value: 2903,
-      },
-      {
-        label: '指标数',
-        value: 3720,
-      },
-      {
-        label: '实验状态',
-        value: '成功',
-        status: 'success',
-      },
-    ],
-  },
-  {
-    name: '实验名称2',
-    desc: '系统性的沉淀B端知识体系',
-    content: [
-      {
-        label: '模型数',
-        value: 2904,
-      },
-      {
-        label: '指标数',
-        value: 3721,
-      },
-      {
-        label: '实验状态',
-        value: '成功',
-        status: 'success',
-      },
-    ],
-  },
-  {
-    name: '实验名称3',
-    desc: '系统性的沉淀B端知识体系',
-    content: [
-      {
-        label: '模型数',
-        value: 2905,
-      },
-      {
-        label: '指标数',
-        value: 3722,
-      },
-      {
-        label: '实验状态',
-        value: '成功',
-        status: 'success',
-      },
-    ],
-  },
-];
-
-const renderBadge = (count: number, active = false) => {
-  return (
-    <Badge
-      count={count}
+const data = [
+  '语雀的天空',
+  'Ant Design',
+  '蚂蚁金服体验科技',
+  'TechUI',
+  'TechUI 2.0',
+  'Bigfish',
+  'Umi',
+  'Ant Design Pro',
+].map((item) => ({
+  title: item,
+  subTitle: <Tag color="#5BD8A6">语雀专栏</Tag>,
+  actions: [<a key="run">邀请</a>, <a key="delete">删除</a>],
+  avatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
+  content: (
+    <div
       style={{
-        marginBlockStart: -2,
-        marginInlineStart: 4,
-        color: active ? '#1890FF' : '#999',
-        backgroundColor: active ? '#E6F7FF' : '#eee',
+        flex: 1,
       }}
-    />
-  );
-};
+    >
+      <div
+        style={{
+          width: 200,
+        }}
+      >
+        <div>发布中</div>
+        <Progress percent={80} />
+      </div>
+    </div>
+  ),
+}));
 
 const Project = () => {
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>('tab1');
+  const [cardActionProps, setCardActionProps] = useState<'actions' | 'extra'>('extra');
+  const [project, setProject] = useState<Array<API.ProjectInfo>>([]);
+  const [projectRender, setProjectRender] = useState<any>([]);
+  useEffect(() => {
+    getAllProjectInfo().then((res) => {
+      let ret = [];
+      for (let i = 0; i < res?.data?.length; i++) {
+        const project = res?.data[i] as API.ProjectInfo;
+        if (project?.name) {
+          ret.push(project);
+        }
+      }
+      console.log('project:', ret);
+      setProject(ret);
+    });
+  }, []);
+  useEffect(() => {
+    let ret = project.map((item) => {
+      return {
+        id: item.id,
+        title: item.name,
+        // subTitle: <Tag color="#5BD8A6">语雀专栏</Tag>,
+        actions: [
+          <span key="status"> {item.status}</span>,
+          <a key="run">查看</a>,
+          // <a key="delete">删除</a>,
+        ],
+        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
+        // content: (
+        //   <div
+        //     style={{
+        //       flex: 1,
+        //     }}
+        //   >
+        //     <div
+        //       style={{
+        //         width: 200,
+        //       }}
+        //     >
+        //       <div></div>
+        //     </div>
+        //   </div>
+        // ),
+      };
+    });
+    setProjectRender(ret);
+  }, [project]);
+
   return (
     <ProList<any>
-      rowKey="name"
-      dataSource={dataSource}
+      pagination={{
+        defaultPageSize: pageSize,
+        showSizeChanger: false,
+      }}
+      showActions="hover"
+      rowSelection={{}}
+      grid={{ gutter: 16, column: 2 }}
+      onItem={(record: any) => {
+        return {
+          // onMouseEnter: () => {
+          //   console.log(record);
+          // },
+          onClick: () => {
+            console.log(record);
+          },
+        };
+      }}
       metas={{
-        title: {
-          dataIndex: 'name',
-        },
-        description: {
-          dataIndex: 'desc',
-        },
-        content: {
-          dataIndex: 'content',
-          render: (text) => (
-            <div key="label" style={{ display: 'flex', justifyContent: 'space-around' }}>
-              {(text as any[]).map((t) => (
-                <div key={t.label}>
-                  <div style={{ color: '#00000073' }}>{t.label}</div>
-                  <div style={{ color: '#000000D9' }}>
-                    {t.status === 'success' && (
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          width: 8,
-                          height: 8,
-                          borderRadius: '50%',
-                          backgroundColor: '#52c41a',
-                          marginInlineEnd: 8,
-                        }}
-                      />
-                    )}
-                    {t.value}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ),
-        },
+        title: {},
+        subTitle: {},
+        type: {},
+        avatar: {},
+        content: {},
         actions: {
-          render: (text, row) => [
-            <a href={row.html_url} target="_blank" rel="noopener noreferrer" key="link">
-              编辑
-            </a>,
-            <a href={row.html_url} target="_blank" rel="noopener noreferrer" key="warning">
-              复制
-            </a>,
-            <a href={row.html_url} target="_blank" rel="noopener noreferrer" key="view">
-              删除
-            </a>,
-          ],
+          cardActionProps,
         },
       }}
-      toolbar={{
-        menu: {
-          activeKey,
-          items: [
-            {
-              key: 'tab1',
-              label: <span>全部实验室{renderBadge(99, activeKey === 'tab1')}</span>,
-            },
-            {
-              key: 'tab2',
-              label: <span>我创建的实验室{renderBadge(32, activeKey === 'tab2')}</span>,
-            },
-          ],
-          onChange(key) {
-            setActiveKey(key);
-          },
-        },
-        search: {
-          onSearch: (value: string) => {
-            alert(value);
-          },
-        },
-        actions: [
-          <Button type="primary" key="primary">
-            新建实验
-          </Button>,
-        ],
-      }}
+      headerTitle="项目列表"
+      dataSource={projectRender}
     />
   );
 };

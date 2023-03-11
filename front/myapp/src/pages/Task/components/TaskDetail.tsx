@@ -8,11 +8,15 @@ const TaskDetail = () => {
   const [plain, setPlain] = useState<boolean>(false);
   const getID = () => {
     const arr = location.pathname.split('/');
+    if (arr.length === 0) return 0;
     return arr[arr.length - 1];
   };
   const taskInfoID = getID();
   useEffect(() => {
-    getTaskInfoByID(taskInfoID).then((res) => {});
+    getTaskInfoByID(taskInfoID).then((res:{data:API.TaskInfo}) => {
+      console.log(res);
+      
+    });
     console.log(taskInfoID);
   }, []);
 

@@ -24,7 +24,7 @@ import (
 // 	return key,value
 // }
 
-func HandleSQL(rows *sql.Rows) []interface{} {
+func HandleSQL(rows *sql.Rows) []map[string]interface{} {
 	//返回所有列
 	cols, _ := rows.Columns()
 	//这里表示一行所有列的值，用[]byte表示
@@ -35,7 +35,7 @@ func HandleSQL(rows *sql.Rows) []interface{} {
 	for k := range vals {
 		scans[k] = &vals[k]
 	}
-	var result []interface{}
+	var result []map[string]interface{}
 	for rows.Next() {
 		//填充数据
 		rows.Scan(scans...)
@@ -88,7 +88,7 @@ func HandleSQL(rows *sql.Rows) []interface{} {
 			fmt.Println(err)
 		}
 		// result = append(result, string(str))
-		var ret interface{}
+		var ret map[string]interface{}
 		err = json.Unmarshal([]byte(str), &ret)
 		if err != nil {
 			fmt.Println(err)
@@ -99,13 +99,13 @@ func HandleSQL(rows *sql.Rows) []interface{} {
 	return result
 }
 
-func GetAll(collection string) []interface{} {
+func GetAll(collection string) []map[string]interface{} {
 	ret := Retrieve(collection, "id", "")
 	return ret
 }
 
 // Retrieve 单字段模糊搜索
-func Retrieve(collection string, searchKey string, value string) []interface{} {
+func Retrieve(collection string, searchKey string, value string) []map[string]interface{} {
 	sqlStr := "select * from " + collection + " where " + searchKey + " like ?;"
 	//查询数据，取所有字段
 	rows, _ := database.MysqlDB.Query(sqlStr, "%"+value+"%")
@@ -114,7 +114,7 @@ func Retrieve(collection string, searchKey string, value string) []interface{} {
 }
 
 // Find 单字段精确搜索
-func Find(collection string, searchKey string, value interface{}) []interface{} {
+func Find(collection string, searchKey string, value interface{}) []map[string]interface{} {
 	sqlStr := "select * from " + collection + " where " + searchKey + " =?;"
 	//查询数据，取所有字段
 	rows, _ := database.MysqlDB.Query(sqlStr, value)

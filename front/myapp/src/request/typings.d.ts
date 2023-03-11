@@ -1,12 +1,25 @@
 // @ts-ignore
 /* eslint-disable */
 
+enum type {
+  会议 = '会议',
+}
+enum TaskInfoStatus {
+  新建 = '新建',
+}
+
+enum ProjectInfoStatus {
+  打开 = '打开',
+  关闭 = '关闭',
+  暂停中 = '暂停中',
+}
+
 declare namespace API {
   type TaskInfo = {
     id?: number;
     name?: string;
-    type?: string;
-    status?: string;
+    type?: type;
+    status?: TaskInfoStatus;
     leval?: string;
     createdBy?: string;
     createdTime?: Date;
@@ -26,6 +39,7 @@ declare namespace API {
     id?: number;
     name?: string;
     parent?: number;
+    status?: ProjectInfoStatus;
   };
 
   // type CurrentUser = {

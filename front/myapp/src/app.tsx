@@ -1,8 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { Question } from '@/components/RightContent';
 import { TaskOptionsDropdown } from '@/components/RightContent/TaskOptions';
 import { LinkOutlined } from '@ant-design/icons';
-import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { SettingDrawer } from '@ant-design/pro-components';
+import { PageLoading, SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
@@ -64,7 +64,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
+
     menuDataRender: (menuData) => {
+      // const [menuItems, setMenuItems] = useState();
+      // useEffect(() => {
+      //   console.log('useEffect:', menuData);
+      // }, []);
       return menuData.filter((item) => item.name !== 'wiki.wiki-list');
     },
     // waterMarkProps: {
@@ -78,26 +83,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         history.push(loginPath);
       }
     },
-    // layoutBgImgList: [
-    //   {
-    //     src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
-    //     left: 85,
-    //     bottom: 100,
-    //     height: '303px',
-    //   },
-    //   {
-    //     src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
-    //     bottom: -68,
-    //     right: -45,
-    //     height: '303px',
-    //   },
-    //   {
-    //     src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
-    //     bottom: 0,
-    //     left: 0,
-    //     width: '331px',
-    //   },
-    // ],
     links: isDev
       ? [
           <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
@@ -107,14 +92,31 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         ]
       : [],
     menuHeaderRender: undefined,
+
+    // menuRender: (children) => {
+    //   console.log('children:', children);
+    //   // return <>{children}</>;
+    // },
+    // headerRender: false, //隐藏顶部蓝，使用自定义
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
     childrenRender: (children) => {
-      // if (initialState?.loading) return <PageLoading />;
+      if (initialState?.loading) return <PageLoading />;
+
       return (
         <>
+          {/* <Affix>
+            <div
+              style={{ height: '60px', width: '100vw', backgroundColor: 'rgba(0, 0, 0, .1)' }}
+            ></div>
+          </Affix> */}
+          {/* <div style={{ display: 'flex' }}>
+            <div style={{ width: '20vw', height: '100vh', backgroundColor: 'red' }}></div>
+            <div style={{ flex: 1 }}>{children}</div>
+          </div> */}
           {children}
+
           <SettingDrawer
             disableUrlParams
             enableDarkTheme
@@ -131,6 +133,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
 
     ...initialState?.settings,
+    // fixSiderbar: false,
   };
 };
 
@@ -139,15 +142,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
  * @doc https://umijs.org/docs/max/request#配置
  */
-// export const request: RequestConfig =
-//   REACT_APP_ENV === 'development' || REACT_APP_ENV === 'production'
-//     ? {
-//         ...errorConfig,
-//         baseURL: REACT_APP_BASEURL,
-//       }
-//     : {
-//         ...errorConfig,
-//       };
 export const request: RequestConfig = {
   ...errorConfig,
   baseURL: REACT_APP_BASEURL,

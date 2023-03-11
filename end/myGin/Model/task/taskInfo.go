@@ -30,22 +30,7 @@ type TaskInfo struct {
 	Parent         *int       `json:"parent"   form:"parent" `                 //父级任务
 }
 
-// // Login 模型
-// type Login struct {
-// 	Account  *string `  form:"account" json:"account"  `
-// 	Password *string `  form:"password" json:"password" `
-// }
-
-// func (l *Login) Login(db *sql.DB) (id int, err error) {
-// 	row := db.QueryRow("select id from userInfo where account=?&&password=?", *&l.Account, *l.Password)
-// 	err = row.Scan(&id)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	return id, err
-// }
-
-func (t *TaskInfo) GetAll() []interface{} {
+func (t *TaskInfo) GetAll() []map[string]interface{} {
 	// ret := curd.GetAll("taskInfo")
 	// return ret
 
@@ -83,14 +68,56 @@ func (t *TaskInfo) GetAll() []interface{} {
 	return ret
 }
 
-func (t *TaskInfo) GetTasksByCreatedBy() []interface{} {
+func (t *TaskInfo) GetTasksByCreatedBy() []map[string]interface{} {
 	result := curd.Find("taskInfo", "createdBy", 1)
 	return result
 }
 
+func getTaskUpdateInfo(id interface{}) interface{} {
+	// ret := 1
+	var sqlStr string
+	sqlStr = "select * from taskUpdateInfo where id=?"
+	rows, err := database.MysqlDB.Query(sqlStr, id)
+	if err != nil {
+		fmt.Println(err)
+	}
+	ret := curd.HandleSQL(rows)
+	if ret[0]["taskUpdateInfo"] != nil {
+		ret[0]["taskUpdateInfo"] = getTaskUpdateInfo(ret[0]["taskUpdateInfo"])
+	}
+
+	return ret[0]
+}
+
 func (t *TaskInfo) GetTaskByID(id string) interface{} {
-	result := curd.Find("taskInfo", "id", id)
-	return result[0]
+	// result := curd.Find("taskInfo", "id", id)
+	// return result[0]
+
+	sqlStr := "select t.*,p.name as project,u.name as createdBy from taskInfo as t,projectInfo as p,userInfo as u where t.id=? and t.project=p.id and t.createdBy=u.id"
+	//查询数据，取所有字段
+	rows, err := database.MysqlDB.Query(sqlStr, id)
+	if err != nil {
+		fmt.Println(err)
+	}
+	ret := curd.HandleSQL(rows)
+
+	// 查找appoint
+	sqlStr2 := "select u.name as appoint from userInfo as u where u.id=?"
+	rows2, err := database.MysqlDB.Query(sqlStr2, ret[0]["appoint"])
+	if err != nil {
+		fmt.Println(err)
+	}
+	ret2 := curd.HandleSQL(rows2)
+	ret[0]["appoint"] = ret2[0]["appoint"]
+
+	if ret[0]["taskUpdateInfo"] != nil {
+		ret[0]["taskUpdateInfo"] = getTaskUpdateInfo(ret[0]["taskUpdateInfo"])
+	}
+
+	// fmt.Println("ret", ret)
+	// fmt.Println("ret2", ret2)
+
+	return ret[0]
 }
 
 // func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {

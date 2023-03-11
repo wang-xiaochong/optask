@@ -1,3 +1,8 @@
+/**
+ * 向返回值为数组的函数中添加key
+ * @param fn
+ * @returns
+ */
 const addKeyToFnDataArray = async (fn: () => any) => {
   const ret = await fn();
   let data = ret.data;
