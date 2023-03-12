@@ -1,24 +1,13 @@
 // @ts-ignore
 /* eslint-disable */
 
-enum type {
-  会议 = '会议',
-}
-enum TaskInfoStatus {
-  新建 = '新建',
-}
-
-enum ProjectInfoStatus {
-  打开 = '打开',
-  关闭 = '关闭',
-  暂停中 = '暂停中',
-}
+import { ProjectInfoStatus, RouterInfoType, TaskInfoStatus, TaskInfoType } from './enum';
 
 declare namespace API {
   type TaskInfo = {
     id?: number;
     name?: string;
-    type?: type;
+    type?: TaskInfoType;
     status?: TaskInfoStatus;
     leval?: string;
     createdBy?: string;
@@ -40,6 +29,15 @@ declare namespace API {
     name?: string;
     parent?: number;
     status?: ProjectInfoStatus;
+  };
+
+  type RouterInfo = {
+    id?: number;
+    name?: string;
+    component?: string;
+    path?: string;
+    type?: RouterInfoType;
+    desc?: string;
   };
 
   // type CurrentUser = {

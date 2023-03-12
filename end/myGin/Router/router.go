@@ -3,6 +3,7 @@ package router
 import (
 	controller "Example/Controller"
 	projectInfo "Example/Controller/projectInfo"
+	routerInfo "Example/Controller/routerInfo"
 	taskInfo "Example/Controller/taskInfo"
 	userInfo "Example/Controller/userInfo"
 	utils "Example/Utils"
@@ -42,6 +43,11 @@ func InitRouter(e *gin.Engine) {
 	project := pre.Group("/project")
 	{
 		project.GET("/getAllProjectInfo", projectInfo.GetAllProjects)
+	}
+
+	myRouter := pre.Group("/router")
+	{
+		myRouter.GET("/getAllRouterInfo", routerInfo.GetAllRouters)
 	}
 
 	person := pre.Group("/person")

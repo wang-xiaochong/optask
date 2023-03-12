@@ -5,9 +5,14 @@ import { LinkOutlined } from '@ant-design/icons';
 import { PageLoading, SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
+import { Select } from 'antd';
 import { useEffect, useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
+import { ProjectInfoStatus, RouterInfoType } from './request/enum';
+import { getAllProjectInfo } from './request/projectInfo';
+import { getAllRouterInfo } from './request/routerInfo';
+import { API } from './request/typings';
 import { currentUser as queryCurrentUser } from './request/userInfo';
 import { errorConfig } from './requestErrorConfig';
 const isDev = process.env.NODE_ENV === 'development';
@@ -52,13 +57,49 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
-  const [menuItems, setMenuItems] = useState([]);
+  type projectRender = {
+    value?: string;
+    label?: string;
+    disabled?: boolean;
+  };
+  const [menuItems, setMenuItems] = useState<Array<API.RouterInfo>>([]);
+  const [isShowSide, setIsShowSide] = useState<boolean>(false);
+  const [projects, setProjects] = useState<Array<projectRender>>([]);
+  const [menuType, setMenuType] = useState<RouterInfoType>(RouterInfoType.project);
   useEffect(() => {
-    console.log('useEffect:', initialState);
+    // console.log('useEffect:', initialState);
+    getAllRouterInfo().then((res) => {
+      // console.log('res:', res);
+      let data = res?.data;
+      let ret: Array<API.RouterInfo> = [];
+      if (data) {
+        // ret = data.reduce((prev, current) => {
+        //   return prev.concat(current?.path);
+        // }, []);
+        ret = data;
+        setMenuItems(ret);
+      }
+      // setMenuItems(ret);
+    });
+    getAllProjectInfo().then((res) => {
+      let data = res?.data;
+      let ret: Array<projectRender> = [];
+      if (data) {
+        ret = data.reduce((prev, current) => {
+          return prev.concat({
+            value: current?.id,
+            label: current?.name,
+            disabled: current?.status === ProjectInfoStatus.关闭,
+          } as projectRender);
+        }, ret);
+        setProjects(ret);
+      }
+    });
   }, []);
   const handleClick = () => {
-    console.log('handleClick:', handleClick);
-    setMenuItems(['/welcome']);
+    // console.log('handleClick:', handleClick);
+    // setMenuItems(['/welcome']);
+    setIsShowSide(true);
   };
   return {
     actionsRender: () => [
@@ -70,19 +111,49 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
-        return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
+        const handleClick = () => {
+          getAllRouterInfo().then((res) => {
+            // console.log('res:', res);
+            let data = res?.data as Array<API.RouterInfo>;
+            let ret: Array<API.RouterInfo> = [];
+            if (data) {
+              ret = data.reduce((prev, current) => {
+                return current.type === RouterInfoType.user ? prev.concat(current) : prev;
+              }, []);
+              // ret = data;
+              setMenuItems(ret);
+              setMenuType(RouterInfoType.project);
+              setIsShowSide(true);
+            }
+            // setMenuItems(ret);
+          });
+        };
+        return (
+          <span onClick={handleClick}>
+            <AvatarDropdown>{avatarChildren}</AvatarDropdown>
+          </span>
+        );
       },
     },
 
-    menuDataRender: (menuData) => {
-      // const [menuItems, setMenuItems] = useState();
-      // useEffect(() => {
-      //   console.log('useEffect:', menuData);
-      // }, []);
-      // let ret = [].concat(menuData);
-      menuData = menuData.filter((item) => menuItems.indexOf(item.path) !== -1);
-      console.log(menuData);
-      return menuData;
+    menuDataRender: (allMenuItem) => {
+      let allMenuItemFilter = allMenuItem.filter((item) => {
+        let hasPath = false;
+        for (let i = 0; i < menuItems.length; i++) {
+          if (menuItems[i].path === item.path) {
+            hasPath = true;
+            break;
+          }
+        }
+        return hasPath;
+      });
+      // console.log(allMenuItemFilter);
+      return allMenuItemFilter;
+    },
+    menuRender: (props, defaultDom) => {
+      // console.log('props:', props, defaultDom);
+      // return props.collapsed ? null : defaultDom;
+      return isShowSide && defaultDom;
     },
     // waterMarkProps: {
     //   content: initialState?.currentUser?.name,
@@ -103,8 +174,61 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
           </Link>,
         ]
       : [],
+    // 侧边栏菜单头部
     menuHeaderRender: undefined,
+    // 顶部菜单栏中间内容
+    headerContentRender: (props) => {
+      // console.log('headerContentRender:', props);
+      return (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <img src={props.logo?.toString()} alt="logo" width={25} />
+          <span>{props.title}</span>
+        </div>
+      );
+    },
+    // 顶部菜单栏左侧
+    headerTitleRender(logo, title, props) {
+      const handleChange = (value) => {
+        getAllRouterInfo().then((res) => {
+          // console.log('res:', res);
+          let data = res?.data as Array<API.RouterInfo>;
+          let ret: Array<API.RouterInfo> = [];
+          if (data) {
+            ret = data.reduce((prev, current) => {
+              return current.type === RouterInfoType.project ? prev.concat(current) : prev;
+            }, []);
+            // ret = data;
+            setMenuItems(ret);
+            setMenuType(RouterInfoType.project);
+            setIsShowSide(true);
+          }
+          // setMenuItems(ret);
+        });
+        console.log(value);
+      };
+      return (
+        <>
+          <Select
+            defaultValue="请选择项目"
+            bordered={false}
+            showArrow={false}
+            style={{ minWidth: 200 }}
+            onChange={handleChange}
+            options={
+              projects
+              // [
+              // { value: 'disabled', label: 'Disabled', disabled: true },
+              // ]
+            }
+          />
+        </>
+      );
+    },
+    // headerRender(props, defaultDom) {
+    //   console.log('props:', props);
 
+    //   return defaultDom;
+    // },
     // menuRender: (children) => {
     //   console.log('children:', children);
     //   // return <>{children}</>;
@@ -127,7 +251,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             <div style={{ width: '20vw', height: '100vh', backgroundColor: 'red' }}></div>
             <div style={{ flex: 1 }}>{children}</div>
           </div> */}
-          <button onClick={handleClick}>click</button>
+          <button type="submit" onClick={handleClick}>
+            click
+          </button>
           {children}
 
           <SettingDrawer
