@@ -25,6 +25,7 @@ export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
   loading?: boolean;
+  menuType?: RouterInfoType;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
@@ -65,7 +66,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   const [menuItems, setMenuItems] = useState<Array<API.RouterInfo>>([]);
   const [isShowSide, setIsShowSide] = useState<boolean>(false);
   const [projects, setProjects] = useState<Array<projectRender>>([]);
-  // const [menuType, setMenuType] = useState<RouterInfoType>(RouterInfoType.task);
+  // const [menuType, setMenuType] = useState<RouterInfoType>();
   const getRouterInfoByMenuType = (menuType?: RouterInfoType) => {
     let ret = getAllRouterInfo().then((res) => {
       // console.log('res:', res);
@@ -75,11 +76,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         ret = data.reduce((prev, current) => {
           return current.type === menuType ? prev.concat(current) : prev;
         }, []);
-        console.log('ret:', ret);
+        // console.log('ret:', ret);
         if (ret.length !== 0) {
           setMenuItems(ret);
           setIsShowSide(true);
+          // setMenuType(menuType);
+          if (menuType) sessionStorage.setItem('menuType', menuType?.toString());
           const defaultPath = ret[0].path || '/welcome';
+          // if (menuType !== RouterInfoType.user)
           history.push(defaultPath);
         }
       }
@@ -88,8 +92,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     return ret;
   };
   useEffect(() => {
-    // console.log('useEffect:', initialState);
-    getRouterInfoByMenuType(RouterInfoType.home);
+    // console.log('history.location', history.location.pathname);
+    if (history.location.pathname === '/welcome') {
+      getRouterInfoByMenuType(RouterInfoType.home);
+    } else {
+      let menuType = sessionStorage.getItem('menuType');
+      getRouterInfoByMenuType(menuType as RouterInfoType);
+    }
     getAllProjectInfo().then((res) => {
       let data = res?.data;
       let ret: Array<projectRender> = [];
@@ -106,6 +115,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     });
   }, []);
   return {
+    // menutype: menuType,
     actionsRender: () => [
       <TaskOptionsDropdown key="task" getRouterInfoByMenuType={getRouterInfoByMenuType} />,
       <Question key="doc" />,
@@ -141,8 +151,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       return allMenuItemFilter;
     },
     menuRender: (props, defaultDom) => {
-      // console.log('props:', props, defaultDom);
-      // return props.collapsed ? null : defaultDom;
       return isShowSide && defaultDom;
     },
     // waterMarkProps: {

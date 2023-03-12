@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /**
  * 向返回值为数组的函数中添加key
  * @param fn
  * @returns
  */
-const addKeyToFnDataArray = async (fn: () => any) => {
+export const addKeyToFnDataArray = async (fn: () => any) => {
   const ret = await fn();
   let data = ret.data;
   for (let i = 0; i < data.length; i++) {
@@ -12,4 +13,12 @@ const addKeyToFnDataArray = async (fn: () => any) => {
   return ret;
 };
 
-export { addKeyToFnDataArray };
+export const sleep = (wait: number) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, wait);
+  });
+};
+
+// export { addKeyToFnDataArray };

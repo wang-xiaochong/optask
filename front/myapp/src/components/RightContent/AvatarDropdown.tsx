@@ -59,6 +59,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
 
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
+      event.domEvent.stopPropagation();
       const { key } = event;
       if (key === 'logout') {
         flushSync(() => {
