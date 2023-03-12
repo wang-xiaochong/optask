@@ -24,7 +24,8 @@ export default [
   },
   {
     path: '/welcome',
-    name: 'welcome',
+    // name: 'welcome',
+    name: '欢迎',
     icon: 'smile',
     component: './Welcome',
   },
@@ -52,7 +53,8 @@ export default [
   //   component: './TableList',
   // },
   {
-    name: 'project.project-list',
+    // name: 'project.project-list',
+    name: '项目列表',
     icon: 'table',
     path: '/project/list',
     component: './Project',
@@ -67,7 +69,8 @@ export default [
     // layout: false,
   },
   {
-    name: 'task.task-list',
+    // name: 'task.task-list',
+    name: '任务列表',
     icon: 'table',
     path: '/task/list',
     component: './Task',
@@ -82,7 +85,8 @@ export default [
     // layout: false,
   },
   {
-    name: 'wiki.wiki-list',
+    // name: 'wiki.wiki-list',
+    name: 'wiki',
     icon: 'table',
     path: '/wiki/list',
     component: './Wiki',

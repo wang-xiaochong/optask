@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { Question } from '@/components/RightContent';
 import { TaskOptionsDropdown } from '@/components/RightContent/TaskOptions';
 import { LinkOutlined } from '@ant-design/icons';
 import { PageLoading, Settings as LayoutSettings } from '@ant-design/pro-components';
@@ -117,7 +116,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // menutype: menuType,
     actionsRender: () => [
       <TaskOptionsDropdown key="task" getRouterInfoByMenuType={getRouterInfoByMenuType} />,
-      <Question key="doc" />,
+      // <Question key="doc" />,
       // <SelectLang key="SelectLang" />
     ],
     avatarProps: {
