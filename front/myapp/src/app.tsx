@@ -2,7 +2,7 @@
 import { Question } from '@/components/RightContent';
 import { TaskOptionsDropdown } from '@/components/RightContent/TaskOptions';
 import { LinkOutlined } from '@ant-design/icons';
-import { PageLoading, SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-components';
+import { PageLoading, Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import { Select } from 'antd';
@@ -83,7 +83,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
           // setMenuType(menuType);
           if (menuType) sessionStorage.setItem('menuType', menuType?.toString());
           const defaultPath = ret[0].path || '/welcome';
-          // if (menuType !== RouterInfoType.user)
           history.push(defaultPath);
         }
       }
@@ -216,7 +215,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       return (
         <>
           {children}
-          <SettingDrawer
+          {/* <SettingDrawer
             disableUrlParams
             enableDarkTheme
             settings={initialState?.settings}
@@ -226,7 +225,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                 settings,
               }));
             }}
-          />
+          /> */}
         </>
       );
     },

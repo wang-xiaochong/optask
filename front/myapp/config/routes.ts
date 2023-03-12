@@ -59,6 +59,14 @@ export default [
     // layout: false,
   },
   {
+    // name: 'task.task-list',
+    icon: 'table',
+    path: '/project/list/:id',
+    component: './Project/components/ProjectDetail.tsx',
+    hideInMenu: true,
+    // layout: false,
+  },
+  {
     name: 'task.task-list',
     icon: 'table',
     path: '/task/list',
