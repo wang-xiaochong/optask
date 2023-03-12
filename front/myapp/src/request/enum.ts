@@ -16,4 +16,5 @@ export enum RouterInfoType {
   wiki = 'wiki',
   task = 'task',
   user = 'user',
+  home = 'home'
 }

@@ -1,40 +1,40 @@
 import { getAllProjectInfo } from '@/request/projectInfo';
 import { ProList } from '@ant-design/pro-components';
-import { Progress, Tag } from 'antd';
+// import { Progress, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { pageSize } from '../Components/unitConfig';
 
-const data = [
-  '语雀的天空',
-  'Ant Design',
-  '蚂蚁金服体验科技',
-  'TechUI',
-  'TechUI 2.0',
-  'Bigfish',
-  'Umi',
-  'Ant Design Pro',
-].map((item) => ({
-  title: item,
-  subTitle: <Tag color="#5BD8A6">语雀专栏</Tag>,
-  actions: [<a key="run">邀请</a>, <a key="delete">删除</a>],
-  avatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
-  content: (
-    <div
-      style={{
-        flex: 1,
-      }}
-    >
-      <div
-        style={{
-          width: 200,
-        }}
-      >
-        <div>发布中</div>
-        <Progress percent={80} />
-      </div>
-    </div>
-  ),
-}));
+// const data = [
+//   '语雀的天空',
+//   'Ant Design',
+//   '蚂蚁金服体验科技',
+//   'TechUI',
+//   'TechUI 2.0',
+//   'Bigfish',
+//   'Umi',
+//   'Ant Design Pro',
+// ].map((item) => ({
+//   title: item,
+//   subTitle: <Tag color="#5BD8A6">语雀专栏</Tag>,
+//   actions: [<a key="run">邀请</a>, <a key="delete">删除</a>],
+//   avatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
+//   content: (
+//     <div
+//       style={{
+//         flex: 1,
+//       }}
+//     >
+//       <div
+//         style={{
+//           width: 200,
+//         }}
+//       >
+//         <div>发布中</div>
+//         <Progress percent={80} />
+//       </div>
+//     </div>
+//   ),
+// }));
 
 const Project = () => {
   const [cardActionProps, setCardActionProps] = useState<'actions' | 'extra'>('extra');
@@ -49,7 +49,7 @@ const Project = () => {
           ret.push(project);
         }
       }
-      console.log('project:', ret);
+      // console.log('project:', ret);
       setProject(ret);
     });
   }, []);

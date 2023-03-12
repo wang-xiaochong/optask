@@ -1,8 +1,10 @@
+import { RouterInfoType } from '@/request/enum';
 import { allIcons, getIcons } from '@/utils/icons';
 import { Dropdown, MenuProps } from 'antd';
 import { MenuInfo } from 'rc-menu/lib/interface';
 
-export const TaskOptionsDropdown = () => {
+export const TaskOptionsDropdown = (props: { getRouterInfoByMenuType: any }) => {
+  const { getRouterInfoByMenuType } = props;
   const items: MenuProps['items'] = [
     {
       key: '1',
@@ -22,8 +24,10 @@ export const TaskOptionsDropdown = () => {
     console.log(key);
     switch (key) {
       case '1':
+        getRouterInfoByMenuType(RouterInfoType.project);
         break;
       case '2':
+        getRouterInfoByMenuType(RouterInfoType.task);
         break;
 
       default:

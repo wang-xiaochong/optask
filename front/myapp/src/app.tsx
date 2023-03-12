@@ -65,22 +65,31 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   const [menuItems, setMenuItems] = useState<Array<API.RouterInfo>>([]);
   const [isShowSide, setIsShowSide] = useState<boolean>(false);
   const [projects, setProjects] = useState<Array<projectRender>>([]);
-  const [menuType, setMenuType] = useState<RouterInfoType>(RouterInfoType.project);
+  // const [menuType, setMenuType] = useState<RouterInfoType>(RouterInfoType.task);
+  const getRouterInfoByMenuType = (menuType?: RouterInfoType) => {
+    let ret = getAllRouterInfo().then((res) => {
+      // console.log('res:', res);
+      let data = res?.data as Array<API.RouterInfo>;
+      let ret: Array<API.RouterInfo> = [];
+      if (data.length !== 0) {
+        ret = data.reduce((prev, current) => {
+          return current.type === menuType ? prev.concat(current) : prev;
+        }, []);
+        console.log('ret:', ret);
+        if (ret.length !== 0) {
+          setMenuItems(ret);
+          setIsShowSide(true);
+          const defaultPath = ret[0].path || '/welcome';
+          history.push(defaultPath);
+        }
+      }
+      return ret;
+    });
+    return ret;
+  };
   useEffect(() => {
     // console.log('useEffect:', initialState);
-    getAllRouterInfo().then((res) => {
-      // console.log('res:', res);
-      let data = res?.data;
-      let ret: Array<API.RouterInfo> = [];
-      if (data) {
-        // ret = data.reduce((prev, current) => {
-        //   return prev.concat(current?.path);
-        // }, []);
-        ret = data;
-        setMenuItems(ret);
-      }
-      // setMenuItems(ret);
-    });
+    getRouterInfoByMenuType(RouterInfoType.home);
     getAllProjectInfo().then((res) => {
       let data = res?.data;
       let ret: Array<projectRender> = [];
@@ -96,14 +105,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       }
     });
   }, []);
-  const handleClick = () => {
-    // console.log('handleClick:', handleClick);
-    // setMenuItems(['/welcome']);
-    setIsShowSide(true);
-  };
   return {
     actionsRender: () => [
-      <TaskOptionsDropdown key="task" />,
+      <TaskOptionsDropdown key="task" getRouterInfoByMenuType={getRouterInfoByMenuType} />,
       <Question key="doc" />,
       // <SelectLang key="SelectLang" />
     ],
@@ -112,21 +116,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         const handleClick = () => {
-          getAllRouterInfo().then((res) => {
-            // console.log('res:', res);
-            let data = res?.data as Array<API.RouterInfo>;
-            let ret: Array<API.RouterInfo> = [];
-            if (data) {
-              ret = data.reduce((prev, current) => {
-                return current.type === RouterInfoType.user ? prev.concat(current) : prev;
-              }, []);
-              // ret = data;
-              setMenuItems(ret);
-              setMenuType(RouterInfoType.project);
-              setIsShowSide(true);
-            }
-            // setMenuItems(ret);
-          });
+          getRouterInfoByMenuType(RouterInfoType.user);
         };
         return (
           <span onClick={handleClick}>
@@ -188,22 +178,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     // 顶部菜单栏左侧
     headerTitleRender(logo, title, props) {
-      const handleChange = (value) => {
-        getAllRouterInfo().then((res) => {
-          // console.log('res:', res);
-          let data = res?.data as Array<API.RouterInfo>;
-          let ret: Array<API.RouterInfo> = [];
-          if (data) {
-            ret = data.reduce((prev, current) => {
-              return current.type === RouterInfoType.project ? prev.concat(current) : prev;
-            }, []);
-            // ret = data;
-            setMenuItems(ret);
-            setMenuType(RouterInfoType.project);
-            setIsShowSide(true);
-          }
-          // setMenuItems(ret);
-        });
+      const handleChange = (value: number | string) => {
+        getRouterInfoByMenuType(RouterInfoType.project);
         console.log(value);
       };
       return (
@@ -224,38 +200,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </>
       );
     },
-    // headerRender(props, defaultDom) {
-    //   console.log('props:', props);
-
-    //   return defaultDom;
-    // },
-    // menuRender: (children) => {
-    //   console.log('children:', children);
-    //   // return <>{children}</>;
-    // },
-    // headerRender: false, //隐藏顶部蓝，使用自定义
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
     childrenRender: (children) => {
       if (initialState?.loading) return <PageLoading />;
-
       return (
         <>
-          {/* <Affix>
-            <div
-              style={{ height: '60px', width: '100vw', backgroundColor: 'rgba(0, 0, 0, .1)' }}
-            ></div>
-          </Affix> */}
-          {/* <div style={{ display: 'flex' }}>
-            <div style={{ width: '20vw', height: '100vh', backgroundColor: 'red' }}></div>
-            <div style={{ flex: 1 }}>{children}</div>
-          </div> */}
-          <button type="submit" onClick={handleClick}>
-            click
-          </button>
           {children}
-
           <SettingDrawer
             disableUrlParams
             enableDarkTheme
