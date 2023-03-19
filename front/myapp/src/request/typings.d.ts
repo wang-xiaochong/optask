@@ -4,7 +4,7 @@
 import { ProjectInfoStatus, RouterInfoType, TaskInfoStatus, TaskInfoType } from './enum';
 
 declare namespace API {
-  export type TaskInfo = {
+  type TaskInfo = {
     id?: number;
     name?: string;
     type?: TaskInfoType;
@@ -24,7 +24,7 @@ declare namespace API {
     parent?: number;
   };
 
-  export type ProjectInfo = {
+  type ProjectInfo = {
     id?: number;
     name?: string;
     parent?: number;

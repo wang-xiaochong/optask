@@ -100,6 +100,18 @@ func GetTaskByID(context *gin.Context) {
 
 }
 
+func GetTaskByProjectID(context *gin.Context) {
+	id := context.Query("id")
+	t := task.TaskInfo{}
+	task := t.GetTaskByProjectID(id)
+	if task != nil {
+		res.Return(context, utils.SUCCESS, task)
+	} else {
+		res.Return(context, utils.ERROR, task)
+	}
+
+}
+
 // func GetUserInfoById(context *gin.Context) {
 // 	// var result gin.H
 // 	id := context.Query("id")

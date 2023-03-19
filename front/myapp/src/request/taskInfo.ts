@@ -27,3 +27,22 @@ export async function getTaskInfoByID(id: number | string, options?: { [key: str
     ...(options || {}),
   });
 }
+
+/** 获取当前的用户 GET /api/currentUser */
+export async function getTaskInfoByProjectID(
+  id: number | string,
+  options?: { [key: string]: any },
+) {
+  if (typeof id == 'number') {
+    id = id.toString();
+  }
+  return request<{
+    data: API.TaskInfo[];
+  }>('/api/task/getTaskInfoByProjectID', {
+    method: 'GET',
+    params: {
+      id: id,
+    },
+    ...(options || {}),
+  });
+}

@@ -24,6 +24,44 @@ declare namespace API {
     phone?: string;
   };
 
+  type TaskInfo = {
+    id?: number;
+    name?: string;
+    type?: TaskInfoType;
+    status?: TaskInfoStatus;
+    leval?: string;
+    createdBy?: string;
+    createdTime?: Date;
+    appoint?: string;
+    project?: string;
+    taskUpdateInfo?: number;
+    updateTime?: Date;
+    estimatedTime?: Date;
+    consumeTime?: Date;
+    leftTime?: Date;
+    detail?: string;
+    date?: Date;
+    parent?: number;
+  };
+
+  type ProjectInfo = {
+    id?: number;
+    name?: string;
+    parent?: number;
+    status?: ProjectInfoStatus;
+    userInfo?: { id: string; name: string; avatar: string }[];
+    desc?: string;
+  };
+
+  type RouterInfo = {
+    id?: number;
+    name?: string;
+    component?: string;
+    path?: string;
+    type?: RouterInfoType;
+    desc?: string;
+  };
+
   type LoginResult = {
     // status?: string;
     // type?: string;

@@ -33,6 +33,7 @@ func InitRouter(e *gin.Engine) {
 		task.GET("/getAllTaskInfo", taskInfo.GetAllTasks)
 		task.GET("/getTasksByCreatedBy", taskInfo.GetTasksByCreatedBy)
 		task.GET("/getTaskInfoByID", taskInfo.GetTaskByID)
+		task.GET("/getTaskInfoByProjectID", taskInfo.GetTaskByProjectID)
 		// myTask.GET("/getAllTaskInfo",con)
 		// person.GET("/person", controller.GetPersonByID)
 		// person.POST("/add", controller.AddPerson)
@@ -42,7 +43,8 @@ func InitRouter(e *gin.Engine) {
 	}
 	project := pre.Group("/project")
 	{
-		project.GET("/getAllProjectInfo", projectInfo.GetAllProjects)
+		project.GET("/getAllProjectInfo", projectInfo.GetAllProjects);
+		project.GET("/getProjectInfoByID", projectInfo.GetProjectByID)
 	}
 
 	myRouter := pre.Group("/router")

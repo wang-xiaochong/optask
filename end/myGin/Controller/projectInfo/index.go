@@ -18,3 +18,15 @@ func GetAllProjects(context *gin.Context) {
 	}
 
 }
+
+func GetProjectByID(context *gin.Context) {
+	id := context.Query("id")
+	p := project.ProjectInfo{}
+	project := p.GetProjectByID(id)
+	if project != nil {
+		res.Return(context, utils.SUCCESS, project)
+	} else {
+		res.Return(context, utils.ERROR, project)
+	}
+
+}

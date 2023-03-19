@@ -50,3 +50,11 @@ export async function getUserInfoById(id: number, options?: { [key: string]: any
     ...(options || {}),
   });
 }
+
+// export async function getUserInfoByProjectId(id: number, options?: { [key: string]: any }) {
+//   return request<API.CurrentUser>(`/api/user/getUserInfoById?id=${id}`, {
+//     method: 'GET',
+//     // data: id,
+//     ...(options || {}),
+//   });
+// }

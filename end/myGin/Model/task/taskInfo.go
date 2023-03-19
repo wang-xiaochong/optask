@@ -73,6 +73,11 @@ func (t *TaskInfo) GetTasksByCreatedBy() []map[string]interface{} {
 	return result
 }
 
+func (t *TaskInfo) GetTaskByProjectID(id string) []map[string]interface{} {
+	result := curd.Find("taskInfo", "project", id)
+	return result
+}
+
 func getTaskUpdateInfo(id interface{}) interface{} {
 	// ret := 1
 	var sqlStr string

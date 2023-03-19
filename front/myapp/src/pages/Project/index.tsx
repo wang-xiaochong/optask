@@ -59,20 +59,22 @@ const Project = () => {
       return {
         id: item.id,
         title: item.name,
+        // userInfo: item?.userInfo,
+        // desc: item?.desc,
         // subTitle: <Tag color="#5BD8A6">语雀专栏</Tag>,
         actions: [
           <span key="status" style={{ width: 120 }}>
             状态:{item.status}
           </span>,
-          <a key="run">
-            <span
-              onClick={() => {
-                history.push(`/project/list/${item?.id}`);
-              }}
-            >
-              查看
-            </span>
-          </a>,
+          // <a key="run">
+          //   <span
+          //     onClick={() => {
+          //       history.push(`/project/list/${item?.id}`);
+          //     }}
+          //   >
+          //     查看
+          //   </span>
+          // </a>,
           // <a key="delete">删除</a>,
         ],
         avatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
@@ -112,6 +114,7 @@ const Project = () => {
           // },
           onClick: () => {
             console.log(record);
+            history.push(`/project/list/${record?.id}`);
           },
         };
       }}
