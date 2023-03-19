@@ -3,12 +3,11 @@ import { getProjectInfoByID } from '@/request/projectInfo';
 import { getTaskInfoByProjectID } from '@/request/taskInfo';
 // import { Bar } from '@ant-design/charts';
 import { Bar } from '@ant-design/plots';
-import { ProCard, ProFieldFCMode } from '@ant-design/pro-components';
-import { Radio, Space, Switch } from 'antd';
+import { ProCard } from '@ant-design/pro-components';
 import { useEffect, useState } from 'react';
 const TaskDetail = () => {
-  const [state, setState] = useState<ProFieldFCMode>('read');
-  const [plain, setPlain] = useState<boolean>(false);
+  // const [state, setState] = useState<ProFieldFCMode>('read');
+  // const [plain, setPlain] = useState<boolean>(false);
   const [projectDetail, setProjectDetail] = useState<API.ProjectInfo>({});
   const [tasksInfo, setTasksInfo] = useState<API.TaskInfo[]>([]);
   const [tasksInfoRender, setTasksInfoRender] = useState<
@@ -67,14 +66,14 @@ const TaskDetail = () => {
   return (
     <ProCard>
       <>
-        <Space>
+        {/* <Space>
           <Radio.Group onChange={(e) => setState(e.target.value as ProFieldFCMode)} value={state}>
             <Radio value="read">只读</Radio>
             <Radio value="edit">编辑</Radio>
           </Radio.Group>
           简约模式
           <Switch checked={plain} onChange={(checked) => setPlain(checked)} />
-        </Space>
+        </Space> */}
         <br />
         <br />
 

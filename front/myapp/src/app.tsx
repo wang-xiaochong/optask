@@ -4,12 +4,10 @@ import { LinkOutlined } from '@ant-design/icons';
 import { PageLoading, Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
-import { Select } from 'antd';
 import { useEffect, useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
-import { ProjectInfoStatus, RouterInfoType } from './request/enum';
-import { getAllProjectInfo } from './request/projectInfo';
+import { RouterInfoType } from './request/enum';
 import { getAllRouterInfo } from './request/routerInfo';
 import { API } from './request/typings';
 import { currentUser as queryCurrentUser } from './request/userInfo';
@@ -97,20 +95,20 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       let menuType = sessionStorage.getItem('menuType');
       getRouterInfoByMenuType(menuType as RouterInfoType);
     }
-    getAllProjectInfo().then((res) => {
-      let data = res?.data;
-      let ret: Array<projectRender> = [];
-      if (data) {
-        ret = data.reduce((prev, current) => {
-          return prev.concat({
-            value: current?.id,
-            label: current?.name,
-            disabled: current?.status === ProjectInfoStatus.关闭,
-          } as projectRender);
-        }, ret);
-        setProjects(ret);
-      }
-    });
+    // getAllProjectInfo().then((res) => {
+    //   let data = res?.data;
+    //   let ret: Array<projectRender> = [];
+    //   if (data) {
+    //     ret = data.reduce((prev, current) => {
+    //       return prev.concat({
+    //         value: current?.id,
+    //         label: current?.name,
+    //         disabled: current?.status === ProjectInfoStatus.关闭,
+    //       } as projectRender);
+    //     }, ret);
+    //     setProjects(ret);
+    //   }
+    // });
   }, []);
   return {
     // menutype: menuType,
@@ -173,39 +171,39 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 侧边栏菜单头部
     menuHeaderRender: undefined,
     // 顶部菜单栏中间内容
-    headerContentRender: (props) => {
-      // console.log('headerContentRender:', props);
-      return (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <img src={props.logo?.toString()} alt="logo" width={25} />
-          <span>{props.title}</span>
-        </div>
-      );
-    },
+    // headerContentRender: (props) => {
+    //   // console.log('headerContentRender:', props);
+    //   return (
+    //     <div style={{ display: 'flex', justifyContent: 'center' }}>
+    //       <img src={props.logo?.toString()} alt="logo" width={25} />
+    //       <span>{props.title}</span>
+    //     </div>
+    //   );
+    // },
     // 顶部菜单栏左侧
-    headerTitleRender(logo, title, props) {
-      const handleChange = (value: number | string) => {
-        getRouterInfoByMenuType(RouterInfoType.project);
-        console.log(value);
-      };
-      return (
-        <>
-          <Select
-            defaultValue="请选择项目"
-            bordered={false}
-            showArrow={false}
-            style={{ minWidth: 200 }}
-            onChange={handleChange}
-            options={
-              projects
-              // [
-              // { value: 'disabled', label: 'Disabled', disabled: true },
-              // ]
-            }
-          />
-        </>
-      );
-    },
+    // headerTitleRender(logo, title, props) {
+    //   const handleChange = (value: number | string) => {
+    //     getRouterInfoByMenuType(RouterInfoType.project);
+    //     console.log(value);
+    //   };
+    //   return (
+    //     <>
+    //       <Select
+    //         defaultValue="请选择项目"
+    //         bordered={false}
+    //         showArrow={false}
+    //         style={{ minWidth: 200 }}
+    //         onChange={handleChange}
+    //         options={
+    //           projects
+    //           // [
+    //           // { value: 'disabled', label: 'Disabled', disabled: true },
+    //           // ]
+    //         }
+    //       />
+    //     </>
+    //   );
+    // },
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
