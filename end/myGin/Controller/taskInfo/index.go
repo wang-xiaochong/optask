@@ -77,16 +77,16 @@ func GetAllTasks(context *gin.Context) {
 	}
 }
 
-func GetTasksByCreatedBy(context *gin.Context) {
-	t := task.TaskInfo{}
-	tasks := t.GetTasksByCreatedBy()
-	if tasks != nil {
-		res.Return(context, utils.SUCCESS, tasks)
-	} else {
-		res.Return(context, utils.ERROR, tasks)
-	}
+// func GetTasksByCreatedBy(context *gin.Context) {
+// 	t := task.TaskInfo{}
+// 	tasks := t.GetTasksByCreatedBy()
+// 	if tasks != nil {
+// 		res.Return(context, utils.SUCCESS, tasks)
+// 	} else {
+// 		res.Return(context, utils.ERROR, tasks)
+// 	}
 
-}
+// }
 
 func GetTaskByID(context *gin.Context) {
 	id := context.Query("id")
@@ -109,7 +109,28 @@ func GetTaskByProjectID(context *gin.Context) {
 	} else {
 		res.Return(context, utils.ERROR, task)
 	}
+}
 
+func GetTasksByCreatedBy(context *gin.Context) {
+	createdBy := context.Query("createdBy")
+	t := task.TaskInfo{}
+	task := t.GetTasksByCreatedBy(createdBy)
+	if task != nil {
+		res.Return(context, utils.SUCCESS, task)
+	} else {
+		res.Return(context, utils.ERROR, task)
+	}
+}
+
+func GetTasksByAppoint(context *gin.Context) {
+	appoint := context.Query("appoint")
+	t := task.TaskInfo{}
+	task := t.GetTasksByAppoint(appoint)
+	if task != nil {
+		res.Return(context, utils.SUCCESS, task)
+	} else {
+		res.Return(context, utils.ERROR, task)
+	}
 }
 
 // func GetUserInfoById(context *gin.Context) {

@@ -58,6 +58,14 @@ export default [
     icon: 'table',
     path: '/project/list',
     component: './Project',
+    // routes: [
+    //   {
+    //     icon: 'table',
+    //     path: '/project/list/:id',
+    //     component: './Project/components/ProjectDetail.tsx',
+    //     hideInMenu: true,
+    //   },
+    // ],
     // layout: false,
   },
   {
@@ -74,6 +82,22 @@ export default [
     icon: 'table',
     path: '/task/list',
     component: './Task',
+    // layout: false,
+  },
+  {
+    // name: 'task.task-list',
+    name: '分配给我',
+    icon: 'table',
+    path: '/task/appointme',
+    component: './Task/components/AppointMe.tsx',
+    // layout: false,
+  },
+  {
+    // name: 'task.task-list',
+    name: '由我创建',
+    icon: 'table',
+    path: '/task/createdbyme',
+    component: './Task/components/CreatedByMe.tsx',
     // layout: false,
   },
   {

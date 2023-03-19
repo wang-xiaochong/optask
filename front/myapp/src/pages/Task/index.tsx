@@ -51,7 +51,7 @@ const TaskProtable = () => {
                 history.push(`/task/list/${record.id}`);
               }}
             >
-              {text}
+              #{1000 + Number(text?.toString())}
             </span>
           </a>
         );

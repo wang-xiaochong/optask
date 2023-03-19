@@ -68,9 +68,56 @@ func (t *TaskInfo) GetAll() []map[string]interface{} {
 	return ret
 }
 
-func (t *TaskInfo) GetTasksByCreatedBy() []map[string]interface{} {
-	result := curd.Find("taskInfo", "createdBy", 1)
-	return result
+func (t *TaskInfo) GetTasksByCreatedBy(createdBy string) []map[string]interface{} {
+	sqlStr := "select t.*,p.name as project,u.name as createdBy from taskInfo as t,projectInfo as p,userInfo as u where t.createdBy=? and t.project=p.id and t.createdBy=u.id"
+	//查询数据，取所有字段
+	rows, err := database.MysqlDB.Query(sqlStr, createdBy)
+	if err != nil {
+		fmt.Println(err)
+	}
+	ret := curd.HandleSQL(rows)
+
+	for i := 0; i < len(ret); i++ {
+		// fmt.Println("ret:", ret[i])
+		sqlStr2 := "select u.name as appoint from userInfo as u where u.id=?"
+		rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["appoint"])
+		if err != nil {
+			fmt.Println(err)
+		}
+		ret2 := curd.HandleSQL(rows2)
+		ret[i]["appoint"] = ret2[0]["appoint"]
+		// fmt.Println("ret2:", ret[i])
+		if ret[i]["taskUpdateInfo"] != nil {
+			ret[i]["taskUpdateInfo"] = getTaskUpdateInfo(ret[i]["taskUpdateInfo"])
+		}
+	}
+	return ret
+}
+
+func (t *TaskInfo) GetTasksByAppoint(appoint string) []map[string]interface{} {
+	sqlStr := "select t.*,p.name as project,u.name as appoint from taskInfo as t,projectInfo as p,userInfo as u where t.appoint=? and t.project=p.id and t.appoint=u.id"
+	//查询数据，取所有字段
+	rows, err := database.MysqlDB.Query(sqlStr, appoint)
+	if err != nil {
+		fmt.Println(err)
+	}
+	ret := curd.HandleSQL(rows)
+	for i := 0; i < len(ret); i++ {
+		// fmt.Println("ret:", ret[i])
+		sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"
+		rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["createdBy"])
+		if err != nil {
+			fmt.Println(err)
+		}
+		ret2 := curd.HandleSQL(rows2)
+		ret[i]["createdBy"] = ret2[0]["createdBy"]
+		// fmt.Println("ret2:", ret[i])
+		if ret[i]["taskUpdateInfo"] != nil {
+			ret[i]["taskUpdateInfo"] = getTaskUpdateInfo(ret[i]["taskUpdateInfo"])
+		}
+	}
+
+	return ret
 }
 
 func (t *TaskInfo) GetTaskByProjectID(id string) []map[string]interface{} {

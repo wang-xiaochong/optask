@@ -24,7 +24,7 @@ const TaskDetail = () => {
       // console.log('对应项目任务列表：', res);
       setTasksInfo(res?.data);
     });
-    console.log('项目ID: ', projectID);
+    // console.log('项目ID: ', projectID);
     getProjectInfoByID(projectID).then((res: { data: API.ProjectInfo }) => {
       // console.log('项目详情：', res);
       setProjectDetail(res.data);
@@ -33,7 +33,7 @@ const TaskDetail = () => {
 
   useEffect(() => {
     let ret: Array<{ value: number; type: TaskInfoType; status: TaskInfoStatus }> = [];
-    tasksInfo.forEach((item) => {
+    tasksInfo?.forEach((item) => {
       let i = 0;
       for (i = 0; i < ret.length; i++) {
         if (ret[i].type === item.type && ret[i].status === item.status) {
@@ -78,54 +78,60 @@ const TaskDetail = () => {
         <br />
 
         <ProCard style={{ marginBlockStart: 8 }} gutter={8} title="">
-          <ProCard
-            layout="center"
-            title={projectDetail.name}
-            extra={projectDetail.status}
-            // tooltip="这是提示"
-            bordered
-            style={{ minHeight: 300, maxWidth: 300, marginBlockStart: 24 }}
-            size="small"
-          >
-            <div>{projectDetail.desc}</div>
-          </ProCard>
-          <ProCard
-            layout="center"
-            title="成员"
-            // extra={projectDetail.status}
-            // tooltip="这是提示"
-            bordered
-            style={{ minHeight: 300, maxWidth: 300, marginBlockStart: 24 }}
-            size="small"
-          >
-            <div>
-              {projectDetail.userInfo?.map((item) => {
-                return (
-                  <div style={{ display: 'flex', margin: '5px' }} key={item.name}>
-                    <img src={item.avatar} alt="头像" />
-                    <span style={{ textAlign: 'center', lineHeight: '40px' }}>{item.name}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </ProCard>
+          {projectDetail && (
+            <ProCard
+              layout="center"
+              title={projectDetail.name}
+              extra={projectDetail.status}
+              // tooltip="这是提示"
+              bordered
+              style={{ minHeight: 300, maxWidth: 300, marginBlockStart: 24 }}
+              size="small"
+            >
+              <div>{projectDetail.desc}</div>
+            </ProCard>
+          )}
+          {projectDetail?.userInfo && (
+            <ProCard
+              layout="center"
+              title="成员"
+              // extra={projectDetail.status}
+              // tooltip="这是提示"
+              bordered
+              style={{ minHeight: 300, maxWidth: 300, marginBlockStart: 24 }}
+              size="small"
+            >
+              <div>
+                {projectDetail.userInfo?.map((item) => {
+                  return (
+                    <div style={{ display: 'flex', margin: '5px' }} key={item.name}>
+                      <img src={item.avatar} alt="头像" />
+                      <span style={{ textAlign: 'center', lineHeight: '40px' }}>{item.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </ProCard>
+          )}
         </ProCard>
 
-        <ProCard style={{ marginBlockStart: 8 }} gutter={8} title="">
-          <ProCard
-            layout="center"
-            title={'任务概况'}
-            // extra={projectDetail.status}
-            // tooltip="这是提示"
-            bordered
-            style={{ minHeight: 300, minWidth: 700, marginBlockStart: 24 }}
-            size="small"
-          >
-            <div style={{ width: '100%' }}>
-              <TaskBar />
-            </div>
+        {tasksInfo && (
+          <ProCard style={{ marginBlockStart: 8 }} gutter={8} title="">
+            <ProCard
+              layout="center"
+              title={'任务概况'}
+              // extra={projectDetail.status}
+              // tooltip="这是提示"
+              bordered
+              style={{ minHeight: 300, minWidth: 700, marginBlockStart: 24 }}
+              size="small"
+            >
+              <div style={{ width: '100%' }}>
+                <TaskBar />
+              </div>
+            </ProCard>
           </ProCard>
-        </ProCard>
+        )}
       </>
     </ProCard>
   );

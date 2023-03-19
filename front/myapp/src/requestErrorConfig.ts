@@ -130,7 +130,8 @@ export const errorConfig: RequestConfig = {
         const error: any = new Error(msg);
         error.name = 'BizError';
         error.info = { msg, data };
-        throw error; // 抛出自制的错误
+        // throw error; // 抛出自制的错误
+        console.log('RequestError:', error);
       }
     },
     // 错误接收及处理
