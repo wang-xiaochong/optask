@@ -50,6 +50,21 @@ func (t *TaskInfo) GetAll() []map[string]interface{} {
 		fmt.Println("GetAllErr:", err)
 	}
 	ret := curd.HandleSQL(rows)
+	// 覆盖createrdBy
+	for i := 0; i < len(ret); i++ {
+		// fmt.Println("ret:", ret[i])
+		sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"
+		rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["createdBy"])
+		if err != nil {
+			fmt.Println(err)
+		}
+		ret2 := curd.HandleSQL(rows2)
+		ret[i]["createdBy"] = ret2[0]["createdBy"]
+		// fmt.Println("ret2:", ret[i])
+		if ret[i]["taskUpdateInfo"] != nil {
+			ret[i]["taskUpdateInfo"] = getTaskUpdateInfo(ret[i]["taskUpdateInfo"])
+		}
+	}
 
 	// // 覆盖createdBy
 	// sqlStr2 := "select u.name as createdBy from taskInfo as t, userInfo as u where t.createdBy=u.id"
@@ -102,6 +117,7 @@ func (t *TaskInfo) GetTasksByAppoint(appoint string) []map[string]interface{} {
 		fmt.Println(err)
 	}
 	ret := curd.HandleSQL(rows)
+	// 覆盖createrdBy
 	for i := 0; i < len(ret); i++ {
 		// fmt.Println("ret:", ret[i])
 		sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"

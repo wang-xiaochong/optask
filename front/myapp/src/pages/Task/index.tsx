@@ -91,6 +91,13 @@ const TaskProtable = () => {
       // render: (_) => <a>{_}</a>,
     },
     {
+      title: '创建人',
+      dataIndex: 'createdBy',
+      valueType: 'select',
+      valueEnum: userName,
+      // render: (_) => <a>{_}</a>,
+    },
+    {
       title: '指定人',
       dataIndex: 'appoint',
       valueType: 'select',

@@ -11,7 +11,7 @@
  Target Server Version : 50740
  File Encoding         : 65001
 
- Date: 12/03/2023 21:22:37
+ Date: 19/03/2023 20:24:00
 */
 
 SET NAMES utf8mb4;
@@ -26,7 +26,7 @@ CREATE TABLE `person`  (
   `first_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `last_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of person
@@ -41,9 +41,11 @@ INSERT INTO `person` VALUES (3, '', '');
 DROP TABLE IF EXISTS `projectInfo`;
 CREATE TABLE `projectInfo`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `parent` int(11) NULL DEFAULT NULL,
-  `status` enum('打开','关闭','暂停') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '项目名称',
+  `parent` int(11) NULL DEFAULT NULL COMMENT '项目父级',
+  `status` enum('打开','关闭','暂停') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '项目状态',
+  `userInfo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '项目组成员',
+  `desc` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '项目简介',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `PROJECTINFO_PARENT_PROJECTINFO`(`parent`) USING BTREE,
   CONSTRAINT `PROJECTINFO_PARENT_PROJECTINFO` FOREIGN KEY (`parent`) REFERENCES `projectInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -52,10 +54,10 @@ CREATE TABLE `projectInfo`  (
 -- ----------------------------
 -- Records of projectInfo
 -- ----------------------------
-INSERT INTO `projectInfo` VALUES (1, '第一个项目名称', NULL, '打开');
-INSERT INTO `projectInfo` VALUES (2, '第二个项目名称', NULL, '打开');
-INSERT INTO `projectInfo` VALUES (3, '第二个项目子项目一', 2, '暂停');
-INSERT INTO `projectInfo` VALUES (4, '第二个项目子项目二', 2, '关闭');
+INSERT INTO `projectInfo` VALUES (1, '第一个项目名称', NULL, '打开', '1,2', '项目一简介');
+INSERT INTO `projectInfo` VALUES (2, '第二个项目名称', NULL, '打开', '1,2,3', '项目二简介');
+INSERT INTO `projectInfo` VALUES (3, '第二个项目子项目一', 2, '暂停', '1,2', '项目二子项目一简介');
+INSERT INTO `projectInfo` VALUES (4, '第二个项目子项目二', 2, '关闭', '1,3', '项目二子项目二简介');
 
 -- ----------------------------
 -- Table structure for roleInfo
@@ -72,8 +74,8 @@ CREATE TABLE `roleInfo`  (
 -- ----------------------------
 -- Records of roleInfo
 -- ----------------------------
-INSERT INTO `roleInfo` VALUES (1, 'admin', '[1,2,4,5,6,7]', NULL);
-INSERT INTO `roleInfo` VALUES (2, 'user', '[1]', NULL);
+INSERT INTO `roleInfo` VALUES (1, 'admin', '1,2,3', NULL);
+INSERT INTO `roleInfo` VALUES (2, 'user', '1', NULL);
 
 -- ----------------------------
 -- Table structure for routerInfo
@@ -88,7 +90,7 @@ CREATE TABLE `routerInfo`  (
   `desc` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '描述',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ROUTERINFO_PATH`(`path`) USING BTREE COMMENT '唯一'
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of routerInfo
@@ -99,6 +101,8 @@ INSERT INTO `routerInfo` VALUES (4, 'project', './Project', '/project/list', 'pr
 INSERT INTO `routerInfo` VALUES (5, 'task', './Task', '/task/list', 'task', '任务列表页');
 INSERT INTO `routerInfo` VALUES (6, NULL, './Task/components/TaskDetail.tsx', '/task/list/:id', 'wiki', '任务详情页');
 INSERT INTO `routerInfo` VALUES (7, 'wiki', './Wiki', '/wiki/list', 'user', 'wiki页');
+INSERT INTO `routerInfo` VALUES (8, 'appointme', './Task/components/AppointMe.tsx', '/task/appointme', 'task', '分配给我');
+INSERT INTO `routerInfo` VALUES (9, 'createdbyme', './Task/components/CreatedByMe.tsx', '/task/createdbyme', 'task', '由我创建');
 
 -- ----------------------------
 -- Table structure for taskInfo
@@ -133,7 +137,7 @@ CREATE TABLE `taskInfo`  (
   CONSTRAINT `TASKINFO_PARENT_TASKINFO` FOREIGN KEY (`parent`) REFERENCES `taskInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `TASKINFO_PROJECT_PROJECTINFO` FOREIGN KEY (`project`) REFERENCES `projectInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `TASKINFO_TASKUPDATEINFO_TASKUPDATEINFO` FOREIGN KEY (`taskUpdateInfo`) REFERENCES `taskUpdateInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of taskInfo
@@ -142,6 +146,11 @@ INSERT INTO `taskInfo` VALUES (2, '第一条任务名称', '会议', '新建', '
 INSERT INTO `taskInfo` VALUES (3, '第二条任务名称', '代码开发', '进行中', '中', 1, '2023-03-02 22:11:02', 2, 2, 2, '2023-03-02 15:40:12', NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `taskInfo` VALUES (4, '第三条任务名称', 'BUG', '暂停中', '低', 2, '2023-03-04 15:16:40', 3, 3, 3, '2023-03-01 15:40:16', NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `taskInfo` VALUES (5, '第四条任务名称', '其他任务', '待办任务', '中', 3, '2023-03-04 15:19:26', 1, 2, 2, '2023-03-03 15:40:19', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `taskInfo` VALUES (6, '第五条任务名称', 'BUG', '已完成', '高', 2, '2023-03-19 12:31:18', 2, 1, 2, '2023-03-01 12:31:35', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `taskInfo` VALUES (7, '任务6', '会议', '新建', '中', 1, '2023-03-19 15:25:00', 3, 1, 2, '2023-03-23 15:25:19', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `taskInfo` VALUES (8, '任务7', '代码开发', '进行中', '低', 3, '2023-03-19 15:26:40', 3, 1, 2, '2023-03-19 15:26:56', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `taskInfo` VALUES (9, '任务8', 'BUG', '进行中', '中', 1, '2023-03-19 15:54:22', 1, 1, 2, '2023-03-19 15:54:36', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `taskInfo` VALUES (10, '任务9', '会议', '已关闭', '低', 2, '2023-03-19 15:55:47', 1, 1, 1, '2023-03-19 15:55:58', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for taskUpdateInfo
@@ -149,10 +158,10 @@ INSERT INTO `taskInfo` VALUES (5, '第四条任务名称', '其他任务', '待�
 DROP TABLE IF EXISTS `taskUpdateInfo`;
 CREATE TABLE `taskUpdateInfo`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `updateBy` int(11) NULL DEFAULT NULL,
-  `updateTime` datetime NULL DEFAULT NULL,
+  `updateBy` int(11) NULL DEFAULT NULL COMMENT '更新人',
+  `updateTime` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `taskUpdateInfo` int(11) NULL DEFAULT NULL COMMENT '后续更新的信息ID',
-  `updateContent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `updateContent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '更新内容',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `TASKUPDATEINFO_UPDATEBY_USERINFO`(`updateBy`) USING BTREE,
   INDEX `TASKUPDATEINFO_TASKUPDATEINFO_TASKUPDATEINFO`(`taskUpdateInfo`) USING BTREE,
@@ -197,7 +206,7 @@ CREATE TABLE `userInfo`  (
   `salt` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '盐（用于加密）',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `USERINFO_NAME`(`name`) USING BTREE COMMENT '值唯一'
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of userInfo

@@ -14,10 +14,10 @@ export const TaskOptionsDropdown = (props: { getRouterInfoByMenuType: any }) => 
       key: '2',
       label: '工作包',
     },
-    // {
-    //   key: '3',
-    //   label: '3rd menu item',
-    // },
+    {
+      key: '3',
+      label: 'wiki',
+    },
   ];
   const onMenuClick = (event: MenuInfo) => {
     const { key } = event;
@@ -28,6 +28,9 @@ export const TaskOptionsDropdown = (props: { getRouterInfoByMenuType: any }) => 
         break;
       case '2':
         getRouterInfoByMenuType(RouterInfoType.task);
+        break;
+      case '3':
+        getRouterInfoByMenuType(RouterInfoType.wiki);
         break;
 
       default:
