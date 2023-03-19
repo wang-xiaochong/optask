@@ -11,7 +11,7 @@
  Target Server Version : 50740
  File Encoding         : 65001
 
- Date: 19/03/2023 20:24:00
+ Date: 19/03/2023 23:01:55
 */
 
 SET NAMES utf8mb4;
@@ -99,8 +99,8 @@ INSERT INTO `routerInfo` VALUES (1, 'login', './User/Login', '/user/login', NULL
 INSERT INTO `routerInfo` VALUES (2, 'welcome', './Welcome', '/welcome', 'home', '欢迎页');
 INSERT INTO `routerInfo` VALUES (4, 'project', './Project', '/project/list', 'project', '项目列表页');
 INSERT INTO `routerInfo` VALUES (5, 'task', './Task', '/task/list', 'task', '任务列表页');
-INSERT INTO `routerInfo` VALUES (6, NULL, './Task/components/TaskDetail.tsx', '/task/list/:id', 'wiki', '任务详情页');
-INSERT INTO `routerInfo` VALUES (7, 'wiki', './Wiki', '/wiki/list', 'user', 'wiki页');
+INSERT INTO `routerInfo` VALUES (6, NULL, './Task/components/TaskDetail.tsx', '/task/list/:id', 'task', '任务详情页');
+INSERT INTO `routerInfo` VALUES (7, 'wiki', './Wiki', '/wiki/list', 'wiki', 'wiki页');
 INSERT INTO `routerInfo` VALUES (8, 'appointme', './Task/components/AppointMe.tsx', '/task/appointme', 'task', '分配给我');
 INSERT INTO `routerInfo` VALUES (9, 'createdbyme', './Task/components/CreatedByMe.tsx', '/task/createdbyme', 'task', '由我创建');
 
@@ -161,7 +161,8 @@ CREATE TABLE `taskUpdateInfo`  (
   `updateBy` int(11) NULL DEFAULT NULL COMMENT '更新人',
   `updateTime` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `taskUpdateInfo` int(11) NULL DEFAULT NULL COMMENT '后续更新的信息ID',
-  `updateContent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '更新内容',
+  `updateContent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '更新后的内容',
+  `changeContent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '变更的内容',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `TASKUPDATEINFO_UPDATEBY_USERINFO`(`updateBy`) USING BTREE,
   INDEX `TASKUPDATEINFO_TASKUPDATEINFO_TASKUPDATEINFO`(`taskUpdateInfo`) USING BTREE,
@@ -172,9 +173,9 @@ CREATE TABLE `taskUpdateInfo`  (
 -- ----------------------------
 -- Records of taskUpdateInfo
 -- ----------------------------
-INSERT INTO `taskUpdateInfo` VALUES (1, 1, '2023-03-01 22:05:03', NULL, '更改内容一');
-INSERT INTO `taskUpdateInfo` VALUES (2, 1, '2023-03-04 15:05:33', 1, '更改内容二');
-INSERT INTO `taskUpdateInfo` VALUES (3, 2, '2023-03-02 22:05:55', 2, '更改内容三');
+INSERT INTO `taskUpdateInfo` VALUES (1, 1, '2023-03-01 22:05:03', NULL, '更改内容一', NULL);
+INSERT INTO `taskUpdateInfo` VALUES (2, 1, '2023-03-04 15:05:33', 1, '更改内容二', NULL);
+INSERT INTO `taskUpdateInfo` VALUES (3, 2, '2023-03-02 22:05:55', 2, '更改内容三', NULL);
 
 -- ----------------------------
 -- Table structure for test
@@ -214,5 +215,67 @@ CREATE TABLE `userInfo`  (
 INSERT INTO `userInfo` VALUES (1, 'admin', 'ant.design', 'root', 'http://thirdqq.qlogo.cn/g?b=oidb&k=lhlTrYajd0rnYuCtFZPzWw&s=40&t=1628724564', NULL, NULL, 1, '1');
 INSERT INTO `userInfo` VALUES (2, 'user', 'ant.design', 'user', '3', NULL, '456', 2, NULL);
 INSERT INTO `userInfo` VALUES (3, 'test', 'ant.design', 'test', NULL, NULL, NULL, NULL, NULL);
+
+-- ----------------------------
+-- Table structure for wikiInfo
+-- ----------------------------
+DROP TABLE IF EXISTS `wikiInfo`;
+CREATE TABLE `wikiInfo`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'HTML内容',
+  `project` int(11) NOT NULL COMMENT '所属项目',
+  `createdBy` int(11) NOT NULL COMMENT '创建人',
+  `createdTime` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `updateInfo` int(11) NULL DEFAULT NULL COMMENT '更新的信息ID',
+  `updateTime` datetime NULL DEFAULT NULL COMMENT '最新的更新时间',
+  `parent` int(11) NULL DEFAULT NULL COMMENT '父级wiki',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `WIKIINFO_CREATEDBY_USERINFO`(`createdBy`) USING BTREE,
+  INDEX `WIKIINFO_PARENT_WIKIINFO`(`parent`) USING BTREE,
+  INDEX `WIKIINFO_PROJECT_PROJECTINFO`(`project`) USING BTREE,
+  INDEX `WIKIINFO_UPDATEINFO`(`updateInfo`) USING BTREE,
+  CONSTRAINT `WIKIINFO_CREATEDBY_USERINFO` FOREIGN KEY (`createdBy`) REFERENCES `userInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `WIKIINFO_PARENT_WIKIINFO` FOREIGN KEY (`parent`) REFERENCES `wikiInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `WIKIINFO_PROJECT_PROJECTINFO` FOREIGN KEY (`project`) REFERENCES `projectInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `WIKIINFO_UPDATEINFO` FOREIGN KEY (`updateInfo`) REFERENCES `wikiUpdateInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of wikiInfo
+-- ----------------------------
+INSERT INTO `wikiInfo` VALUES (1, '第一个wiki', 'wiki HTML 内容一', 1, 1, '2023-03-17 22:55:42', NULL, NULL, NULL);
+INSERT INTO `wikiInfo` VALUES (2, '第二个wiki', 'wiki HTML 内容二', 2, 2, '2023-03-16 22:55:47', 2, '2023-03-19 23:01:32', NULL);
+INSERT INTO `wikiInfo` VALUES (3, '第三个wiki', 'wiki HTML 内容三', 3, 3, '2023-03-15 22:55:51', NULL, NULL, NULL);
+INSERT INTO `wikiInfo` VALUES (4, '第四个wiki', 'wiki HTML 内容四', 4, 1, '2023-03-18 22:55:55', 5, '2023-03-18 23:01:28', 1);
+INSERT INTO `wikiInfo` VALUES (5, '第五个wiki', 'wiki HTML 内容五', 1, 2, '2023-03-19 22:55:58', NULL, NULL, 2);
+INSERT INTO `wikiInfo` VALUES (6, '第六个wiki', 'wiki HTML 内容六', 2, 1, '2023-03-20 22:56:02', 1, '2023-03-17 23:01:23', 4);
+
+-- ----------------------------
+-- Table structure for wikiUpdateInfo
+-- ----------------------------
+DROP TABLE IF EXISTS `wikiUpdateInfo`;
+CREATE TABLE `wikiUpdateInfo`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `updateBy` int(11) NULL DEFAULT NULL COMMENT '更新人',
+  `updateTime` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  `wikiUpdateInfo` int(11) NULL DEFAULT NULL COMMENT '后续更新的信息ID',
+  `updateContent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '更新后的内容',
+  `changeContent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '变更的内容',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `WIKIUPDATEINFO_UPDATEBY_USERINFO`(`updateBy`) USING BTREE,
+  INDEX `WIKIUPDATEINFO_WIKIUPDATEINFO_WIKIUPDATEINFO`(`wikiUpdateInfo`) USING BTREE,
+  CONSTRAINT `WIKIUPDATEINFO_UPDATEBY_USERINFO` FOREIGN KEY (`updateBy`) REFERENCES `userInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `WIKIUPDATEINFO_WIKIUPDATEINFO_WIKIUPDATEINFO` FOREIGN KEY (`wikiUpdateInfo`) REFERENCES `wikiUpdateInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of wikiUpdateInfo
+-- ----------------------------
+INSERT INTO `wikiUpdateInfo` VALUES (1, 1, '2023-03-19 22:56:24', NULL, '更新内容一', '改变内容一');
+INSERT INTO `wikiUpdateInfo` VALUES (2, 2, '2023-03-18 22:57:03', NULL, '更新内容二', '改变内容二');
+INSERT INTO `wikiUpdateInfo` VALUES (3, 3, '2023-03-19 22:58:18', 2, '更新内容三', '改变内容三');
+INSERT INTO `wikiUpdateInfo` VALUES (4, 2, '2023-03-19 22:59:17', 3, '更新内容四', '改变内容四');
+INSERT INTO `wikiUpdateInfo` VALUES (5, 3, '2023-03-19 22:59:53', NULL, '更新内容五', '改变内容五');
 
 SET FOREIGN_KEY_CHECKS = 1;
