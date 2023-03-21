@@ -76,14 +76,7 @@ export default [
     hideInMenu: true,
     // layout: false,
   },
-  {
-    // name: 'task.task-list',
-    name: '任务列表',
-    icon: 'table',
-    path: '/task/list',
-    component: './Task',
-    // layout: false,
-  },
+
   {
     // name: 'task.task-list',
     name: '分配给我',
@@ -91,6 +84,11 @@ export default [
     path: '/task/appointme',
     component: './Task/components/AppointMe.tsx',
     // layout: false,
+  },
+  {
+    path: '/task/appointme/:id',
+    component: './Task/components/TaskDetail.tsx',
+    hideInMenu: true,
   },
   {
     // name: 'task.task-list',
@@ -101,6 +99,19 @@ export default [
     // layout: false,
   },
   {
+    path: '/task/createdbyme/:id',
+    component: './Task/components/TaskDetail.tsx',
+    hideInMenu: true,
+  },
+  {
+    // name: 'task.task-list',
+    name: '任务列表',
+    icon: 'table',
+    path: '/task/list',
+    component: './Task',
+    // layout: false,
+  },
+  {
     // name: 'task.task-list',
     icon: 'table',
     path: '/task/list/:id',
@@ -108,15 +119,22 @@ export default [
     hideInMenu: true,
     // layout: false,
   },
+  // {
+  //   // name: 'wiki.wiki-list',
+  //   name: 'wiki',
+  //   icon: 'table',
+  //   path: '/wiki/list',
+  //   component: './Wiki',
+  //   // hideInMenu: true,
+  //   // hideChildrenInMenu: true,
+  //   // layout: false,
+  // },
   {
-    // name: 'wiki.wiki-list',
-    name: 'wiki',
+    name: 'wikiDetail',
     icon: 'table',
-    path: '/wiki/list',
-    component: './Wiki',
-    // hideInMenu: true,
-    // hideChildrenInMenu: true,
-    // layout: false,
+    path: '/wiki/list?title=?&id=?',
+    component: './Wiki/components/WikiDetail.tsx',
+    hideInMenu: true,
   },
   {
     path: '/',

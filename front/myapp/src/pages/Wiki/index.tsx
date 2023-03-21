@@ -1,3 +1,4 @@
+import { history } from '@umijs/max';
 import { useEffect } from 'react';
 const WikiList = () => {
   const getValue = (v) => {
@@ -6,9 +7,18 @@ const WikiList = () => {
 
   useEffect(() => {}, []);
 
+  const onClick = () => {
+    console.log('clickpathname', location);
+    history.push(`${location.pathname}?title=?&id=?`);
+  };
+
   return (
     <>
-      <div></div>
+      <div>
+        <button type="button" onClick={onClick}>
+          click
+        </button>
+      </div>
     </>
   );
 };

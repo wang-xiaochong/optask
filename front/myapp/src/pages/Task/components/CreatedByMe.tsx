@@ -62,7 +62,8 @@ const TaskCreatedByMe = () => {
           <a>
             <span
               onClick={() => {
-                history.push(`/task/list/${record.id}`);
+                let pathname = location.pathname;
+                history.push(`${pathname}/${record.id}`);
               }}
             >
               #{1000 + Number(text?.toString())}
@@ -81,7 +82,8 @@ const TaskCreatedByMe = () => {
           <a>
             <span
               onClick={() => {
-                history.push(`/task/list/${record?.id}`);
+                let pathname = location.pathname;
+                history.push(`${pathname}/${record.id}`);
               }}
             >
               {text}
