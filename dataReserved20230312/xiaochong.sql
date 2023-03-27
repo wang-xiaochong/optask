@@ -11,7 +11,7 @@
  Target Server Version : 50740
  File Encoding         : 65001
 
- Date: 19/03/2023 23:01:55
+ Date: 27/03/2023 21:25:13
 */
 
 SET NAMES utf8mb4;
@@ -90,7 +90,7 @@ CREATE TABLE `routerInfo`  (
   `desc` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '描述',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ROUTERINFO_PATH`(`path`) USING BTREE COMMENT '唯一'
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of routerInfo
@@ -103,6 +103,9 @@ INSERT INTO `routerInfo` VALUES (6, NULL, './Task/components/TaskDetail.tsx', '/
 INSERT INTO `routerInfo` VALUES (7, 'wiki', './Wiki', '/wiki/list', 'wiki', 'wiki页');
 INSERT INTO `routerInfo` VALUES (8, 'appointme', './Task/components/AppointMe.tsx', '/task/appointme', 'task', '分配给我');
 INSERT INTO `routerInfo` VALUES (9, 'createdbyme', './Task/components/CreatedByMe.tsx', '/task/createdbyme', 'task', '由我创建');
+INSERT INTO `routerInfo` VALUES (10, NULL, './Task/components/TaskDetail.tsx', '/task/createdbyme/:id', 'task', '由我创建详情页');
+INSERT INTO `routerInfo` VALUES (11, NULL, './Task/components/TaskDetail.tsx', '/task/appointme/:id', 'task', '分配给我详情页');
+INSERT INTO `routerInfo` VALUES (12, NULL, './Task/components/TaskDetail.tsx', '/wiki/list?title=?&id=?', 'wiki', 'wiki详情页');
 
 -- ----------------------------
 -- Table structure for taskInfo
@@ -230,7 +233,9 @@ CREATE TABLE `wikiInfo`  (
   `updateInfo` int(11) NULL DEFAULT NULL COMMENT '更新的信息ID',
   `updateTime` datetime NULL DEFAULT NULL COMMENT '最新的更新时间',
   `parent` int(11) NULL DEFAULT NULL COMMENT '父级wiki',
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'wiki访问路径(/wiki?title=xxx&id=xxx)',
   PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `PATH_UNIQUE`(`path`) USING BTREE,
   INDEX `WIKIINFO_CREATEDBY_USERINFO`(`createdBy`) USING BTREE,
   INDEX `WIKIINFO_PARENT_WIKIINFO`(`parent`) USING BTREE,
   INDEX `WIKIINFO_PROJECT_PROJECTINFO`(`project`) USING BTREE,
@@ -244,12 +249,12 @@ CREATE TABLE `wikiInfo`  (
 -- ----------------------------
 -- Records of wikiInfo
 -- ----------------------------
-INSERT INTO `wikiInfo` VALUES (1, '第一个wiki', 'wiki HTML 内容一', 1, 1, '2023-03-17 22:55:42', NULL, NULL, NULL);
-INSERT INTO `wikiInfo` VALUES (2, '第二个wiki', 'wiki HTML 内容二', 2, 2, '2023-03-16 22:55:47', 2, '2023-03-19 23:01:32', NULL);
-INSERT INTO `wikiInfo` VALUES (3, '第三个wiki', 'wiki HTML 内容三', 3, 3, '2023-03-15 22:55:51', NULL, NULL, NULL);
-INSERT INTO `wikiInfo` VALUES (4, '第四个wiki', 'wiki HTML 内容四', 4, 1, '2023-03-18 22:55:55', 5, '2023-03-18 23:01:28', 1);
-INSERT INTO `wikiInfo` VALUES (5, '第五个wiki', 'wiki HTML 内容五', 1, 2, '2023-03-19 22:55:58', NULL, NULL, 2);
-INSERT INTO `wikiInfo` VALUES (6, '第六个wiki', 'wiki HTML 内容六', 2, 1, '2023-03-20 22:56:02', 1, '2023-03-17 23:01:23', 4);
+INSERT INTO `wikiInfo` VALUES (1, '第一个wiki', 'wiki HTML 内容一', 1, 1, '2023-03-17 22:55:42', NULL, NULL, NULL, NULL);
+INSERT INTO `wikiInfo` VALUES (2, '第二个wiki', 'wiki HTML 内容二', 2, 2, '2023-03-16 22:55:47', 2, '2023-03-19 23:01:32', NULL, NULL);
+INSERT INTO `wikiInfo` VALUES (3, '第三个wiki', 'wiki HTML 内容三', 3, 3, '2023-03-15 22:55:51', NULL, NULL, NULL, NULL);
+INSERT INTO `wikiInfo` VALUES (4, '第四个wiki', 'wiki HTML 内容四', 4, 1, '2023-03-18 22:55:55', 5, '2023-03-18 23:01:28', 1, NULL);
+INSERT INTO `wikiInfo` VALUES (5, '第五个wiki', 'wiki HTML 内容五', 1, 2, '2023-03-19 22:55:58', NULL, NULL, 2, NULL);
+INSERT INTO `wikiInfo` VALUES (6, '第六个wiki', 'wiki HTML 内容六', 2, 1, '2023-03-20 22:56:02', 1, '2023-03-17 23:01:23', 4, NULL);
 
 -- ----------------------------
 -- Table structure for wikiUpdateInfo
