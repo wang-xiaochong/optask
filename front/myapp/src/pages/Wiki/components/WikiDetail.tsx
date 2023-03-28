@@ -1,5 +1,6 @@
+import { history } from '@umijs/max';
 import { useEffect, useState } from 'react';
-import Edit from './edit';
+import Editor from './Editor';
 import './index.css';
 const Wiki = () => {
   const [htmlContent, setHtmlContent] = useState();
@@ -8,11 +9,13 @@ const Wiki = () => {
     console.log(v);
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log('history', history.location.state);
+  }, []);
 
   return (
     <>
-      <Edit getValue={getValue} />
+      <Editor getValue={getValue} />
     </>
   );
 };
