@@ -33,7 +33,7 @@ export default [
     path: '/admin',
     name: 'admin',
     icon: 'crown',
-    access: 'canAdmin',
+    // access: 'canAdmin',
     routes: [
       {
         path: '/admin',
@@ -44,7 +44,29 @@ export default [
         name: 'sub-page',
         component: './Admin',
       },
+      {
+        path: '/admin/sub-page',
+        name: 'sub-page',
+        component: './Admin',
+      },
     ],
+  },
+  {
+    // name: 'wiki.wiki-list',
+    name: 'wiki',
+    icon: 'table',
+    path: '/wiki/list',
+    component: './Wiki',
+    // hideInMenu: true,
+    // hideChildrenInMenu: true,
+    // layout: false,
+  },
+  {
+    name: 'wikiDetail',
+    icon: 'table',
+    path: '/wiki/list/detail',
+    component: './Wiki/components/WikiDetail.tsx',
+    hideInMenu: true,
   },
   // {
   //   name: 'list.table-list',
@@ -118,23 +140,6 @@ export default [
     component: './Task/components/TaskDetail.tsx',
     hideInMenu: true,
     // layout: false,
-  },
-  {
-    // name: 'wiki.wiki-list',
-    name: 'wiki',
-    icon: 'table',
-    path: '/wiki/list',
-    component: './Wiki',
-    // hideInMenu: true,
-    // hideChildrenInMenu: true,
-    // layout: false,
-  },
-  {
-    name: 'wikiDetail',
-    icon: 'table',
-    path: '/wiki/list/detail',
-    component: './Wiki/components/WikiDetail.tsx',
-    hideInMenu: true,
   },
   {
     path: '/',

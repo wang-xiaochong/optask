@@ -62,6 +62,18 @@ declare namespace API {
     desc?: string;
   };
 
+  type WikiInfo = {
+    id?: number;
+    title?: string;
+    content?: string;
+    project?: number;
+    createdBy?: number;
+    createdTime?: string;
+    updateInfo?: number;
+    updateTime?: string;
+    parent?: number;
+  };
+
   type LoginResult = {
     // status?: string;
     // type?: string;

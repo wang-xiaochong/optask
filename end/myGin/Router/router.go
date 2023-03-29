@@ -6,6 +6,7 @@ import (
 	routerInfo "Example/Controller/routerInfo"
 	taskInfo "Example/Controller/taskInfo"
 	userInfo "Example/Controller/userInfo"
+	wikiInfo "Example/Controller/wikiInfo"
 	utils "Example/Utils"
 
 	"github.com/gin-gonic/gin"
@@ -35,7 +36,7 @@ func InitRouter(e *gin.Engine) {
 		task.GET("/getTasksByAppoint", taskInfo.GetTasksByAppoint)
 		task.GET("/getTaskInfoByID", taskInfo.GetTaskByID)
 		task.GET("/getTaskInfoByProjectID", taskInfo.GetTaskByProjectID)
-		
+
 		// myTask.GET("/getAllTaskInfo",con)
 		// person.GET("/person", controller.GetPersonByID)
 		// person.POST("/add", controller.AddPerson)
@@ -43,9 +44,13 @@ func InitRouter(e *gin.Engine) {
 		// person.DELETE("/delete", controller.DeletePerson)
 
 	}
+	wiki := pre.Group("/wiki")
+	{
+		wiki.GET("/getAllWikiInfo", wikiInfo.GetAllWikis)
+	}
 	project := pre.Group("/project")
 	{
-		project.GET("/getAllProjectInfo", projectInfo.GetAllProjects);
+		project.GET("/getAllProjectInfo", projectInfo.GetAllProjects)
 		project.GET("/getProjectInfoByID", projectInfo.GetProjectByID)
 	}
 
