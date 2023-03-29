@@ -7,9 +7,9 @@ import { Button, Input } from 'antd';
 import 'braft-editor/dist/index.css';
 
 const Editor = (props?: any) => {
-  const { getValue } = props;
+  const { getValue, state } = props;
 
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(state?.title);
   const [editor, setEditor] = useState(BraftEditor.createEditorState(null));
 
   const submitContent = async () => {

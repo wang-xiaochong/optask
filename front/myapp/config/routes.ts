@@ -64,7 +64,7 @@ export default [
   {
     name: 'wikiDetail',
     icon: 'table',
-    path: '/wiki/list/detail',
+    path: '/wiki/list/:id',
     component: './Wiki/components/WikiDetail.tsx',
     hideInMenu: true,
   },

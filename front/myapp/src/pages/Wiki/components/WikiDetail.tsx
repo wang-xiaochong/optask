@@ -15,7 +15,7 @@ const Wiki = () => {
 
   return (
     <>
-      <Editor getValue={getValue} />
+      <Editor state={history.location.state} getValue={getValue} />
     </>
   );
 };

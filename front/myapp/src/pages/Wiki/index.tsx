@@ -46,15 +46,16 @@
 // export default WikiList;
 
 import { getAllProjectInfo } from '@/request/projectInfo';
-import { getAllTaskInfo } from '@/request/taskInfo';
 import { getAllUserInfo } from '@/request/userInfo';
-import { ProColumns } from '@ant-design/pro-components';
+import { getAllWikiInfo } from '@/request/wikiInfo';
+import { addKeyToFnDataArray } from '@/utils/utils';
+import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { NewLineConfig, RecordKey } from '@ant-design/pro-utils/es/useEditableArray';
 import { history } from '@umijs/max';
 import { useEffect, useState } from 'react';
-import { TaskInfoStatus, TaskInfoType } from '../Components/Task';
+import { pageSize } from '../Components/unitConfig';
 
-const TaskProtable = () => {
+const WikiProtable = () => {
   const [userName, setUserName] = useState({});
   const [project, setProject] = useState({});
   useEffect(() => {
@@ -81,7 +82,7 @@ const TaskProtable = () => {
 
     // console.log('TaskProtable');
   }, []);
-  const columns: ProColumns<API.TaskInfo>[] = [
+  const columns: ProColumns<API.WikiInfo>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -94,7 +95,7 @@ const TaskProtable = () => {
             <span
               onClick={() => {
                 let pathname = location.pathname;
-                history.push(`${pathname}/${record.id}`);
+                history.push(`${pathname}/${record.id}`, { id: record.id, title: record.title });
               }}
             >
               #{1000 + Number(text?.toString())}
@@ -104,8 +105,8 @@ const TaskProtable = () => {
       },
     },
     {
-      title: '主题',
-      dataIndex: 'name',
+      title: '标题',
+      dataIndex: 'title',
       valueType: 'text',
       width: '30%',
       render: (text, record) => {
@@ -124,29 +125,8 @@ const TaskProtable = () => {
       },
     },
     {
-      title: '类型',
-      dataIndex: 'type',
-      valueType: 'select',
-      valueEnum: TaskInfoType,
-      // render: (_) => <a>{_}</a>,
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      valueType: 'select',
-      valueEnum: TaskInfoStatus,
-      // render: (_) => <a>{_}</a>,
-    },
-    {
       title: '创建人',
       dataIndex: 'createdBy',
-      valueType: 'select',
-      valueEnum: userName,
-      // render: (_) => <a>{_}</a>,
-    },
-    {
-      title: '指定人',
-      dataIndex: 'appoint',
       valueType: 'select',
       valueEnum: userName,
       // render: (_) => <a>{_}</a>,
@@ -158,13 +138,13 @@ const TaskProtable = () => {
       valueType: 'text',
       // render: (_) => <a>{_}</a>,
     },
-    {
-      title: '项目',
-      dataIndex: 'project',
-      valueType: 'select',
-      valueEnum: project,
-      // render: (_) => <a>{_}</a>,
-    },
+    // {
+    //   title: '项目',
+    //   dataIndex: 'project',
+    //   valueType: 'select',
+    //   valueEnum: project,
+    //   // render: (_) => <a>{_}</a>,
+    // },
     {
       title: '操作',
       valueType: 'option',
@@ -204,45 +184,45 @@ const TaskProtable = () => {
     // record sent to end
   };
 
-  const myGetAllTaskInfo = () => {
-    getAllTaskInfo().then((res) => {
-      console.log('resgetAllTaskInfo', res);
-    });
-  };
+  // const myGetAllTaskInfo = () => {
+  //   getAllWikiInfo().then((res) => {
+  //     console.log('resgetAllTaskInfo', res);
+  //   });
+  // };
   return (
-    <button type="button" onClick={myGetAllTaskInfo}>
-      click
-    </button>
+    // <button type="button" onClick={myGetAllTaskInfo}>
+    //   click
+    // </button>
 
-    // <ProTable<API.TaskInfo>
-    //   columns={columns}
-    //   editable={{
-    //     type: 'multiple',
-    //     actionRender: (row, config, defaultDoms) => {
-    //       return [defaultDoms.save, defaultDoms.cancel];
-    //     },
-    //     onSave: async (rows, record, originRow, newLineConfig) => {
-    //       await updateTaskInfo(rows, record, originRow, newLineConfig);
-    //     },
-    //   }}
-    //   request={(params, sorter, filter) => {
-    //     // 表单搜索项会从 params 传入，传递给后端接口。
-    //     console.log(params, sorter, filter);
-    //     // return Promise.resolve({
-    //     //   data: tableListDataSource,
-    //     //   success: true,
-    //     // });
-    //     return addKeyToFnDataArray(getAllWikiInfo);
-    //   }}
-    //   ErrorBoundary={false}
-    //   rowKey="id"
-    //   search={false}
-    //   pagination={{
-    //     pageSize: pageSize,
-    //     // onChange: (page) => console.log(page),
-    //   }}
-    // />
+    <ProTable<API.WikiInfo>
+      columns={columns}
+      editable={{
+        type: 'multiple',
+        actionRender: (row, config, defaultDoms) => {
+          return [defaultDoms.save, defaultDoms.cancel];
+        },
+        onSave: async (rows, record, originRow, newLineConfig) => {
+          await updateTaskInfo(rows, record, originRow, newLineConfig);
+        },
+      }}
+      request={(params, sorter, filter) => {
+        // 表单搜索项会从 params 传入，传递给后端接口。
+        console.log(params, sorter, filter);
+        // return Promise.resolve({
+        //   data: tableListDataSource,
+        //   success: true,
+        // });
+        return addKeyToFnDataArray(getAllWikiInfo);
+      }}
+      ErrorBoundary={false}
+      rowKey="id"
+      search={false}
+      pagination={{
+        pageSize: pageSize,
+        // onChange: (page) => console.log(page),
+      }}
+    />
   );
 };
 
-export default TaskProtable;
+export default WikiProtable;
