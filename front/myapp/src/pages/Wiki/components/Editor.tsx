@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 // 引入编辑器组件
 import BraftEditor from 'braft-editor';
 // 引入编辑器样式
+import { getWikiInfoByProjectID } from '@/request/wikiInfo';
 import { ProCard } from '@ant-design/pro-components';
 import { Button, Input } from 'antd';
 import 'braft-editor/dist/index.css';
 
 const Editor = (props?: any) => {
-  const { getValue, state } = props;
+  const { updateContent, state } = props;
 
   const [title, setTitle] = useState(state?.title);
   const [editor, setEditor] = useState(BraftEditor.createEditorState(null));
@@ -31,7 +32,11 @@ const Editor = (props?: any) => {
 
   useEffect(() => {
     // 假设此处从服务端获取html格式的编辑器内容
-    // const htmlContent = await fetchEditorContent();
+    getWikiInfoByProjectID(state?.id).then((res) => {
+      console.log('content', res?.data?.content);
+      setEditor(BraftEditor.createEditorState(res?.data?.content));
+    });
+
     // 使用BraftEditor.createEditorState将html字符串转换为编辑器需要的editorStat
     // this.setState({
     //   editorState: BraftEditor.createEditorState(htmlContent),
@@ -48,7 +53,7 @@ const Editor = (props?: any) => {
           value={title}
           onChange={handleTitle}
         />
-        <Button type="primary" onClick={() => getValue({ title, content: editor.toHTML() })}>
+        <Button type="primary" onClick={() => updateContent({ title, content: editor.toHTML() })}>
           保存
         </Button>
         <BraftEditor value={editor} onChange={handleEditorChange} onSave={submitContent} />
