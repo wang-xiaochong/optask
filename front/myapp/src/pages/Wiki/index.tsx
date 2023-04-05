@@ -95,7 +95,7 @@ const WikiProtable = () => {
             <span
               onClick={() => {
                 let pathname = location.pathname;
-                history.push(`${pathname}/${record.id}`, { id: record.id, title: record.title });
+                history.push(`${pathname}/${record.id}`, record);
               }}
             >
               #{1000 + Number(text?.toString())}
@@ -115,7 +115,7 @@ const WikiProtable = () => {
             <span
               onClick={() => {
                 let pathname = location.pathname;
-                history.push(`${pathname}/${record.id}`);
+                history.push(`${pathname}/${record.id}`, record);
               }}
             >
               {text}
@@ -129,6 +129,7 @@ const WikiProtable = () => {
       dataIndex: 'createdBy',
       valueType: 'select',
       valueEnum: userName,
+      readonly: true,
       // render: (_) => <a>{_}</a>,
     },
     {
