@@ -2,7 +2,7 @@ import { currentUser } from '@/request/userInfo';
 import { updateWikiContent } from '@/request/wikiInfo';
 import { getNowFormatDate } from '@/utils/utils';
 import { history } from '@umijs/max';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Editor from './Editor';
 import './index.css';
 const Wiki = () => {
@@ -24,9 +24,9 @@ const Wiki = () => {
     updateWikiContent(data);
   };
 
-  useEffect(() => {
-    console.log('history', history.location.state);
-  }, []);
+  // useEffect(() => {
+  //   console.log('history', history.location.state);
+  // }, []);
 
   return (
     <>

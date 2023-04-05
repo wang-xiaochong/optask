@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 // 引入编辑器组件
 import BraftEditor from 'braft-editor';
 // 引入编辑器样式
-import { getWikiInfoByProjectID } from '@/request/wikiInfo';
+import { getWikiInfoByID } from '@/request/wikiInfo';
 import { ProCard } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { Button, Input } from 'antd';
@@ -37,7 +37,7 @@ const Editor = (props?: any) => {
 
   useEffect(() => {
     // 假设此处从服务端获取html格式的编辑器内容
-    getWikiInfoByProjectID(state?.id).then((res) => {
+    getWikiInfoByID(state?.id).then((res) => {
       // console.log('content', res?.data?.content);
       setEditor(BraftEditor.createEditorState(res?.data?.content));
     });

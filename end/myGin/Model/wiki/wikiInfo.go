@@ -57,6 +57,28 @@ func (w *WikiInfo) GetWikiByID(id string) map[string]interface{} {
 	return ret[0]
 }
 
+func (w *WikiInfo) GetWikiByProjectID(id string) []map[string]interface{} {
+	sqlStr := "select * from wikiInfo where project=? order by id desc"
+	//查询数据，取所有字段
+	rows, err := database.MysqlDB.Query(sqlStr, id)
+	if err != nil {
+		fmt.Println("GetAllErr:", err)
+	}
+	ret := curd.HandleSQL(rows)
+	// 覆盖createrdBy
+	for i := 0; i < len(ret); i++ {
+		// fmt.Println("ret:", ret[i])
+		sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"
+		rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["createdBy"])
+		if err != nil {
+			fmt.Println(err)
+		}
+		ret2 := curd.HandleSQL(rows2)
+		ret[i]["createdBy"] = ret2[0]["createdBy"]
+	}
+	return ret
+}
+
 func (w *WikiInfoUpdate) UpdateContent(wu WikiInfoUpdate) (rows int, err error) {
 	stmt, err := database.MysqlDB.Prepare("update wikiInfo set content=?,title=?,updateTime=?,updateInfo=? where id=?")
 	if err != nil {

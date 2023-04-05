@@ -1,63 +1,17 @@
-// import { history } from '@umijs/max';
-// import { Collapse } from 'antd';
-// import { useEffect } from 'react';
-// const { Panel } = Collapse;
-// const WikiList = () => {
-//   const getValue = (v) => {
-//     console.log(v);
-//   };
-
-//   useEffect(() => {}, []);
-
-//   const onClick = () => {
-//     console.log('clickpathname', location);
-//     history.push(`${location.pathname}/detail`, { data: 123 });
-//   };
-
-//   const text = (
-//     <p style={{ paddingLeft: 24 }}>
-//       A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be
-//       found as a welcome guest in many households across the world.
-//     </p>
-//   );
-
-//   return (
-//     <>
-//       <div>
-//         <Collapse bordered={false} defaultActiveKey={['1']}>
-//           <Panel header="This is panel header 1" key="1">
-//             {text}
-//           </Panel>
-//           <Panel header="This is panel header 2" key="2">
-//             {text}
-//           </Panel>
-//           <Panel header="This is panel header 3" key="3">
-//             {text}
-//           </Panel>
-//         </Collapse>
-//         <button type="button" onClick={onClick}>
-//           click
-//         </button>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default WikiList;
-
 import { getAllProjectInfo } from '@/request/projectInfo';
 import { getAllUserInfo } from '@/request/userInfo';
-import { getAllWikiInfo } from '@/request/wikiInfo';
-import { addKeyToFnDataArray } from '@/utils/utils';
+import { getWikiInfoByProjectID } from '@/request/wikiInfo';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { NewLineConfig, RecordKey } from '@ant-design/pro-utils/es/useEditableArray';
 import { history } from '@umijs/max';
+import { Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { pageSize } from '../Components/unitConfig';
 
 const WikiProtable = () => {
   const [userName, setUserName] = useState({});
-  const [project, setProject] = useState({});
+  const [project, setProject] = useState<any>([]);
+  const [wikiList, setWikiList] = useState<API.WikiInfo[]>([]);
   useEffect(() => {
     getAllUserInfo().then((res) => {
       let ret = {};
@@ -69,19 +23,24 @@ const WikiProtable = () => {
       }
       setUserName(ret);
     });
+
     getAllProjectInfo().then((res) => {
-      let ret = {};
+      let ret: { value: number; label: string }[] = [];
       for (let i = 0; i < res?.data?.length; i++) {
-        const project = res?.data[i] as API.ProjectInfo;
-        if (project?.name) {
-          ret[project.name] = { text: project.name, id: project.id };
-        }
+        const t = { value: res?.data[i].id, label: res?.data[i].name };
+        ret.push(t);
       }
+      // console.log('project:', ret);
       setProject(ret);
+    });
+
+    getWikiInfoByProjectID(1).then((res) => {
+      setWikiList(res.data);
     });
 
     // console.log('TaskProtable');
   }, []);
+
   const columns: ProColumns<API.WikiInfo>[] = [
     {
       title: 'ID',
@@ -190,6 +149,26 @@ const WikiProtable = () => {
   //     console.log('resgetAllTaskInfo', res);
   //   });
   // };
+  const selectProject = () => {
+    const handleChange = (value: number) => {
+      // console.log(`selected ${value}`);
+      getWikiInfoByProjectID(value).then((res) => {
+        setWikiList(res.data);
+      });
+    };
+
+    return (
+      <>
+        <span> 项目名称</span>
+        <Select
+          style={{ width: 200, marginLeft: '10px' }}
+          onChange={handleChange}
+          options={project}
+        />
+      </>
+    );
+  };
+
   return (
     // <button type="button" onClick={myGetAllTaskInfo}>
     //   click
@@ -206,18 +185,20 @@ const WikiProtable = () => {
           await updateTaskInfo(rows, record, originRow, newLineConfig);
         },
       }}
-      request={(params, sorter, filter) => {
-        // 表单搜索项会从 params 传入，传递给后端接口。
-        console.log(params, sorter, filter);
-        // return Promise.resolve({
-        //   data: tableListDataSource,
-        //   success: true,
-        // });
-        return addKeyToFnDataArray(getAllWikiInfo);
-      }}
+      // request={(params, sorter, filter) => {
+      //   // 表单搜索项会从 params 传入，传递给后端接口。
+      //   console.log(params, sorter, filter);
+      //   // return Promise.resolve({
+      //   //   data: tableListDataSource,
+      //   //   success: true,
+      //   // });
+      //   // return addKeyToFnDataArray(getAllWikiInfo);
+      // }}
+      dataSource={wikiList}
       ErrorBoundary={false}
       rowKey="id"
       search={false}
+      headerTitle={selectProject()}
       pagination={{
         pageSize: pageSize,
         // onChange: (page) => console.log(page),

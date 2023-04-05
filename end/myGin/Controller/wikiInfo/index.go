@@ -62,3 +62,14 @@ func UpdateContent(context *gin.Context) {
 	// fmt.Println("update", l)
 
 }
+
+func GetWikiByProjectID(context *gin.Context) {
+	id := context.Query("id")
+	w := wiki.WikiInfo{}
+	wikis := w.GetWikiByProjectID(id)
+	if wikis != nil {
+		res.Return(context, utils.SUCCESS, wikis)
+	} else {
+		res.Return(context, utils.ERROR, wikis)
+	}
+}

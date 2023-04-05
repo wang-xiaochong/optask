@@ -13,6 +13,22 @@ export async function getAllWikiInfo(options?: { [key: string]: any }) {
 }
 
 /** 获取当前的用户 GET /api/currentUser */
+export async function getWikiInfoByID(id: number | string, options?: { [key: string]: any }) {
+  if (typeof id == 'number') {
+    id = id.toString();
+  }
+  return request<{
+    data: API.WikiInfo;
+  }>('/api/wiki/getWikiInfoByID', {
+    method: 'GET',
+    params: {
+      id: id,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 获取当前的用户 GET /api/currentUser */
 export async function getWikiInfoByProjectID(
   id: number | string,
   options?: { [key: string]: any },
@@ -21,7 +37,7 @@ export async function getWikiInfoByProjectID(
     id = id.toString();
   }
   return request<{
-    data: API.WikiInfo;
+    data: API.WikiInfo[];
   }>('/api/wiki/getWikiInfoByProjectID', {
     method: 'GET',
     params: {
