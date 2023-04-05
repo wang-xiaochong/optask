@@ -99,14 +99,22 @@ func HandleSQL(rows *sql.Rows) []map[string]interface{} {
 	return result
 }
 
-func GetAll(collection string) []map[string]interface{} {
-	ret := Retrieve(collection, "id", "")
+func GetAll(collection string, args ...string) []map[string]interface{} {
+	ret := Retrieve(collection, "id", "", args)
 	return ret
 }
 
 // Retrieve 单字段模糊搜索
-func Retrieve(collection string, searchKey string, value string) []map[string]interface{} {
-	sqlStr := "select * from " + collection + " where " + searchKey + " like ?;"
+func Retrieve(collection string, searchKey string, value string, args []string) []map[string]interface{} {
+	var sort = ""
+	if args != nil {
+		sort = "order by " + args[0] + " " + args[1]
+	}
+	sqlStr := "select * from " + collection + " where " + searchKey + " like ?"
+	if sort != "" {
+		sqlStr = sqlStr + " " + sort
+	}
+	sqlStr = sqlStr + ";"
 	//查询数据，取所有字段
 	rows, _ := database.MysqlDB.Query(sqlStr, "%"+value+"%")
 	ret := HandleSQL(rows)
