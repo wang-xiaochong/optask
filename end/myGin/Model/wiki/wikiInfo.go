@@ -12,7 +12,7 @@ type WikiInfo struct {
 	Title       *string `json:"title" form:"title"`              //标题
 	Content     *string `json:"content"   form:"content" `       //HTML内容
 	Project     *int    `json:"project" form:"project" `         //所属项目
-	CreatedBy   *int    `json:"createdBy" form:"createdBy" `     //创建人
+	CreatedBy   *string `json:"createdBy" form:"createdBy" `     //创建人
 	CreatedTime *string `json:"createdTime" form:"createdTime" ` //创建时间
 	UpdateInfo  *int    `json:"updateInfo" form:"updateInfo" `   //更新的信息ID
 	UpdateTime  *string `json:"updateTime" form:"updateTime" `   //最新的更新时间
@@ -85,6 +85,33 @@ func (w *WikiInfoUpdate) UpdateContent(wu WikiInfoUpdate) (rows int, err error) 
 		fmt.Println(err)
 	}
 	rs, err := stmt.Exec(*wu.Content, *wu.Title, *wu.UpdateTime, *wu.UpdateInfo, *wu.Id)
+	if err != nil {
+		fmt.Println(err)
+	}
+	row, err := rs.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+	}
+	rows = int(row)
+	defer stmt.Close()
+	return
+}
+
+func (w *WikiInfo) UpdateWikiInfoByID(wu WikiInfo) (rows int, err error) {
+	//查询数据，取所有字段
+	sqlStr := "select id from userInfo where name=?;"
+	rows1, err := database.MysqlDB.Query(sqlStr, *wu.CreatedBy)
+	if err != nil {
+		fmt.Println("GetAllErr:", err)
+	}
+	ret := curd.HandleSQL(rows1)
+	var createdBy = ret[0]["id"]
+
+	stmt, err := database.MysqlDB.Prepare("update wikiInfo set title=?,content=?,project=?,createdBy=?,createdTime=?,updateInfo=?,updateTime=?,parent=? where id=?")
+	if err != nil {
+		fmt.Println(err)
+	}
+	rs, err := stmt.Exec(*wu.Title, *wu.Content, *wu.Project, createdBy, *wu.CreatedTime, *wu.UpdateInfo, *wu.UpdateTime, *wu.Parent, *wu.Id)
 	if err != nil {
 		fmt.Println(err)
 	}

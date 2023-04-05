@@ -45,8 +45,6 @@ func GetWikiByID(context *gin.Context) {
 }
 
 func UpdateContent(context *gin.Context) {
-	// fmt.Println("context", context)
-	// fmt.Println("context", context.Request.Body)
 	w := wiki.WikiInfoUpdate{}
 	err := context.Bind(&w)
 	if err != nil {
@@ -54,13 +52,16 @@ func UpdateContent(context *gin.Context) {
 	}
 	w.UpdateContent(w)
 	res.Return(context, utils.SUCCESS, "")
-	// if wikis != nil {
-	// 	res.Return(context, utils.SUCCESS, "")
-	// } else {
-	// 	res.Return(context, utils.ERROR, "")
-	// }
-	// fmt.Println("update", l)
+}
 
+func UpdateWikiInfoByID(context *gin.Context) {
+	w := wiki.WikiInfo{}
+	err := context.Bind(&w)
+	if err != nil {
+		fmt.Println(err)
+	}
+	w.UpdateWikiInfoByID(w)
+	res.Return(context, utils.SUCCESS, "")
 }
 
 func GetWikiByProjectID(context *gin.Context) {

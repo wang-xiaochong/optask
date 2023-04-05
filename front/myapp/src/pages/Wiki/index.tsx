@@ -1,8 +1,8 @@
 import { getAllProjectInfo } from '@/request/projectInfo';
 import { getAllUserInfo } from '@/request/userInfo';
-import { getWikiInfoByProjectID } from '@/request/wikiInfo';
+import { getAllWikiInfo, getWikiInfoByProjectID, updateWikiInfoByID } from '@/request/wikiInfo';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
-import { NewLineConfig, RecordKey } from '@ant-design/pro-utils/es/useEditableArray';
+import { RecordKey } from '@ant-design/pro-utils/es/useEditableArray';
 import { history } from '@umijs/max';
 import { Select } from 'antd';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ import { pageSize } from '../Components/unitConfig';
 const WikiProtable = () => {
   const [userName, setUserName] = useState({});
   const [project, setProject] = useState<any>([]);
+  const [projectID, setProjectID] = useState<any>();
   const [wikiList, setWikiList] = useState<API.WikiInfo[]>([]);
   useEffect(() => {
     getAllUserInfo().then((res) => {
@@ -33,11 +34,9 @@ const WikiProtable = () => {
       // console.log('project:', ret);
       setProject(ret);
     });
-
-    getWikiInfoByProjectID(1).then((res) => {
+    getAllWikiInfo().then((res) => {
       setWikiList(res.data);
     });
-
     // console.log('TaskProtable');
   }, []);
 
@@ -131,27 +130,34 @@ const WikiProtable = () => {
       },
     },
   ];
-  const updateTaskInfo = async (
+  const updateWikiInfo = async (
     rows: RecordKey,
     record: API.TaskInfo & { index?: number | undefined },
-    originRow: API.TaskInfo & { index?: number | undefined },
-    newLineConfig: NewLineConfig<API.TaskInfo> | undefined,
+    // originRow: API.TaskInfo & { index?: number | undefined },
+    // newLineConfig: NewLineConfig<API.TaskInfo> | undefined,
   ) => {
-    console.log('rows', rows);
+    // console.log('rows', rows);
     console.log('record', record);
-    console.log('originRow', originRow);
-    console.log('newLineConfig', newLineConfig);
+    // console.log('originRow', originRow);
+    // console.log('newLineConfig', newLineConfig);
     // record sent to end
-  };
+    delete record.index;
+    await updateWikiInfoByID(record);
 
-  // const myGetAllTaskInfo = () => {
-  //   getAllWikiInfo().then((res) => {
-  //     console.log('resgetAllTaskInfo', res);
-  //   });
-  // };
+    if (projectID) {
+      getWikiInfoByProjectID(projectID).then((res) => {
+        setWikiList(res.data);
+      });
+    } else {
+      getAllWikiInfo().then((res) => {
+        setWikiList(res.data);
+      });
+    }
+  };
   const selectProject = () => {
     const handleChange = (value: number) => {
       // console.log(`selected ${value}`);
+      setProjectID(value);
       getWikiInfoByProjectID(value).then((res) => {
         setWikiList(res.data);
       });
@@ -182,7 +188,7 @@ const WikiProtable = () => {
           return [defaultDoms.save, defaultDoms.cancel];
         },
         onSave: async (rows, record, originRow, newLineConfig) => {
-          await updateTaskInfo(rows, record, originRow, newLineConfig);
+          await updateWikiInfo(rows, record, originRow, newLineConfig);
         },
       }}
       // request={(params, sorter, filter) => {
