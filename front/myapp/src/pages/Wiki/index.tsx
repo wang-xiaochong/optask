@@ -26,7 +26,7 @@ const WikiProtable = () => {
     });
 
     getAllProjectInfo().then((res) => {
-      let ret: { value: number; label: string }[] = [];
+      let ret: { value: number; label: string }[] = [{ value: 0, label: '全部' }];
       for (let i = 0; i < res?.data?.length; i++) {
         const t = { value: res?.data[i].id, label: res?.data[i].name };
         ret.push(t);
@@ -158,9 +158,15 @@ const WikiProtable = () => {
     const handleChange = (value: number) => {
       // console.log(`selected ${value}`);
       setProjectID(value);
-      getWikiInfoByProjectID(value).then((res) => {
-        setWikiList(res.data);
-      });
+      if (value) {
+        getWikiInfoByProjectID(value).then((res) => {
+          setWikiList(res.data);
+        });
+      } else {
+        getAllWikiInfo().then((res) => {
+          setWikiList(res.data);
+        });
+      }
     };
 
     return (

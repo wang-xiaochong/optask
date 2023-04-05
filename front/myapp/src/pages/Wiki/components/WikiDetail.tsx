@@ -2,13 +2,9 @@ import { currentUser } from '@/request/userInfo';
 import { updateWikiContent } from '@/request/wikiInfo';
 import { getNowFormatDate } from '@/utils/utils';
 import { history } from '@umijs/max';
-import { useState } from 'react';
 import Editor from './Editor';
 import './index.css';
 const Wiki = () => {
-  const [htmlContent, setHtmlContent] = useState();
-  const [state, setState] = useState(history.location.state);
-
   const updateContent = async (v) => {
     // console.log(v);
     const user = await currentUser();
