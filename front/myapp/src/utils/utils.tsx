@@ -21,7 +21,13 @@ export const addKeyToFnDataArray = async (fn: any) => {
   //   return fn;
   // }
 };
-
+export const waitTime = (time: number = 100) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+};
 // export const sleep = (wait: number) => {
 //   return new Promise((resolve, reject) => {
 //     setTimeout(() => {

@@ -7,20 +7,13 @@ import {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Col, Image, message, Row, Space } from 'antd';
+import { Button, Col, Image, message, Row, Space } from 'antd';
 import { useEffect, useState } from 'react';
-
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
 
 const Personal = () => {
   const formLayoutType = 'horizontal';
   const [user, setUser] = useState<API.CurrentUser>();
+  const [editEnable, setEditEnable] = useState(false);
 
   const initData = async () => {
     const userRet = await currentUser();
@@ -39,6 +32,7 @@ const Personal = () => {
   return (
     <ProCard>
       <ProForm
+        readonly={!editEnable}
         layout={formLayoutType}
         // grid={grid}
         rowProps={{
@@ -47,32 +41,36 @@ const Personal = () => {
         submitter={{
           render: (props, doms) => {
             return (
-              <Row>
-                <Col span={14} offset={4}>
-                  <Space>{doms}</Space>
-                </Col>
-              </Row>
+              <>
+                <Row>
+                  <Col span={14} offset={4}>
+                    <Space>
+                      {editEnable ? (
+                        doms
+                      ) : (
+                        <Button onClick={() => setEditEnable(!editEnable)}>编辑</Button>
+                      )}
+                    </Space>
+                  </Col>
+                </Row>
+              </>
             );
           },
         }}
         onFinish={async (values) => {
           // await waitTime(2000);
           console.log(values);
+
           message.success('提交成功');
+          setEditEnable(!editEnable);
         }}
         params={{}}
-        // request={async () => {
-        //   // await waitTime(100);
-        //   return {
-        //     name: user?.name,
-        //     useMode: 'chapter',
-        //   };
-        // }}
         request={myCurrentUser}
       >
         <div style={{ margin: '10px' }}>
           头像：
           <Image width={150} src={user?.avatar} />
+          <Button onClick={() => console.log('上传')}>上传</Button>
         </div>
         <ProFormText name="account" label="账号" tooltip="最长为 24 位" placeholder="请输入账号" />
         <ProFormText colProps={{ md: 12, xl: 8 }} name="name" label="姓名" />
@@ -85,9 +83,9 @@ const Personal = () => {
           label="职位"
           name="job"
           valueEnum={{
-            1: 'front end',
-            2: 'back end',
-            3: 'full stack',
+            前端工程师: '前端工程师',
+            后端工程师: '后端工程师',
+            实习生: '实习生',
           }}
         />
       </ProForm>
