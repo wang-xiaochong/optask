@@ -32,6 +32,8 @@ declare namespace API {
     phone?: string;
     password?: string;
     roleInfo?: string;
+    birthday?: string;
+    job?: string;
   };
 
   type TaskInfo = {

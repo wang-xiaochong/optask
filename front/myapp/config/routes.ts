@@ -141,6 +141,25 @@ export default [
     hideInMenu: true,
     // layout: false,
   },
+
+  {
+    // name: 'task.task-list',
+    icon: 'table',
+    name: '用户管理',
+    path: '/userManagement/list',
+    component: './User/Manager',
+    // hideInMenu: true,
+    // layout: false,
+  },
+  {
+    // name: 'task.task-list',
+    icon: 'table',
+    name: '个人中心',
+    path: '/personal',
+    component: './User/Personal',
+    // hideInMenu: true,
+    // layout: false,
+  },
   {
     path: '/',
     redirect: '/welcome',
