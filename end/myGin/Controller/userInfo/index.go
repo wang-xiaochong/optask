@@ -106,6 +106,16 @@ func MyLogin(context *gin.Context) {
 
 }
 
+func UpdateUserInfoByID(context *gin.Context) {
+	u := user.UserUpdateInfo{}
+	err := context.Bind(&u)
+	if err != nil {
+		fmt.Println(err)
+	}
+	u.UpdateUserInfoByID(u, context)
+	res.Return(context, utils.SUCCESS, "")
+}
+
 // func AddPerson(context *gin.Context) {
 // 	var p model.Person
 // 	err := context.Bind(&p)

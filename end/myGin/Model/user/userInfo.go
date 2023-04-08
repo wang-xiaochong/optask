@@ -1,9 +1,14 @@
 package user
 
 import (
+	database "Example/Database"
+	redis "Example/Redis"
+	keys "Example/Redis/keys"
 	"database/sql"
 	"fmt"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Person 自定义Person类
@@ -20,6 +25,18 @@ type UserInfo struct {
 	Phone    *int       `json:"phone" form:"phone"`          //电话
 	RoleInfo *int       `json:"roleInfo" form:"roleInfo"`    //对应角色ID
 	Salt     *string    `json:"salt"   form:"salt" `         //盐，用于加密
+	Birthday *time.Time `json:"birthday"   form:"birthday" ` //生日
+	Job      *string    `json:"job"   form:"job" `           //职位
+}
+
+type UserUpdateInfo struct {
+	Id       *int       `json:"id" form:"id"`                //唯一识别、主键自增
+	Account  *string    `json:"account" form:"account"`      //登录账号
+	Avatar   *string    `json:"avatar" form:"avatar"`        //头像
+	Name     *string    `json:"name" form:"name"`            //真实姓名
+	Email    *string    `json:"email" form:"email"`          //电子邮件
+	Phone    *int       `json:"phone" form:"phone"`          //电话
+	RoleInfo *int       `json:"roleInfo" form:"roleInfo"`    //对应角色ID
 	Birthday *time.Time `json:"birthday"   form:"birthday" ` //生日
 	Job      *string    `json:"job"   form:"job" `           //职位
 }
@@ -61,6 +78,36 @@ func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {
 	if err != nil {
 		fmt.Println(err)
 		return
+	}
+	return
+}
+
+func (w *UserUpdateInfo) UpdateUserInfoByID(u UserUpdateInfo, context *gin.Context) (rows int, err error) {
+
+	stmt, err := database.MysqlDB.Prepare("update userInfo set account=?,name=?,avatar=?,email=?,phone=?,roleInfo=?,birthday=?,job=? where id=?")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	rs, err := stmt.Exec(*u.Account, *u.Name, *u.Avatar, *u.Email, *u.Phone, *u.RoleInfo, *u.Birthday, *u.Job, *u.Id)
+	if err != nil {
+		fmt.Println(err)
+
+	}
+	row, err := rs.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+	}
+	rows = int(row)
+	defer stmt.Close()
+
+	reqIP := context.ClientIP()
+	if reqIP == "::1" {
+		reqIP = "127.0.0.1"
+	}
+	_, err = redis.DelKey(keys.REACT_APP_REDIS_USERINFO_ID_ + reqIP)
+	if err != nil {
+		fmt.Println(err)
 	}
 	return
 }

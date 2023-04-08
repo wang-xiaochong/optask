@@ -24,6 +24,7 @@ func InitRouter(e *gin.Engine) {
 		user.GET("/getUserInfoById", userInfo.GetUserInfoById)
 		user.POST("/login", userInfo.MyLogin)
 		user.POST("/logout", userInfo.MyLogout)
+		user.POST("/updateUserInfoByID", userInfo.UpdateUserInfoByID)
 		// user.POST("/add", controller.AddPerson)
 		// user.PUT("/update", controller.UpdatePerson)
 		// user.DELETE("/delete", controller.DeletePerson)

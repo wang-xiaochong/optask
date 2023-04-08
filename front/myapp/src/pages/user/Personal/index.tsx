@@ -1,13 +1,12 @@
-import { currentUser } from '@/request/userInfo';
+import { currentUser, updateUserInfoByID } from '@/request/userInfo';
 import {
   ProCard,
   ProForm,
   ProFormDatePicker,
-  ProFormDigit,
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Button, Col, Image, message, Row, Space } from 'antd';
+import { Avatar, Button, Col, message, Row, Space } from 'antd';
 import { useEffect, useState } from 'react';
 
 const Personal = () => {
@@ -59,8 +58,10 @@ const Personal = () => {
         }}
         onFinish={async (values) => {
           // await waitTime(2000);
+          values['id'] = user?.id;
+          values['avatar'] = user?.avatar;
           console.log(values);
-
+          await updateUserInfoByID(values);
           message.success('提交成功');
           setEditEnable(!editEnable);
         }}
@@ -69,12 +70,12 @@ const Personal = () => {
       >
         <div style={{ margin: '10px' }}>
           头像：
-          <Image width={150} src={user?.avatar} />
-          <Button onClick={() => console.log('上传')}>上传</Button>
+          <Avatar size={64} src={user?.avatar} />
         </div>
         <ProFormText name="account" label="账号" tooltip="最长为 24 位" placeholder="请输入账号" />
         <ProFormText colProps={{ md: 12, xl: 8 }} name="name" label="姓名" />
-        <ProFormDigit colProps={{ md: 12, xl: 8 }} name="email" label="邮箱" />
+        {/* <ProFormDigit colProps={{ md: 12, xl: 8 }} name="email" label="邮箱" /> */}
+        <ProFormText colProps={{ md: 12, xl: 8 }} name="email" label="邮箱" />
         <ProFormText colProps={{ md: 12, xl: 8 }} name="phone" label="电话" />
         <ProFormText colProps={{ md: 12, xl: 8 }} name="roleInfo" label="角色" />
         <ProFormDatePicker colProps={{ xl: 8, md: 12 }} label="生日" name="birthday" />
