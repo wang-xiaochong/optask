@@ -4,6 +4,7 @@ import (
 	database "Example/Database"
 	redis "Example/Redis"
 	keys "Example/Redis/keys"
+	"Example/Utils/curd"
 	"database/sql"
 	"fmt"
 	"time"
@@ -56,19 +57,33 @@ func (l *Login) Login(db *sql.DB) (id int, err error) {
 	return id, err
 }
 
-func (p *UserInfo) GetAll(db *sql.DB) (userInfos []UserInfo, err error) {
-	rows, err := db.Query("select id,account,name,avatar,email,phone,roleInfo,salt,birthday,job from userInfo")
-	// fmt.Println("=========GetAll")
-	// fmt.Println(rows)
-	if err != nil {
-		return
+// func (p *UserInfo) GetAll(db *sql.DB) (userInfos []UserInfo, err error) {
+// 	rows, err := db.Query("select id,account,name,avatar,email,phone,roleInfo,salt,birthday,job from userInfo")
+// 	if err != nil {
+// 		return
+// 	}
+// 	for rows.Next() {
+// 		var userInfo UserInfo
+// 		rows.Scan(&userInfo.Id, &userInfo.Account, &userInfo.Name, &userInfo.Avatar, &userInfo.Email, &userInfo.Phone, &userInfo.RoleInfo, &userInfo.Salt, &userInfo.Birthday, &userInfo.Job)
+// 		userInfos = append(userInfos, userInfo)
+// 	}
+// 	defer rows.Close()
+// 	return
+// }
+
+func (p *UserInfo) GetAll(db *sql.DB) (ret []map[string]interface{}, err error) {
+	ret = curd.GetAll("userInfo")
+	// 覆盖roleInfo
+	for i := 0; i < len(ret); i++ {
+		// fmt.Println("ret:", ret[i])
+		sqlStr2 := "select r.name as roleInfo from roleInfo as r where r.id=?"
+		rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["roleInfo"])
+		if err != nil {
+			fmt.Println(err)
+		}
+		ret2 := curd.HandleSQL(rows2)
+		ret[i]["roleInfo"] = ret2[0]["roleInfo"]
 	}
-	for rows.Next() {
-		var userInfo UserInfo
-		rows.Scan(&userInfo.Id, &userInfo.Account, &userInfo.Name, &userInfo.Avatar, &userInfo.Email, &userInfo.Phone, &userInfo.RoleInfo, &userInfo.Salt, &userInfo.Birthday, &userInfo.Job)
-		userInfos = append(userInfos, userInfo)
-	}
-	defer rows.Close()
 	return
 }
 

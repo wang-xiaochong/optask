@@ -182,10 +182,6 @@ const WikiProtable = () => {
   };
 
   return (
-    // <button type="button" onClick={myGetAllTaskInfo}>
-    //   click
-    // </button>
-
     <ProTable<API.WikiInfo>
       columns={columns}
       editable={{
@@ -197,15 +193,6 @@ const WikiProtable = () => {
           await updateWikiInfo(rows, record, originRow, newLineConfig);
         },
       }}
-      // request={(params, sorter, filter) => {
-      //   // 表单搜索项会从 params 传入，传递给后端接口。
-      //   console.log(params, sorter, filter);
-      //   // return Promise.resolve({
-      //   //   data: tableListDataSource,
-      //   //   success: true,
-      //   // });
-      //   // return addKeyToFnDataArray(getAllWikiInfo);
-      // }}
       dataSource={wikiList}
       ErrorBoundary={false}
       rowKey="id"

@@ -1,135 +1,122 @@
-import { getAllProjectInfo } from '@/request/projectInfo';
-import { ProList } from '@ant-design/pro-components';
 // import { Progress, Tag } from 'antd';
-import { history } from '@umijs/max';
+import { getAllUserInfo } from '@/request/userInfo';
+import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { useEffect, useState } from 'react';
 import { pageSize } from '../../Components/unitConfig';
 
-// const data = [
-//   '语雀的天空',
-//   'Ant Design',
-//   '蚂蚁金服体验科技',
-//   'TechUI',
-//   'TechUI 2.0',
-//   'Bigfish',
-//   'Umi',
-//   'Ant Design Pro',
-// ].map((item) => ({
-//   title: item,
-//   subTitle: <Tag color="#5BD8A6">语雀专栏</Tag>,
-//   actions: [<a key="run">邀请</a>, <a key="delete">删除</a>],
-//   avatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
-//   content: (
-//     <div
-//       style={{
-//         flex: 1,
-//       }}
-//     >
-//       <div
-//         style={{
-//           width: 200,
-//         }}
-//       >
-//         <div>发布中</div>
-//         <Progress percent={80} />
-//       </div>
-//     </div>
-//   ),
-// }));
-
 const Manager = () => {
-  const [cardActionProps, setCardActionProps] = useState<'actions' | 'extra'>('extra');
-  const [project, setProject] = useState<Array<API.ProjectInfo>>([]);
-  const [projectRender, setProjectRender] = useState<any>([]);
+  const [userList, setUserList] = useState();
+
+  const columns: ProColumns<API.User>[] = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      valueType: 'text',
+      readonly: true,
+      render: (text, record) => {
+        // console.log(text, record, index);
+        return (
+          <a>
+            <span
+            // onClick={() => {
+            //   let pathname = location.pathname;
+            //   history.push(`${pathname}/${record.id}`, record);
+            // }}
+            >
+              #{Number(text?.toString())}
+            </span>
+          </a>
+        );
+      },
+    },
+    {
+      title: '账号',
+      dataIndex: 'account',
+      valueType: 'text',
+      readonly: true,
+      width: '10%',
+      render: (text, record) => {
+        return (
+          <a>
+            <span
+            // onClick={() => {
+            //   let pathname = location.pathname;
+            //   history.push(`${pathname}/${record.id}`, record);
+            // }}
+            >
+              {text}
+            </span>
+          </a>
+        );
+      },
+    },
+    {
+      title: '姓名',
+      dataIndex: 'name',
+      valueType: 'text',
+      // valueType: 'select',
+      // valueEnum: userName,
+      readonly: true,
+      // render: (_) => <a>{_}</a>,
+    },
+    {
+      title: '角色',
+      dataIndex: 'roleInfo',
+      valueType: 'text',
+      // render: (_) => <a>{_}</a>,
+    },
+    {
+      title: '职位',
+      dataIndex: 'job',
+      valueType: 'text',
+      // render: (_) => <a>{_}</a>,
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      key: 'option',
+      render: (text, record, _, action) => {
+        return [
+          <a
+            key="editable"
+            onClick={() => {
+              action?.startEditable?.(record?.id);
+            }}
+          >
+            编辑
+          </a>,
+        ];
+      },
+    },
+  ];
+
   useEffect(() => {
-    getAllProjectInfo().then((res) => {
-      let ret = [];
-      for (let i = 0; i < res?.data?.length; i++) {
-        const project = res?.data[i] as API.ProjectInfo;
-        if (project?.name) {
-          ret.push(project);
-        }
-      }
-      // console.log('project:', ret);
-      setProject(ret);
+    getAllUserInfo().then((res) => {
+      setUserList(res?.data);
     });
   }, []);
-  useEffect(() => {
-    let ret = project.map((item) => {
-      return {
-        id: item.id,
-        title: item.name,
-        // userInfo: item?.userInfo,
-        // desc: item?.desc,
-        // subTitle: <Tag color="#5BD8A6">语雀专栏</Tag>,
-        actions: [
-          <span key="status" style={{ width: 120 }}>
-            状态:{item.status}
-          </span>,
-          // <a key="run">
-          //   <span
-          //     onClick={() => {
-          //       history.push(`/project/list/${item?.id}`);
-          //     }}
-          //   >
-          //     查看
-          //   </span>
-          // </a>,
-          // <a key="delete">删除</a>,
-        ],
-        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
-        // content: (
-        //   <div
-        //     style={{
-        //       flex: 1,
-        //     }}
-        //   >
-        //     <div
-        //       style={{
-        //         width: 200,
-        //       }}
-        //     >
-        //       <div></div>
-        //     </div>
-        //   </div>
-        // ),
-      };
-    });
-    setProjectRender(ret);
-  }, [project]);
 
   return (
-    <ProList<any>
-      pagination={{
-        defaultPageSize: pageSize,
-        showSizeChanger: false,
-      }}
-      showActions="hover"
-      rowSelection={{}}
-      grid={{ gutter: 16, column: 2 }}
-      onItem={(record: any) => {
-        return {
-          // onMouseEnter: () => {
-          //   console.log(record);
-          // },
-          onClick: () => {
-            console.log(record);
-            history.push(`/project/list/${record?.id}`);
-          },
-        };
-      }}
-      metas={{
-        title: {},
-        subTitle: {},
-        type: {},
-        avatar: {},
-        content: {},
-        actions: {
-          cardActionProps,
+    <ProTable<API.User>
+      columns={columns}
+      editable={{
+        type: 'multiple',
+        actionRender: (row, config, defaultDoms) => {
+          return [defaultDoms.save, defaultDoms.cancel];
+        },
+        onSave: async (rows, record, originRow, newLineConfig) => {
+          // await updateWikiInfo(rows, record, originRow, newLineConfig);
         },
       }}
-      headerTitle="项目列表"
-      dataSource={projectRender}
+      dataSource={userList}
+      ErrorBoundary={false}
+      rowKey="id"
+      search={false}
+      // headerTitle={selectProject()}
+      pagination={{
+        pageSize: pageSize,
+        // onChange: (page) => console.log(page),
+      }}
     />
   );
 };
