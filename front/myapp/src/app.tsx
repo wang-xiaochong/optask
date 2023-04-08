@@ -4,13 +4,14 @@ import { LinkOutlined } from '@ant-design/icons';
 import { PageLoading, Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
+import { message } from 'antd';
 import { useEffect, useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
 import { RouterInfoType } from './request/enum';
 import { getAllRouterInfo } from './request/routerInfo';
 import { API } from './request/typings';
-import { currentUser as queryCurrentUser } from './request/userInfo';
+import { currentUser as queryCurrentUser, getRoleInfoByUserRoleInfo } from './request/userInfo';
 import { errorConfig } from './requestErrorConfig';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -62,25 +63,39 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   };
   const [menuItems, setMenuItems] = useState<Array<API.RouterInfo>>([]);
   const [isShowSide, setIsShowSide] = useState<boolean>(false);
-  const [projects, setProjects] = useState<Array<projectRender>>([]);
+  const [routerInfo, setRouterInfo] = useState<Array<string>>([]);
   // const [menuType, setMenuType] = useState<RouterInfoType>();
   const getRouterInfoByMenuType = (menuType?: RouterInfoType) => {
-    let ret = getAllRouterInfo().then((res) => {
+    let ret = getAllRouterInfo().then(async (res) => {
       // console.log('res:', res);
       let data = res?.data as Array<API.RouterInfo>;
       let ret: Array<API.RouterInfo> = [];
       if (data.length !== 0) {
+        let routerInfoArr = routerInfo;
+        if (routerInfo.length === 0) {
+          routerInfoArr = await getRoleInfoByUserRoleInfo(initialState?.currentUser?.roleInfo);
+          routerInfoArr = (routerInfoArr?.data?.routerInfo as string).split(',');
+          setRouterInfo(routerInfoArr);
+        }
         ret = data.reduce((prev, current) => {
-          return current.type === menuType ? prev.concat(current) : prev;
+          if (current.type === menuType && routerInfo.indexOf(current.id?.toString()) !== -1) {
+            // console.log('routerInfo', routerInfoArr);
+            return prev.concat(current);
+          } else {
+            return prev;
+          }
         }, []);
         // console.log('ret:', ret);
         if (ret.length !== 0) {
+          console.log('ret', ret);
           setMenuItems(ret);
           setIsShowSide(true);
           // setMenuType(menuType);
           if (menuType) sessionStorage.setItem('menuType', menuType?.toString());
           const defaultPath = ret[0].path || '/welcome';
           history.push(defaultPath);
+        } else {
+          message.info(`请联系管理员分配权限`);
         }
       }
       return ret;
@@ -89,6 +104,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   };
   useEffect(() => {
     // console.log('history.location', history.location.pathname);
+    getRoleInfoByUserRoleInfo(initialState?.currentUser?.roleInfo).then((res) => {
+      let routerInfoArr = (res?.data?.routerInfo as string).split(',');
+      // console.log('routerInfoArr', routerInfoArr);
+      setRouterInfo(routerInfoArr);
+    });
+
     if (history.location.pathname === '/welcome') {
       getRouterInfoByMenuType(RouterInfoType.home);
     } else {
@@ -135,8 +156,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     menuDataRender: (allMenuItem) => {
       let allMenuItemFilter = allMenuItem.filter((item) => {
         let hasPath = false;
+        // console.log('routerInfo', routerInfo);
         for (let i = 0; i < menuItems.length; i++) {
-          if (menuItems[i].path === item.path) {
+          if (
+            menuItems[i].path === item.path &&
+            routerInfo.indexOf(menuItems[i].id.toString()) !== -1
+          ) {
             hasPath = true;
             break;
           }
@@ -153,12 +178,34 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     //   content: initialState?.currentUser?.name,
     // },
     // footerRender: () => <Footer />,
-    onPageChange: () => {
+    onPageChange: async () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
       }
+
+      // let hasPath = false;
+      // console.log('menuItems', menuItems);
+      // console.log('routerInfo', routerInfo);
+      // let menuItemsArr = menuItems;
+      // let routerInfoArr = routerInfo;
+      // if (menuItems.length === 0) {
+      //   let routerInfo = await getAllRouterInfo();
+      // }
+
+      // menuItemsArr.forEach((menuItem) => {
+      //   if (
+      //     menuItem.path === location.pathname &&
+      //     routerInfoArr.indexOf(menuItem.id?.toString()) !== -1
+      //   ) {
+      //     hasPath = true;
+      //   }
+      // });
+      // if (!hasPath) {
+      //   message.info(`请联系管理员分配权限`);
+      //   history.push(loginPath);
+      // }
     },
     links: isDev
       ? [
@@ -180,6 +227,22 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     //     </div>
     //   );
     // },
+    // 顶部菜单栏左侧
+    headerTitleRender(logo: any, title: any, props: any) {
+      return (
+        <>
+          {/* {logo}
+          {title?.props?.children} */}
+          <span
+            style={{ display: 'inline-flex', cursor: 'pointer' }}
+            onClick={() => getRouterInfoByMenuType(RouterInfoType.home)}
+          >
+            {logo}
+            {title}
+          </span>
+        </>
+      );
+    },
     // 顶部菜单栏左侧
     // headerTitleRender(logo, title, props) {
     //   const handleChange = (value: number | string) => {

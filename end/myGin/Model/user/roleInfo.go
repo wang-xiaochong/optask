@@ -1,7 +1,7 @@
 package user
 
 // Role 模型
-type Role struct {
+type RoleInfo struct {
 	Id          int    `json:"id" `
 	Name        string `bson:"name"               json:"name" binding:"required" form:"name"`
 	Apis        []int  `bson:"apis"               json:"apis" form:"apis"`

@@ -68,6 +68,14 @@ export async function updateUserInfoByID(
     ...(options || {}),
   });
 }
+/** 查找用户信息接口 POST /api/login/account */
+export async function getRoleInfoByUserRoleInfo(id: number, options?: { [key: string]: any }) {
+  return request<API.RoleInfo>(`/api/user/getRoleInfoByUserRoleInfo?id=${id}`, {
+    method: 'GET',
+    // data: id,
+    ...(options || {}),
+  });
+}
 
 // export async function getUserInfoByProjectId(id: number, options?: { [key: string]: any }) {
 //   return request<API.CurrentUser>(`/api/user/getUserInfoById?id=${id}`, {

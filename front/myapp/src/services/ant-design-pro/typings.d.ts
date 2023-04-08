@@ -73,7 +73,12 @@ declare namespace API {
     type?: RouterInfoType;
     desc?: string;
   };
-
+  type RoleInfo = {
+    id?: number;
+    name?: string;
+    routerInfo?: string;
+    desc?: string;
+  };
   type WikiInfo = {
     id?: number;
     title?: string;

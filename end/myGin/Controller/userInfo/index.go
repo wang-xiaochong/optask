@@ -2,6 +2,7 @@ package userInfo
 
 import (
 	database "Example/Database"
+	role "Example/Model/role"
 	user "Example/Model/user"
 	redis "Example/Redis"
 	keys "Example/Redis/keys"
@@ -85,6 +86,18 @@ func GetUserInfoById(context *gin.Context) {
 		// context.JSON(http.StatusOK, result)
 	}
 
+}
+
+func GetRoleInfoByUserRoleInfo(context *gin.Context) {
+	// var result gin.H
+	id := context.Query("id")
+	r := role.RoleInfo{}
+	roleInfo, err := r.GetRoleInfoByID(id)
+	if err != nil {
+		res.Return(context, utils.ERROR, roleInfo)
+	} else {
+		res.Return(context, utils.SUCCESS, roleInfo)
+	}
 }
 
 func MyLogin(context *gin.Context) {

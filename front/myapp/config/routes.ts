@@ -141,7 +141,6 @@ export default [
     hideInMenu: true,
     // layout: false,
   },
-
   {
     // name: 'task.task-list',
     icon: 'table',
@@ -160,6 +159,7 @@ export default [
     // hideInMenu: true,
     // layout: false,
   },
+
   {
     path: '/',
     redirect: '/welcome',
