@@ -3,6 +3,7 @@ import {
   ProCard,
   ProForm,
   ProFormDatePicker,
+  ProFormDigit,
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
@@ -60,7 +61,8 @@ const Personal = () => {
           // await waitTime(2000);
           values['id'] = user?.id;
           values['avatar'] = user?.avatar;
-          console.log(values);
+          values['birthday'] = values?.birthday?.split('T')[0];
+          // console.log(values);
           await updateUserInfoByID(values);
           message.success('提交成功');
           setEditEnable(!editEnable);
@@ -77,7 +79,7 @@ const Personal = () => {
         {/* <ProFormDigit colProps={{ md: 12, xl: 8 }} name="email" label="邮箱" /> */}
         <ProFormText colProps={{ md: 12, xl: 8 }} name="email" label="邮箱" />
         <ProFormText colProps={{ md: 12, xl: 8 }} name="phone" label="电话" />
-        <ProFormText colProps={{ md: 12, xl: 8 }} name="roleInfo" label="角色" />
+        <ProFormDigit colProps={{ md: 12, xl: 8 }} name="roleInfo" label="角色" />
         <ProFormDatePicker colProps={{ xl: 8, md: 12 }} label="生日" name="birthday" />
         <ProFormSelect
           colProps={{ xl: 8, md: 12 }}

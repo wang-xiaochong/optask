@@ -66,7 +66,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   const [routerInfo, setRouterInfo] = useState<any>([]);
   // const [menuType, setMenuType] = useState<RouterInfoType>();
 
-  const routingPermissionVerification = async (menuType?: RouterInfoType) => {
+  const routingPermissionVerification = async (menuType?: RouterInfoType, push = true) => {
     let allRouterInfo = await getAllRouterInfo();
     // console.log('res:', res);
     let routerInfoData = allRouterInfo?.data as Array<API.RouterInfo>;
@@ -84,7 +84,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     hasPath = false;
     // 验证是否有路由权限
     let routerInfoArr = routerInfo;
-    if (routerInfo.length === 0) {
+    if (routerInfo.length === 0 && initialState?.currentUser?.roleInfo) {
       routerInfoArr = await getRoleInfoByUserRoleInfo(initialState?.currentUser?.roleInfo);
       routerInfoArr = (routerInfoArr?.data?.routerInfo as string).split(',');
       setRouterInfo(routerInfoArr);
@@ -116,21 +116,23 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         setIsShowSide(true);
         // setMenuType(menuType);
         if (menuType) sessionStorage.setItem('menuType', menuType?.toString());
-        const defaultPath = menuItemsArr[0].path || '/welcome';
-        history.push(defaultPath);
+        if (push) {
+          const defaultPath = menuItemsArr[0].path || '/welcome';
+          history.push(defaultPath);
+        }
       } else {
         message.error('请联系管理员分配权限');
       }
     }
   };
 
-  const getRouterInfoByMenuType = (menuType?: RouterInfoType) => {
-    routingPermissionVerification(menuType);
+  const getRouterInfoByMenuType = (menuType?: RouterInfoType, push = true) => {
+    routingPermissionVerification(menuType, push);
   };
 
   useEffect(() => {
     // console.log('history.location', history.location.pathname);
-    if (initialState?.currentUser) {
+    if (initialState?.currentUser?.roleInfo) {
       getRoleInfoByUserRoleInfo(initialState?.currentUser?.roleInfo).then((res) => {
         let routerInfoArr = (res?.data?.routerInfo as string).split(',');
         // console.log('routerInfoArr', routerInfoArr);
@@ -141,7 +143,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       getRouterInfoByMenuType(RouterInfoType.home);
     } else {
       let menuType = sessionStorage.getItem('menuType');
-      getRouterInfoByMenuType(menuType as RouterInfoType);
+      getRouterInfoByMenuType(menuType as RouterInfoType, false);
     }
     // getAllProjectInfo().then((res) => {
     //   let data = res?.data;

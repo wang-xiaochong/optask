@@ -70,11 +70,13 @@ export async function updateUserInfoByID(
 }
 /** 查找用户信息接口 POST /api/login/account */
 export async function getRoleInfoByUserRoleInfo(id: number, options?: { [key: string]: any }) {
-  return request<API.RoleInfo>(`/api/user/getRoleInfoByUserRoleInfo?id=${id}`, {
-    method: 'GET',
-    // data: id,
-    ...(options || {}),
-  });
+  if (id !== undefined) {
+    return request<API.RoleInfo>(`/api/user/getRoleInfoByUserRoleInfo?id=${id}`, {
+      method: 'GET',
+      // data: id,
+      ...(options || {}),
+    });
+  }
 }
 
 // export async function getUserInfoByProjectId(id: number, options?: { [key: string]: any }) {

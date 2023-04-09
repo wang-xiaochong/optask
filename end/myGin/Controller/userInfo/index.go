@@ -125,6 +125,7 @@ func UpdateUserInfoByID(context *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	u.UpdateUserInfoByID(u, context)
 	res.Return(context, utils.SUCCESS, "")
 }

@@ -7,7 +7,6 @@ import (
 	"Example/Utils/curd"
 	"database/sql"
 	"fmt"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,29 +16,29 @@ type UserInfo struct {
 	// Id        int    `json:"id"`
 	// FirstName string `json:"first_name" form:"first_name"`
 	// LastName  string `json:"last_name" form:"last_name"`
-	Id       *int       `json:"id" form:"id"`                //唯一识别、主键自增
-	Account  *string    `json:"account" form:"account"`      //登录账号
-	Password *string    `json:"password" form:"password"`    //登录密码（加密）
-	Avatar   *string    `json:"avatar" form:"avatar"`        //头像
-	Name     *string    `json:"name" form:"name"`            //真实姓名
-	Email    *string    `json:"email" form:"email"`          //电子邮件
-	Phone    *int       `json:"phone" form:"phone"`          //电话
-	RoleInfo *int       `json:"roleInfo" form:"roleInfo"`    //对应角色ID
-	Salt     *string    `json:"salt"   form:"salt" `         //盐，用于加密
-	Birthday *time.Time `json:"birthday"   form:"birthday" ` //生日
-	Job      *string    `json:"job"   form:"job" `           //职位
+	Id       *int    `json:"id" form:"id"`                //唯一识别、主键自增
+	Account  *string `json:"account" form:"account"`      //登录账号
+	Password *string `json:"password" form:"password"`    //登录密码（加密）
+	Avatar   *string `json:"avatar" form:"avatar"`        //头像
+	Name     *string `json:"name" form:"name"`            //真实姓名
+	Email    *string `json:"email" form:"email"`          //电子邮件
+	Phone    *string `json:"phone" form:"phone"`          //电话
+	RoleInfo *int    `json:"roleInfo" form:"roleInfo"`    //对应角色ID
+	Salt     *string `json:"salt"   form:"salt" `         //盐，用于加密
+	Birthday *string `json:"birthday"   form:"birthday" ` //生日
+	Job      *string `json:"job"   form:"job" `           //职位
 }
 
 type UserUpdateInfo struct {
-	Id       *int       `json:"id" form:"id"`                //唯一识别、主键自增
-	Account  *string    `json:"account" form:"account"`      //登录账号
-	Avatar   *string    `json:"avatar" form:"avatar"`        //头像
-	Name     *string    `json:"name" form:"name"`            //真实姓名
-	Email    *string    `json:"email" form:"email"`          //电子邮件
-	Phone    *int       `json:"phone" form:"phone"`          //电话
-	RoleInfo *int       `json:"roleInfo" form:"roleInfo"`    //对应角色ID
-	Birthday *time.Time `json:"birthday"   form:"birthday" ` //生日
-	Job      *string    `json:"job"   form:"job" `           //职位
+	Id       *int    `json:"id" form:"id"`                //唯一识别、主键自增
+	Account  *string `json:"account" form:"account"`      //登录账号
+	Avatar   *string `json:"avatar" form:"avatar"`        //头像
+	Name     *string `json:"name" form:"name"`            //真实姓名
+	Email    *string `json:"email" form:"email"`          //电子邮件
+	Phone    *string `json:"phone" form:"phone"`          //电话
+	RoleInfo *int    `json:"roleInfo" form:"roleInfo"`    //对应角色ID
+	Birthday *string `json:"birthday"   form:"birthday" ` //生日
+	Job      *string `json:"job"   form:"job" `           //职位
 }
 
 // Login 模型
