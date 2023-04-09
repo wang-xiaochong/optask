@@ -109,36 +109,49 @@ const TaskDetail = () => {
               />
             </ProForm.Group>
             <ProForm.Group>
+              <ProForm.Group>
+                <ProFormSelect options={userName} width="xs" name="createdBy" label="创建人" />
+                <ProFormSelect options={userName} width="xs" name="appoint" label="指定人" />
+                {/* <ProFormText name={['contract', 'name']} label="合同名称" placeholder="请输入名称" /> */}
+                <ProFormDigit width="xs" name="estimatedTime" label="估计的时间" />
+                <ProFormDigit width="xs" name="consumeTime" label="已耗时间" />
+                <ProFormDigit width="xs" name="leftTime" label="剩余时间" />
+                <ProFormDatePicker
+                  colProps={{ xl: 8, md: 12 }}
+                  label="开始日期"
+                  name="createdTime"
+                />
+                <ProFormDatePicker colProps={{ xl: 8, md: 12 }} label="结束日期" name="endTime" />
+                <ProFormRadio.Group
+                  label="优先级"
+                  name="invoiceType"
+                  initialValue="高"
+                  options={['高', '中', '低']}
+                />
+              </ProForm.Group>
+              <ProForm.Group>
+                <label>任务详情</label>
+                <div
+                  style={{
+                    display: mode === 'read' ? 'none' : 'block',
+                    width: '100%',
+                    height: '300px',
+                    border: '1px solid #ececec',
+                    margin: '5px 0 10px 0',
+                  }}
+                >
+                  <BraftEditor
+                    value={editor}
+                    onChange={handleEditorChange}
+                    onSave={submitContent}
+                  />
+                </div>
+                <div id="htmlContent" style={{ display: mode === 'read' ? 'block' : 'none' }}></div>
+              </ProForm.Group>
               {/* <ProFormTextArea width={900} label="任务详情" name="detail" labelAlign="left" /> */}
-              <label>任务详情</label>
-              <div
-                style={{
-                  display: mode === 'read' ? 'none' : 'block',
-                  width: '100%',
-                  height: '300px',
-                  border: '1px solid #ececec',
-                  margin: '5px 0 10px 0',
-                }}
-              >
-                <BraftEditor value={editor} onChange={handleEditorChange} onSave={submitContent} />
-              </div>
-              <div id="htmlContent" style={{ display: mode === 'read' ? 'block' : 'none' }}></div>
             </ProForm.Group>
-
-            <ProForm.Group>
-              <ProFormSelect options={userName} width="xs" name="createdBy" label="创建人" />
-              <ProFormSelect options={userName} width="xs" name="appoint" label="指定人" />
-              {/* <ProFormText name={['contract', 'name']} label="合同名称" placeholder="请输入名称" /> */}
-            </ProForm.Group>
-            <ProForm.Group>
-              <ProFormDigit width="xs" name="estimatedTime" label="估计的时间" />
-              <ProFormDigit width="xs" name="consumeTime" label="已耗时间" />
-              <ProFormDigit width="xs" name="leftTime" label="剩余时间" />
-            </ProForm.Group>
-            <ProForm.Group>
-              <ProFormDatePicker colProps={{ xl: 8, md: 12 }} label="开始日期" name="createdTime" />
-              <ProFormDatePicker colProps={{ xl: 8, md: 12 }} label="结束日期" name="endTime" />
-            </ProForm.Group>
+            {/* <ProForm.Group></ProForm.Group>
+            <ProForm.Group></ProForm.Group>
             <ProForm.Group>
               <ProFormRadio.Group
                 label="优先级"
@@ -146,7 +159,7 @@ const TaskDetail = () => {
                 initialValue="高"
                 options={['高', '中', '低']}
               />
-            </ProForm.Group>
+            </ProForm.Group> */}
           </ProForm>
         </Card>
       </>
