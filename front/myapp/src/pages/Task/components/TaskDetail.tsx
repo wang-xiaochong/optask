@@ -86,8 +86,16 @@ const TaskDetail = () => {
             //   render: (_, dom) => <FooterToolbar>{dom}</FooterToolbar>,
             // }}
             submitter={{
-              render: (_, dom) => (
-                <span style={{ visibility: mode === 'read' ? 'hidden' : 'visible' }}>{dom}</span>
+              render: (_, doms) => (
+                <span style={{ visibility: mode === 'read' ? 'hidden' : 'visible' }}>
+                  {doms.map((dom) => {
+                    return (
+                      <span style={{ margin: '0 10px 0 10px' }} key={dom.key}>
+                        {dom}
+                      </span>
+                    );
+                  })}
+                </span>
               ),
             }}
             onFinish={updateFormData}
@@ -150,16 +158,6 @@ const TaskDetail = () => {
               </ProForm.Group>
               {/* <ProFormTextArea width={900} label="任务详情" name="detail" labelAlign="left" /> */}
             </ProForm.Group>
-            {/* <ProForm.Group></ProForm.Group>
-            <ProForm.Group></ProForm.Group>
-            <ProForm.Group>
-              <ProFormRadio.Group
-                label="优先级"
-                name="invoiceType"
-                initialValue="高"
-                options={['高', '中', '低']}
-              />
-            </ProForm.Group> */}
           </ProForm>
         </Card>
       </>
