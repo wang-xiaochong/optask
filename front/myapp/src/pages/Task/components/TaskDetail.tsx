@@ -10,16 +10,17 @@ import {
   ProFormRadio,
   ProFormSelect,
   ProFormText,
-  ProFormTextArea,
 } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { Card, Radio, Space } from 'antd';
+import BraftEditor from 'braft-editor';
 import { useEffect, useState } from 'react';
 
 const TaskDetail = () => {
   const [mode, setMode] = useState<ProFieldFCMode>('read');
   const [formData, setFormData] = useState<API.TaskInfo>();
   const [userName, setUserName] = useState<any>([]);
+  const [editor, setEditor] = useState(BraftEditor.createEditorState(null));
 
   const state = history.location.state;
   const taskInfoID = state?.id;
@@ -35,14 +36,35 @@ const TaskDetail = () => {
       setUserName(ret);
     });
   }, []);
+
+  useEffect(() => {
+    if (document.getElementById('htmlContent')) {
+      document.getElementById('htmlContent').innerHTML = editor.toHTML();
+    }
+  }, [editor]);
   const getFormData = async () => {
     const taskInfoRes = await getTaskInfoByID(taskInfoID);
     setFormData(taskInfoRes.data);
+    setEditor(BraftEditor.createEditorState(taskInfoRes.data?.detail));
     console.log('taskInfoRes.data', taskInfoRes.data);
     return taskInfoRes.data;
   };
   const updateFormData = async (values: any) => {
     console.log(values);
+  };
+  const handleEditorChange = (editor: any) => {
+    setEditor(editor);
+  };
+  const submitContent = async () => {
+    // 在编辑器获得焦点时按下ctrl+s会执行此方法
+    // 编辑器内容提交到服务端之前，可直接调用editorState.toHTML()来获取HTML格式的内容
+    const htmlContent = editor.toHTML();
+    console.log('htmlContent', htmlContent);
+
+    // updateContent({ title, content: htmlContent });
+    // setEditorEnable(false);
+    // document.getElementById('htmlContent').innerHTML = editor.toHTML();
+    // const result = await saveEditorContent(htmlContent);
   };
 
   return (
@@ -87,7 +109,20 @@ const TaskDetail = () => {
               />
             </ProForm.Group>
             <ProForm.Group>
-              <ProFormTextArea width={900} label="任务详情" name="detail" labelAlign="left" />
+              {/* <ProFormTextArea width={900} label="任务详情" name="detail" labelAlign="left" /> */}
+              <label>任务详情</label>
+              <div
+                style={{
+                  display: mode === 'read' ? 'none' : 'block',
+                  width: '100%',
+                  height: '300px',
+                  border: '1px solid #ececec',
+                  margin: '5px 0 10px 0',
+                }}
+              >
+                <BraftEditor value={editor} onChange={handleEditorChange} onSave={submitContent} />
+              </div>
+              <div id="htmlContent" style={{ display: mode === 'read' ? 'block' : 'none' }}></div>
             </ProForm.Group>
 
             <ProForm.Group>
