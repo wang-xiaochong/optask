@@ -63,53 +63,80 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   };
   const [menuItems, setMenuItems] = useState<Array<API.RouterInfo>>([]);
   const [isShowSide, setIsShowSide] = useState<boolean>(false);
-  const [routerInfo, setRouterInfo] = useState<Array<string>>([]);
+  const [routerInfo, setRouterInfo] = useState<any>([]);
   // const [menuType, setMenuType] = useState<RouterInfoType>();
-  const getRouterInfoByMenuType = (menuType?: RouterInfoType) => {
-    let ret = getAllRouterInfo().then(async (res) => {
-      // console.log('res:', res);
-      let data = res?.data as Array<API.RouterInfo>;
-      let ret: Array<API.RouterInfo> = [];
-      if (data.length !== 0) {
-        let routerInfoArr = routerInfo;
-        if (routerInfo.length === 0) {
-          routerInfoArr = await getRoleInfoByUserRoleInfo(initialState?.currentUser?.roleInfo);
-          routerInfoArr = (routerInfoArr?.data?.routerInfo as string).split(',');
-          setRouterInfo(routerInfoArr);
-        }
-        ret = data.reduce((prev, current) => {
-          if (current.type === menuType && routerInfo.indexOf(current.id?.toString()) !== -1) {
-            // console.log('routerInfo', routerInfoArr);
-            return prev.concat(current);
-          } else {
-            return prev;
-          }
-        }, []);
-        // console.log('ret:', ret);
-        if (ret.length !== 0) {
-          console.log('ret', ret);
-          setMenuItems(ret);
-          setIsShowSide(true);
-          // setMenuType(menuType);
-          if (menuType) sessionStorage.setItem('menuType', menuType?.toString());
-          const defaultPath = ret[0].path || '/welcome';
-          history.push(defaultPath);
-        } else {
-          message.info(`请联系管理员分配权限`);
-        }
+
+  const routingPermissionVerification = async (menuType?: RouterInfoType) => {
+    let allRouterInfo = await getAllRouterInfo();
+    // console.log('res:', res);
+    let routerInfoData = allRouterInfo?.data as Array<API.RouterInfo>;
+    let hasPath = false;
+    // 验证是否包含路由
+    routerInfoData.forEach((routerInfo) => {
+      if (routerInfo.path === location.pathname) {
+        hasPath = true;
       }
-      return ret;
     });
-    return ret;
+    if (!hasPath) {
+      message.error('非法跳转');
+      history.back();
+    }
+    hasPath = false;
+    // 验证是否有路由权限
+    let routerInfoArr = routerInfo;
+    if (routerInfo.length === 0) {
+      routerInfoArr = await getRoleInfoByUserRoleInfo(initialState?.currentUser?.roleInfo);
+      routerInfoArr = (routerInfoArr?.data?.routerInfo as string).split(',');
+      setRouterInfo(routerInfoArr);
+    }
+    routerInfoData.forEach((routerInfo) => {
+      if (
+        routerInfo.path === location.pathname &&
+        routerInfoArr.indexOf(routerInfo.id?.toString()) !== -1
+      ) {
+        hasPath = true;
+      }
+    });
+    if (!hasPath) {
+      message.error('请联系管理员分配权限');
+      history.push('/welcome');
+    }
+
+    if (menuType) {
+      let menuItemsArr: Array<API.RouterInfo> = [];
+      menuItemsArr = routerInfoData.reduce((prev, current) => {
+        if (current.type === menuType && routerInfoArr.indexOf(current.id?.toString()) !== -1) {
+          return prev.concat(current);
+        } else {
+          return prev;
+        }
+      }, []);
+      if (menuItemsArr.length !== 0) {
+        setMenuItems(menuItemsArr);
+        setIsShowSide(true);
+        // setMenuType(menuType);
+        if (menuType) sessionStorage.setItem('menuType', menuType?.toString());
+        const defaultPath = menuItemsArr[0].path || '/welcome';
+        history.push(defaultPath);
+      } else {
+        message.error('请联系管理员分配权限');
+      }
+    }
   };
+
+  const getRouterInfoByMenuType = (menuType?: RouterInfoType) => {
+    routingPermissionVerification(menuType);
+  };
+
   useEffect(() => {
     // console.log('history.location', history.location.pathname);
-    getRoleInfoByUserRoleInfo(initialState?.currentUser?.roleInfo).then((res) => {
-      let routerInfoArr = (res?.data?.routerInfo as string).split(',');
-      // console.log('routerInfoArr', routerInfoArr);
-      setRouterInfo(routerInfoArr);
-    });
-
+    if (initialState?.currentUser) {
+      getRoleInfoByUserRoleInfo(initialState?.currentUser?.roleInfo).then((res) => {
+        let routerInfoArr = (res?.data?.routerInfo as string).split(',');
+        // console.log('routerInfoArr', routerInfoArr);
+        setRouterInfo(routerInfoArr);
+      });
+    }
     if (history.location.pathname === '/welcome') {
       getRouterInfoByMenuType(RouterInfoType.home);
     } else {
@@ -184,28 +211,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
       }
-
-      // let hasPath = false;
-      // console.log('menuItems', menuItems);
-      // console.log('routerInfo', routerInfo);
-      // let menuItemsArr = menuItems;
-      // let routerInfoArr = routerInfo;
-      // if (menuItems.length === 0) {
-      //   let routerInfo = await getAllRouterInfo();
-      // }
-
-      // menuItemsArr.forEach((menuItem) => {
-      //   if (
-      //     menuItem.path === location.pathname &&
-      //     routerInfoArr.indexOf(menuItem.id?.toString()) !== -1
-      //   ) {
-      //     hasPath = true;
-      //   }
-      // });
-      // if (!hasPath) {
-      //   message.info(`请联系管理员分配权限`);
-      //   history.push(loginPath);
-      // }
+      await routingPermissionVerification();
     },
     links: isDev
       ? [
