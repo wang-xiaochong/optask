@@ -78,6 +78,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       }
     });
     if (!hasPath) {
+      // console.log('location.pathname', location.pathname);
       message.error('非法跳转');
       history.back();
     }

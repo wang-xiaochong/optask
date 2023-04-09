@@ -4,8 +4,9 @@ import { getTaskInfoByProjectID } from '@/request/taskInfo';
 // import { Bar } from '@ant-design/charts';
 import { Bar } from '@ant-design/plots';
 import { ProCard } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import { useEffect, useState } from 'react';
-const TaskDetail = () => {
+const ProjectDetail = () => {
   // const [state, setState] = useState<ProFieldFCMode>('read');
   // const [plain, setPlain] = useState<boolean>(false);
   const [projectDetail, setProjectDetail] = useState<API.ProjectInfo>({});
@@ -13,13 +14,10 @@ const TaskDetail = () => {
   const [tasksInfoRender, setTasksInfoRender] = useState<
     { value: number; type: TaskInfoType; status: TaskInfoStatus }[]
   >([]);
-  const getID = () => {
-    const arr = location.pathname.split('/');
-    if (arr.length === 0) return 0;
-    return arr[arr.length - 1];
-  };
-  const projectID = getID();
+
   useEffect(() => {
+    console.log('history.location.state', history.location.state);
+    const projectID = history.location.state?.id;
     getTaskInfoByProjectID(projectID).then((res: { data: API.TaskInfo[] }) => {
       // console.log('对应项目任务列表：', res);
       setTasksInfo(res?.data);
@@ -136,4 +134,4 @@ const TaskDetail = () => {
     </ProCard>
   );
 };
-export default TaskDetail;
+export default ProjectDetail;

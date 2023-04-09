@@ -53,7 +53,7 @@ const WikiProtable = () => {
             <span
               onClick={() => {
                 let pathname = location.pathname;
-                history.push(`${pathname}/${record.id}`, record);
+                history.push(`${pathname}/detail`, record);
               }}
             >
               #{1000 + Number(text?.toString())}
@@ -73,7 +73,7 @@ const WikiProtable = () => {
             <span
               onClick={() => {
                 let pathname = location.pathname;
-                history.push(`${pathname}/${record.id}`, record);
+                history.push(`${pathname}/detail`, record);
               }}
             >
               {text}

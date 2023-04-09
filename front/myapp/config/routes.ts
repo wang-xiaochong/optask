@@ -64,7 +64,7 @@ export default [
   {
     name: 'wikiDetail',
     icon: 'table',
-    path: '/wiki/list/:id',
+    path: '/wiki/list/detail',
     component: './Wiki/components/WikiDetail.tsx',
     hideInMenu: true,
   },
@@ -83,7 +83,12 @@ export default [
     // routes: [
     //   {
     //     icon: 'table',
-    //     path: '/project/list/:id',
+    //     path: '/project/list',
+    //     component: './Project',
+    //   },
+    //   {
+    //     icon: 'table',
+    //     path: '/project/list/detail',
     //     component: './Project/components/ProjectDetail.tsx',
     //     hideInMenu: true,
     //   },
@@ -91,9 +96,9 @@ export default [
     // layout: false,
   },
   {
-    // name: 'task.task-list',
     icon: 'table',
-    path: '/project/list/:id',
+    name: 'projectDetail',
+    path: '/project/list/detail',
     component: './Project/components/ProjectDetail.tsx',
     hideInMenu: true,
     // layout: false,
@@ -136,7 +141,7 @@ export default [
   {
     // name: 'task.task-list',
     icon: 'table',
-    path: '/task/list/:id',
+    path: '/task/list/detail',
     component: './Task/components/TaskDetail.tsx',
     hideInMenu: true,
     // layout: false,

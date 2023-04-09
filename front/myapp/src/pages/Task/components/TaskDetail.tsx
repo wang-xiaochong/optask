@@ -1,21 +1,17 @@
 import { getTaskInfoByID } from '@/request/taskInfo';
 import { ProCard, ProFieldFCMode } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import { Radio, Space, Switch } from 'antd';
 import { useEffect, useState } from 'react';
 
 const TaskDetail = () => {
   const [state, setState] = useState<ProFieldFCMode>('read');
   const [plain, setPlain] = useState<boolean>(false);
-  const getID = () => {
-    const arr = location.pathname.split('/');
-    if (arr.length === 0) return 0;
-    return arr[arr.length - 1];
-  };
-  const taskInfoID = getID();
+
+  const taskInfoID = history.location.state?.id;
   useEffect(() => {
-    getTaskInfoByID(taskInfoID).then((res:{data:API.TaskInfo}) => {
+    getTaskInfoByID(taskInfoID).then((res: { data: API.TaskInfo }) => {
       console.log(res);
-      
     });
     console.log(taskInfoID);
   }, []);
