@@ -63,7 +63,7 @@ const MyTask = () => {
             <span
               onClick={() => {
                 let pathname = location.pathname;
-                history.push(`${pathname}/${record.id}`);
+                history.push(`${pathname}/detail`, record);
               }}
             >
               #{1000 + Number(text?.toString())}
@@ -83,7 +83,7 @@ const MyTask = () => {
             <span
               onClick={() => {
                 let pathname = location.pathname;
-                history.push(`${pathname}/${record.id}`);
+                history.push(`${pathname}/detail`, record);
               }}
             >
               {text}

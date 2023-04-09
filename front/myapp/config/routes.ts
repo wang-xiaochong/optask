@@ -113,7 +113,7 @@ export default [
     // layout: false,
   },
   {
-    path: '/task/appointme/:id',
+    path: '/task/appointme/detail',
     component: './Task/components/TaskDetail.tsx',
     hideInMenu: true,
   },
@@ -126,7 +126,7 @@ export default [
     // layout: false,
   },
   {
-    path: '/task/createdbyme/:id',
+    path: '/task/createdbyme/detail',
     component: './Task/components/TaskDetail.tsx',
     hideInMenu: true,
   },

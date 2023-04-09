@@ -5,10 +5,11 @@ import { Radio, Space, Switch } from 'antd';
 import { useEffect, useState } from 'react';
 
 const TaskDetail = () => {
-  const [state, setState] = useState<ProFieldFCMode>('read');
+  const [mode, setMode] = useState<ProFieldFCMode>('read');
   const [plain, setPlain] = useState<boolean>(false);
 
-  const taskInfoID = history.location.state?.id;
+  const state = history.location.state;
+  const taskInfoID = state?.id;
   useEffect(() => {
     getTaskInfoByID(taskInfoID).then((res: { data: API.TaskInfo }) => {
       console.log(res);
@@ -20,7 +21,7 @@ const TaskDetail = () => {
     <ProCard>
       <>
         <Space>
-          <Radio.Group onChange={(e) => setState(e.target.value as ProFieldFCMode)} value={state}>
+          <Radio.Group onChange={(e) => setMode(e.target.value as ProFieldFCMode)} value={mode}>
             <Radio value="read">只读</Radio>
             <Radio value="edit">编辑</Radio>
           </Radio.Group>
