@@ -19,7 +19,7 @@ const WikiProtable = () => {
       for (let i = 0; i < res?.data?.length; i++) {
         const user = res?.data[i] as API.CurrentUser;
         if (user?.name) {
-          ret[user.name] = { text: user.name, id: user.userid };
+          ret[user.name] = { text: user.name, id: user.id };
         }
       }
       setUserName(ret);

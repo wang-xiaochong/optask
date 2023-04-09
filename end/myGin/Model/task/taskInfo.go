@@ -18,15 +18,15 @@ type TaskInfo struct {
 	Leval          *string    `json:"leval" form:"leval"`                      //优先级
 	CreatedBy      *int       `json:"createdBy" form:"createdBy"`              //创建人
 	CreatedTime    *time.Time `json:"createdTime" form:"createdTime"`          //创建时间
+	EndTime        *time.Time `json:"endTime" form:"endTime"`                  //创建时间
 	Appoint        *int       `json:"appoint" form:"appoint"`                  //指定人
 	Project        *int       `json:"project"   form:"project" `               //所属项目
 	TaskUpdateInfo *int       `json:"taskUpdateInfo"   form:"taskUpdateInfo" ` //更新信息
 	UpdateTime     *time.Time `json:"updateTime"   form:"updateTime" `         //最新更新时间
-	EstimatedTime  *time.Time `json:"estimatedTime"   form:"estimatedTime" `   //预估时间
-	ConsumeTime    *time.Time `json:"consumeTime"   form:"consumeTime" `       //已耗时间
-	LeftTime       *time.Time `json:"leftTime"   form:"leftTime" `             //剩余时间
+	EstimatedTime  *int       `json:"estimatedTime"   form:"estimatedTime" `   //预估时间
+	ConsumeTime    *int       `json:"consumeTime"   form:"consumeTime" `       //已耗时间
+	LeftTime       *int       `json:"leftTime"   form:"leftTime" `             //剩余时间
 	Detail         *string    `json:"detail"   form:"detail" `                 //任务详情
-	Date           *time.Time `json:"date"   form:"date" `                     //日期
 	Parent         *int       `json:"parent"   form:"parent" `                 //父级任务
 }
 
