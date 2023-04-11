@@ -1,6 +1,7 @@
 import { TaskInfoStatusOptions, TaskInfoTypeOptions } from '@/pages/Components/Task';
-import { getTaskInfoByID } from '@/request/taskInfo';
+import { getTaskInfoByID, updateTaskContent } from '@/request/taskInfo';
 import { getAllUserInfo } from '@/request/userInfo';
+import { getNowFormatDate } from '@/utils/utils';
 import {
   ProCard,
   ProFieldFCMode,
@@ -50,7 +51,16 @@ const TaskDetail = () => {
     return taskInfoRes.data;
   };
   const updateFormData = async (values: any) => {
+    const htmlContent = editor.toHTML();
+    // console.log('htmlContent', htmlContent);
+    values['detail'] = htmlContent;
+    values['id'] = formData?.id;
+    values['parent'] = formData?.parent;
+    values['project'] = formData?.project;
+    values['updateTime'] = getNowFormatDate();
     console.log(values);
+    await updateTaskContent(values);
+    setMode('read');
   };
   const handleEditorChange = (editor: any) => {
     setEditor(editor);
@@ -130,33 +140,32 @@ const TaskDetail = () => {
                   name="createdTime"
                 />
                 <ProFormDatePicker colProps={{ xl: 8, md: 12 }} label="结束日期" name="endTime" />
-                <ProFormRadio.Group
-                  label="优先级"
-                  name="invoiceType"
-                  initialValue="高"
-                  options={['高', '中', '低']}
-                />
+                <ProFormRadio.Group label="优先级" name="leval" options={['高', '中', '低']} />
               </ProForm.Group>
-              <ProForm.Group>
-                <label>任务详情</label>
-                <div
-                  style={{
-                    display: mode === 'read' ? 'none' : 'block',
-                    width: '100%',
-                    height: '300px',
-                    border: '1px solid #ececec',
-                    margin: '5px 0 10px 0',
-                  }}
-                >
-                  <BraftEditor
-                    value={editor}
-                    onChange={handleEditorChange}
-                    onSave={submitContent}
-                  />
-                </div>
-                <div id="htmlContent" style={{ display: mode === 'read' ? 'block' : 'none' }}></div>
-              </ProForm.Group>
-              {/* <ProFormTextArea width={900} label="任务详情" name="detail" labelAlign="left" /> */}
+              <div>
+                <ProForm.Group>
+                  <label>任务详情</label>
+                  <div
+                    style={{
+                      display: mode === 'read' ? 'none' : 'block',
+                      width: '100%',
+                      height: '630px',
+                      border: '1px solid #ececec',
+                      margin: '5px 0 10px 0',
+                    }}
+                  >
+                    <BraftEditor
+                      value={editor}
+                      onChange={handleEditorChange}
+                      onSave={submitContent}
+                    />
+                  </div>
+                  <div
+                    id="htmlContent"
+                    style={{ display: mode === 'read' ? 'block' : 'none' }}
+                  ></div>
+                </ProForm.Group>
+              </div>
             </ProForm.Group>
           </ProForm>
         </Card>

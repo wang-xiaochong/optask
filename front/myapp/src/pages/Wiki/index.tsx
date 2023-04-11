@@ -176,6 +176,7 @@ const WikiProtable = () => {
           style={{ width: 200, marginLeft: '10px' }}
           onChange={handleChange}
           options={project}
+          defaultValue={0}
         />
       </>
     );

@@ -98,12 +98,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         hasPath = true;
       }
     });
-    if (!hasPath) {
+    if (!hasPath && initialState.currentUser) {
       message.error('请联系管理员分配权限');
       history.push('/welcome');
     }
 
-    if (menuType) {
+    if (menuType && initialState.currentUser) {
       let menuItemsArr: Array<API.RouterInfo> = [];
       menuItemsArr = routerInfoData.reduce((prev, current) => {
         if (current.type === menuType && routerInfoArr.indexOf(current.id?.toString()) !== -1) {
@@ -132,6 +132,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   };
 
   useEffect(() => {
+    if (!initialState?.currentUser && location.pathname !== loginPath) {
+      history.push(loginPath);
+      return;
+    }
     // console.log('history.location', history.location.pathname);
     if (initialState?.currentUser?.roleInfo) {
       getRoleInfoByUserRoleInfo(initialState?.currentUser?.roleInfo).then((res) => {
@@ -213,6 +217,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
+        return;
       }
       await routingPermissionVerification();
     },

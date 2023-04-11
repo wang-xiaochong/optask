@@ -8,6 +8,7 @@ import (
 	task "Example/Model/task"
 	utils "Example/Utils"
 	res "Example/Utils/response"
+	"fmt"
 
 	// "encoding/json"
 	// "fmt"
@@ -131,6 +132,16 @@ func GetTasksByAppoint(context *gin.Context) {
 	} else {
 		res.Return(context, utils.ERROR, task)
 	}
+}
+
+func UpdateContent(context *gin.Context) {
+	t := task.TaskUpdateInfo{}
+	err := context.Bind(&t)
+	if err != nil {
+		fmt.Println(err)
+	}
+	t.UpdateContent(t)
+	res.Return(context, utils.SUCCESS, "")
 }
 
 // func GetUserInfoById(context *gin.Context) {

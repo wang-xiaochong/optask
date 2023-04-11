@@ -30,6 +30,25 @@ type TaskInfo struct {
 	Parent         *int       `json:"parent"   form:"parent" `                 //父级任务
 }
 
+type TaskUpdateInfo struct {
+	Id            *int    `json:"id" form:"id"`                          //唯一识别、主键自增
+	Name          *string `json:"name" form:"name"`                      //任务名称
+	Type          *string `json:"type" form:"type"`                      //任务类型
+	Status        *string `json:"status" form:"status"`                  //状态
+	Leval         *string `json:"leval" form:"leval"`                    //优先级
+	CreatedBy     *string `json:"createdBy" form:"createdBy"`            //创建人
+	CreatedTime   *string `json:"createdTime" form:"createdTime"`        //创建时间
+	EndTime       *string `json:"endTime" form:"endTime"`                //创建时间
+	Appoint       *string `json:"appoint" form:"appoint"`                //指定人
+	Project       *string `json:"project"   form:"project" `             //所属项目
+	UpdateTime    *string `json:"updateTime"   form:"updateTime" `       //最新更新时间
+	EstimatedTime *int    `json:"estimatedTime"   form:"estimatedTime" ` //预估时间
+	ConsumeTime   *int    `json:"consumeTime"   form:"consumeTime" `     //已耗时间
+	LeftTime      *int    `json:"leftTime"   form:"leftTime" `           //剩余时间
+	Detail        *string `json:"detail"   form:"detail" `               //任务详情
+	Parent        *int    `json:"parent"   form:"parent" `               //父级任务
+}
+
 func (t *TaskInfo) GetAll() []map[string]interface{} {
 	// ret := curd.GetAll("taskInfo")
 	// return ret
@@ -186,6 +205,49 @@ func (t *TaskInfo) GetTaskByID(id string) interface{} {
 	// fmt.Println("ret2", ret2)
 
 	return ret[0]
+}
+
+func (tu *TaskUpdateInfo) UpdateContent(t TaskUpdateInfo) (rows int, err error) {
+	// fmt.Println("ggg", t)
+	sqlStr2 := "select id from userInfo as u where u.name=?"
+	rows2, err := database.MysqlDB.Query(sqlStr2, t.CreatedBy)
+	if err != nil {
+		fmt.Println(err)
+	}
+	ret2 := curd.HandleSQL(rows2)
+	var createdById = ret2[0]["id"]
+
+	sqlStr3 := "select id from userInfo as u where u.name=?"
+	rows3, err := database.MysqlDB.Query(sqlStr3, t.Appoint)
+	if err != nil {
+		fmt.Println(err)
+	}
+	ret3 := curd.HandleSQL(rows3)
+	var appointId = ret3[0]["id"]
+
+	sqlStr4 := "select id from projectInfo as p where p.name=?"
+	rows4, err := database.MysqlDB.Query(sqlStr4, t.Project)
+	if err != nil {
+		fmt.Println(err)
+	}
+	ret4 := curd.HandleSQL(rows4)
+	var projectId = ret4[0]["id"]
+
+	stmt, err := database.MysqlDB.Prepare("update taskInfo set name=?,type=?,status=?,leval=?,createdBy=?,createdTime=?,endTime=?,appoint=?,project=?,updateTime=?,estimatedTime=?,consumeTime=?,leftTime=?,detail=?,parent=? where id=?")
+	if err != nil {
+		fmt.Println(err)
+	}
+	rs, err := stmt.Exec(*t.Name, *t.Type, *t.Status, *t.Leval, createdById, *t.CreatedTime, *t.EndTime, appointId, projectId, *t.UpdateTime, *t.EstimatedTime, *t.ConsumeTime, *t.LeftTime, *t.Detail, *t.Parent, *t.Id)
+	if err != nil {
+		fmt.Println(err)
+	}
+	row, err := rs.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+	}
+	rows = int(row)
+	defer stmt.Close()
+	return
 }
 
 // func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {

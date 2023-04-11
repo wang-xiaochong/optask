@@ -38,7 +38,7 @@ func InitRouter(e *gin.Engine) {
 		task.GET("/getTasksByAppoint", taskInfo.GetTasksByAppoint)
 		task.GET("/getTaskInfoByID", taskInfo.GetTaskByID)
 		task.GET("/getTaskInfoByProjectID", taskInfo.GetTaskByProjectID)
-
+		task.POST("/update", taskInfo.UpdateContent)
 		// myTask.GET("/getAllTaskInfo",con)
 		// person.GET("/person", controller.GetPersonByID)
 		// person.POST("/add", controller.AddPerson)
