@@ -79,7 +79,9 @@ const Personal = () => {
         {/* <ProFormDigit colProps={{ md: 12, xl: 8 }} name="email" label="邮箱" /> */}
         <ProFormText colProps={{ md: 12, xl: 8 }} name="email" label="邮箱" />
         <ProFormText colProps={{ md: 12, xl: 8 }} name="phone" label="电话" />
-        <ProFormDigit colProps={{ md: 12, xl: 8 }} name="roleInfo" label="角色" />
+        <div className={user?.roleInfo === 1 ? undefined : 'none'}>
+          <ProFormDigit colProps={{ md: 12, xl: 8 }} name="roleInfo" label="角色" />
+        </div>
         <ProFormDatePicker colProps={{ xl: 8, md: 12 }} label="生日" name="birthday" />
         <ProFormSelect
           colProps={{ xl: 8, md: 12 }}
