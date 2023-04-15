@@ -68,6 +68,17 @@ export async function updateUserInfoByID(
     ...(options || {}),
   });
 }
+
+/** Updated user This can only be done by the logged in user. PUT /user/${param0} */
+export async function addUserInfo(body: any, options?: { [key: string]: any }) {
+  return request<any>(`/api/user/addUserInfo`, {
+    method: 'POST',
+    // params: { ...queryParams },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 查找用户信息接口 POST /api/login/account */
 export async function getRoleInfoByUserRoleInfo(id: number, options?: { [key: string]: any }) {
   if (id !== undefined) {

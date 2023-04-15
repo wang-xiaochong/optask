@@ -41,6 +41,14 @@ type UserUpdateInfo struct {
 	Job      *string `json:"job"   form:"job" `           //职位
 }
 
+type UserAddInfo struct {
+	Account  *string `json:"account" form:"account"`   //登录账号
+	Password *string `json:"password" form:"password"` //登录密码（加密）
+	Name     *string `json:"name" form:"name"`         //真实姓名
+	RoleInfo *int    `json:"roleInfo" form:"roleInfo"` //对应角色ID
+	Job      *string `json:"job"   form:"job" `        //职位
+}
+
 // Login 模型
 type Login struct {
 	Account  *string `  form:"account" json:"account"  `
@@ -123,6 +131,25 @@ func (w *UserUpdateInfo) UpdateUserInfoByID(u UserUpdateInfo, context *gin.Conte
 	if err != nil {
 		fmt.Println(err)
 	}
+	return
+}
+
+func (w *UserAddInfo) AddUserInfo(u UserAddInfo, context *gin.Context) (Id int, err error) {
+	stmt, err := database.MysqlDB.Prepare("insert into userInfo(account,password,name,roleInfo,job) values (?,?,?,?,?)")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("========1")
+	rs, err := stmt.Exec(*u.Account, *u.Password, *u.Name, *u.RoleInfo, *u.Job)
+	if err != nil {
+		fmt.Println(err)
+	}
+	id, err := rs.LastInsertId()
+	if err != nil {
+		fmt.Println(err)
+	}
+	Id = int(id)
+	defer stmt.Close()
 	return
 }
 

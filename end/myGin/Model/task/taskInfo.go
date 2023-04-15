@@ -208,11 +208,10 @@ func (t *TaskInfo) GetTaskByID(id string) interface{} {
 }
 
 func (tu *TaskUpdateInfo) UpdateContent(t TaskUpdateInfo) (rows int, err error) {
-	// fmt.Println("ggg", t)
 	sqlStr2 := "select id from userInfo as u where u.name=?"
 	rows2, err := database.MysqlDB.Query(sqlStr2, t.CreatedBy)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("ModelErr:", err)
 	}
 	ret2 := curd.HandleSQL(rows2)
 	var createdById = ret2[0]["id"]
@@ -233,18 +232,20 @@ func (tu *TaskUpdateInfo) UpdateContent(t TaskUpdateInfo) (rows int, err error) 
 	ret4 := curd.HandleSQL(rows4)
 	var projectId = ret4[0]["id"]
 
-	stmt, err := database.MysqlDB.Prepare("update taskInfo set name=?,type=?,status=?,leval=?,createdBy=?,createdTime=?,endTime=?,appoint=?,project=?,updateTime=?,estimatedTime=?,consumeTime=?,leftTime=?,detail=?,parent=? where id=?")
+	stmt, err := database.MysqlDB.Prepare("update taskInfo set name=?,type=?,status=?,leval=?,createdBy=?,createdTime=?,endTime=?,appoint=?,project=?,updateTime=?,estimatedTime=?,consumeTime=?,leftTime=?,detail=? where id=?")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("ModealSqlErr:", err)
 	}
-	rs, err := stmt.Exec(*t.Name, *t.Type, *t.Status, *t.Leval, createdById, *t.CreatedTime, *t.EndTime, appointId, projectId, *t.UpdateTime, *t.EstimatedTime, *t.ConsumeTime, *t.LeftTime, *t.Detail, *t.Parent, *t.Id)
+	// fmt.Println(*t.Name, *t.Type, *t.Status, *t.Leval, createdById, *t.CreatedTime, appointId, projectId, *t.UpdateTime, *t.Detail, *t.Id)
+	rs, err := stmt.Exec(*t.Name, *t.Type, *t.Status, *t.Leval, createdById, *t.CreatedTime, *t.EndTime, appointId, projectId, *t.UpdateTime, *t.EstimatedTime, *t.ConsumeTime, *t.LeftTime, *t.Detail, *t.Id)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("sqlUpdateErr:", err)
 	}
 	row, err := rs.RowsAffected()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("ModealSqlErr:", err)
 	}
+	// fmt.Println("ModealSqlErr:", err)
 	rows = int(row)
 	defer stmt.Close()
 	return

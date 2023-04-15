@@ -80,20 +80,6 @@ export default [
     icon: 'table',
     path: '/project/list',
     component: './Project',
-    // routes: [
-    //   {
-    //     icon: 'table',
-    //     path: '/project/list',
-    //     component: './Project',
-    //   },
-    //   {
-    //     icon: 'table',
-    //     path: '/project/list/detail',
-    //     component: './Project/components/ProjectDetail.tsx',
-    //     hideInMenu: true,
-    //   },
-    // ],
-    // layout: false,
   },
   {
     icon: 'table',
@@ -103,7 +89,6 @@ export default [
     hideInMenu: true,
     // layout: false,
   },
-
   {
     // name: 'task.task-list',
     name: '分配给我',
@@ -161,6 +146,14 @@ export default [
     name: '个人中心',
     path: '/personal',
     component: './User/Personal',
+    // hideInMenu: true,
+    // layout: false,
+  },
+  {
+    icon: 'table',
+    name: '添加用户',
+    path: '/user/add',
+    component: './User/Add',
     // hideInMenu: true,
     // layout: false,
   },

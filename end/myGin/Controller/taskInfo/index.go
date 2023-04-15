@@ -138,7 +138,7 @@ func UpdateContent(context *gin.Context) {
 	t := task.TaskUpdateInfo{}
 	err := context.Bind(&t)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Controller:UpdateContent", err)
 	}
 	t.UpdateContent(t)
 	res.Return(context, utils.SUCCESS, "")
