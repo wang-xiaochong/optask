@@ -1,4 +1,3 @@
-import Footer from '@/components/Footer';
 import { getUserInfoById, login } from '@/request/userInfo';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
@@ -380,7 +379,12 @@ const Login: React.FC = () => {
           </div>
         </LoginForm>
       </div>
-      <Footer />
+      <div style={{ position: 'absolute', bottom: '20px', left: '43%' }}>
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">
+          冀ICP备2021019405号-1
+        </a>
+      </div>
+      {/* <Footer /> */}
     </div>
   );
 };
