@@ -65,6 +65,7 @@ import (
 
 func GetAllTasks(context *gin.Context) {
 	t := task.TaskInfo{}
+	fmt.Println("===")
 	tasks := t.GetAll()
 	// for i := 0; i < len(tasks); i++ {
 	// 	 tasksNew[i] := new(task.TaskInfo)

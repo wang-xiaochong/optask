@@ -7,7 +7,7 @@
  * @param redirect 配置路由跳转
  * @param wrappers 配置路由组件的包装组件，通过包装组件可以为当前的路由组件组合进更多的功能。 比如，可以用于路由级别的权限校验
  * @param name 配置路由的标题，默认读取国际化文件 menu.ts 中 menu.xxxx 的值，如配置 name 为 login，则读取 menu.ts 中 menu.login 的取值作为标题
- * @param icon 配置路由的图标，取值参考 https://ant.design/components/icon-cn， 注意去除风格后缀和大小写，如想要配置图标为 <StepBackwardOutlined /> 则取值应为 stepBackward 或 StepBackward，如想要配置图标为 <UserOutlined /> 则取值应为 user 或者 User
+ * @param icon 配置路由的图标，取值参考 https://ant.design/components/icon-cn， 注意去除风格后缀和大小写，如想要配置图标为 <StepBackwardOutlined /> 则取值应为 stepBackward 或 StepBackward，如想要配置图标为 <UserOutlined /> 则取值应为 user 或者 user
  * @doc https://umijs.org/docs/guides/routes
  */
 export default [
@@ -18,7 +18,7 @@ export default [
       {
         name: 'login',
         path: '/user/login',
-        component: './User/Login',
+        component: './user/Login',
       },
     ],
   },
@@ -136,7 +136,7 @@ export default [
     icon: 'table',
     name: '用户管理',
     path: '/userManagement/list',
-    component: './User/Manager',
+    component: './user/Manager',
     // hideInMenu: true,
     // layout: false,
   },
@@ -145,7 +145,7 @@ export default [
     icon: 'table',
     name: '个人中心',
     path: '/personal',
-    component: './User/Personal',
+    component: './user/Personal',
     // hideInMenu: true,
     // layout: false,
   },
@@ -153,7 +153,7 @@ export default [
     icon: 'table',
     name: '添加用户',
     path: '/user/add',
-    component: './User/Add',
+    component: './user/Add',
     // hideInMenu: true,
     // layout: false,
   },
