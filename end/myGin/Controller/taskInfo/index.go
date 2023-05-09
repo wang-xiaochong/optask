@@ -65,7 +65,6 @@ import (
 
 func GetAllTasks(context *gin.Context) {
 	t := task.TaskInfo{}
-	fmt.Println("===")
 	tasks := t.GetAll()
 	// for i := 0; i < len(tasks); i++ {
 	// 	 tasksNew[i] := new(task.TaskInfo)
@@ -103,9 +102,9 @@ func GetTaskByID(context *gin.Context) {
 }
 
 func GetTaskByProjectID(context *gin.Context) {
-	id := context.Query("id")
+	name := context.Query("name")
 	t := task.TaskInfo{}
-	task := t.GetTaskByProjectID(id)
+	task := t.GetTaskByProjectID(name)
 	if task != nil {
 		res.Return(context, utils.SUCCESS, task)
 	} else {

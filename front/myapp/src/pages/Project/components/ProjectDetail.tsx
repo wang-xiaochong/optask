@@ -17,7 +17,7 @@ const ProjectDetail = () => {
 
   useEffect(() => {
     console.log('history.location.state', history.location.state);
-    const projectID = history.location.state?.id;
+    const projectID = history.location.state?.title;
     getTaskInfoByProjectID(projectID).then((res: { data: API.TaskInfo[] }) => {
       // console.log('对应项目任务列表：', res);
       setTasksInfo(res?.data);
@@ -99,7 +99,7 @@ const ProjectDetail = () => {
               style={{ minHeight: 300, maxWidth: 300, marginBlockStart: 24 }}
               size="small"
             >
-              <div>
+              {/* <div>
                 {projectDetail.userInfo?.map((item) => {
                   return (
                     <div style={{ display: 'flex', margin: '5px' }} key={item.name}>
@@ -108,7 +108,7 @@ const ProjectDetail = () => {
                     </div>
                   );
                 })}
-              </div>
+              </div> */}
             </ProCard>
           )}
         </ProCard>

@@ -12,7 +12,6 @@ const MyTask = () => {
   const [userName, setUserName] = useState({});
   const [project, setProject] = useState({});
   const [myTasks, setMyTasks] = useState([]);
-  const [appoint, setAppoint] = useState(0);
   useEffect(() => {
     getAllUserInfo().then((res) => {
       let ret = {};
@@ -35,20 +34,16 @@ const MyTask = () => {
       setProject(ret);
     });
     getInitialState().then((res) => {
-      if (res?.currentUser?.id) {
-        setAppoint(res?.currentUser?.id);
+      if (res?.currentUser?.name) {
+        getTaskInfoByAppoint(res?.currentUser?.name).then((res) => {
+          if (res.data) {
+            setMyTasks(res?.data);
+          }
+        });
       }
     });
     // console.log('TaskProtable');
   }, []);
-
-  useEffect(() => {
-    getTaskInfoByAppoint(appoint).then((res) => {
-      if (res.data) {
-        setMyTasks(res?.data);
-      }
-    });
-  }, [appoint]);
 
   const columns: ProColumns<API.TaskInfo>[] = [
     {

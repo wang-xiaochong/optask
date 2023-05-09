@@ -16,18 +16,18 @@ type TaskInfo struct {
 	Type           *string    `json:"type" form:"type"`                        //任务类型
 	Status         *string    `json:"status" form:"status"`                    //状态
 	Leval          *string    `json:"leval" form:"leval"`                      //优先级
-	CreatedBy      *int       `json:"createdBy" form:"createdBy"`              //创建人
+	CreatedBy      *string    `json:"createdBy" form:"createdBy"`              //创建人
 	CreatedTime    *time.Time `json:"createdTime" form:"createdTime"`          //创建时间
 	EndTime        *time.Time `json:"endTime" form:"endTime"`                  //创建时间
-	Appoint        *int       `json:"appoint" form:"appoint"`                  //指定人
-	Project        *int       `json:"project"   form:"project" `               //所属项目
+	Appoint        *string    `json:"appoint" form:"appoint"`                  //指定人
+	Project        *string    `json:"project"   form:"project" `               //所属项目
 	TaskUpdateInfo *int       `json:"taskUpdateInfo"   form:"taskUpdateInfo" ` //更新信息
 	UpdateTime     *time.Time `json:"updateTime"   form:"updateTime" `         //最新更新时间
 	EstimatedTime  *int       `json:"estimatedTime"   form:"estimatedTime" `   //预估时间
 	ConsumeTime    *int       `json:"consumeTime"   form:"consumeTime" `       //已耗时间
 	LeftTime       *int       `json:"leftTime"   form:"leftTime" `             //剩余时间
 	Detail         *string    `json:"detail"   form:"detail" `                 //任务详情
-	Parent         *int       `json:"parent"   form:"parent" `                 //父级任务
+	Parent         *string    `json:"parent"   form:"parent" `                 //父级任务
 }
 
 type TaskUpdateInfo struct {
@@ -46,12 +46,12 @@ type TaskUpdateInfo struct {
 	ConsumeTime   *int    `json:"consumeTime"   form:"consumeTime" `     //已耗时间
 	LeftTime      *int    `json:"leftTime"   form:"leftTime" `           //剩余时间
 	Detail        *string `json:"detail"   form:"detail" `               //任务详情
-	Parent        *int    `json:"parent"   form:"parent" `               //父级任务
+	Parent        *string `json:"parent"   form:"parent" `               //父级任务
 }
 
 func (t *TaskInfo) GetAll() []map[string]interface{} {
-	// ret := curd.GetAll("taskInfo")
-	// return ret
+	ret := curd.GetAll("taskInfo")
+	return ret
 
 	// sqlStr := "select t.*,p.name as project from taskInfo as t join projectInfo as p on t.project=p.id"
 	// //查询数据，取所有字段
@@ -62,28 +62,28 @@ func (t *TaskInfo) GetAll() []map[string]interface{} {
 	// ret := curd.HandleSQL(rows)
 	// return ret
 
-	sqlStr := "select t.*,p.name as project,u.name as appoint from taskInfo as t,projectInfo as p,userInfo as u where t.project=p.id and t.appoint=u.id order by t.id desc"
+	// sqlStr := "select t.*,p.name as project,u.name as appoint from taskInfo as t,projectInfo as p,userInfo as u where t.project=p.id and t.appoint=u.id order by t.id desc"
 	//查询数据，取所有字段
-	rows, err := database.MysqlDB.Query(sqlStr)
-	if err != nil {
-		fmt.Println("GetAllErr:", err)
-	}
-	ret := curd.HandleSQL(rows)
+	// rows, err := database.MysqlDB.Query(sqlStr)
+	// if err != nil {
+	// 	fmt.Println("GetAllErr:", err)
+	// }
+	// ret := curd.HandleSQL(rows)
 	// 覆盖createrdBy
-	for i := 0; i < len(ret); i++ {
-		// fmt.Println("ret:", ret[i])
-		sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"
-		rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["createdBy"])
-		if err != nil {
-			fmt.Println(err)
-		}
-		ret2 := curd.HandleSQL(rows2)
-		ret[i]["createdBy"] = ret2[0]["createdBy"]
-		// fmt.Println("ret2:", ret[i])
-		if ret[i]["taskUpdateInfo"] != nil {
-			ret[i]["taskUpdateInfo"] = getTaskUpdateInfo(ret[i]["taskUpdateInfo"])
-		}
-	}
+	// for i := 0; i < len(ret); i++ {
+	// 	// fmt.Println("ret:", ret[i])
+	// 	sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"
+	// 	rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["createdBy"])
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	ret2 := curd.HandleSQL(rows2)
+	// 	ret[i]["createdBy"] = ret2[0]["createdBy"]
+	// 	// fmt.Println("ret2:", ret[i])
+	// 	if ret[i]["taskUpdateInfo"] != nil {
+	// 		ret[i]["taskUpdateInfo"] = getTaskUpdateInfo(ret[i]["taskUpdateInfo"])
+	// 	}
+	// }
 
 	// // 覆盖createdBy
 	// sqlStr2 := "select u.name as createdBy from taskInfo as t, userInfo as u where t.createdBy=u.id"
@@ -99,64 +99,68 @@ func (t *TaskInfo) GetAll() []map[string]interface{} {
 	// 	// fmt.Println("isMap:", reflect.ValueOf(ret[i]).Kind() == reflect.Map)
 	// }
 	// fmt.Println("ret:", ret)
-	return ret
+	// return ret
 }
 
 func (t *TaskInfo) GetTasksByCreatedBy(createdBy string) []map[string]interface{} {
-	sqlStr := "select t.*,p.name as project,u.name as createdBy from taskInfo as t,projectInfo as p,userInfo as u where t.createdBy=? and t.project=p.id and t.createdBy=u.id"
-	//查询数据，取所有字段
-	rows, err := database.MysqlDB.Query(sqlStr, createdBy)
-	if err != nil {
-		fmt.Println(err)
-	}
-	ret := curd.HandleSQL(rows)
+	result := curd.Find("taskInfo", "createdBy", createdBy)
+	return result
+	// sqlStr := "select t.*,p.name as project,u.name as createdBy from taskInfo as t,projectInfo as p,userInfo as u where t.createdBy=? and t.project=p.id and t.createdBy=u.id"
+	// //查询数据，取所有字段
+	// rows, err := database.MysqlDB.Query(sqlStr, createdBy)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// ret := curd.HandleSQL(rows)
 
-	for i := 0; i < len(ret); i++ {
-		// fmt.Println("ret:", ret[i])
-		sqlStr2 := "select u.name as appoint from userInfo as u where u.id=?"
-		rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["appoint"])
-		if err != nil {
-			fmt.Println(err)
-		}
-		ret2 := curd.HandleSQL(rows2)
-		ret[i]["appoint"] = ret2[0]["appoint"]
-		// fmt.Println("ret2:", ret[i])
-		if ret[i]["taskUpdateInfo"] != nil {
-			ret[i]["taskUpdateInfo"] = getTaskUpdateInfo(ret[i]["taskUpdateInfo"])
-		}
-	}
-	return ret
+	// for i := 0; i < len(ret); i++ {
+	// 	// fmt.Println("ret:", ret[i])
+	// 	sqlStr2 := "select u.name as appoint from userInfo as u where u.id=?"
+	// 	rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["appoint"])
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	ret2 := curd.HandleSQL(rows2)
+	// 	ret[i]["appoint"] = ret2[0]["appoint"]
+	// 	// fmt.Println("ret2:", ret[i])
+	// 	if ret[i]["taskUpdateInfo"] != nil {
+	// 		ret[i]["taskUpdateInfo"] = getTaskUpdateInfo(ret[i]["taskUpdateInfo"])
+	// 	}
+	// }
+	// return ret
 }
 
 func (t *TaskInfo) GetTasksByAppoint(appoint string) []map[string]interface{} {
-	sqlStr := "select t.*,p.name as project,u.name as appoint from taskInfo as t,projectInfo as p,userInfo as u where t.appoint=? and t.project=p.id and t.appoint=u.id"
-	//查询数据，取所有字段
-	rows, err := database.MysqlDB.Query(sqlStr, appoint)
-	if err != nil {
-		fmt.Println(err)
-	}
-	ret := curd.HandleSQL(rows)
+	result := curd.Find("taskInfo", "appoint", appoint)
+	return result
+	// sqlStr := "select t.*,p.name as project,u.name as appoint from taskInfo as t,projectInfo as p,userInfo as u where t.appoint=? and t.project=p.id and t.appoint=u.id"
+	// //查询数据，取所有字段
+	// rows, err := database.MysqlDB.Query(sqlStr, appoint)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// ret := curd.HandleSQL(rows)
 	// 覆盖createrdBy
-	for i := 0; i < len(ret); i++ {
-		// fmt.Println("ret:", ret[i])
-		sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"
-		rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["createdBy"])
-		if err != nil {
-			fmt.Println(err)
-		}
-		ret2 := curd.HandleSQL(rows2)
-		ret[i]["createdBy"] = ret2[0]["createdBy"]
-		// fmt.Println("ret2:", ret[i])
-		if ret[i]["taskUpdateInfo"] != nil {
-			ret[i]["taskUpdateInfo"] = getTaskUpdateInfo(ret[i]["taskUpdateInfo"])
-		}
-	}
+	// for i := 0; i < len(ret); i++ {
+	// 	// fmt.Println("ret:", ret[i])
+	// 	sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"
+	// 	rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["createdBy"])
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	ret2 := curd.HandleSQL(rows2)
+	// 	ret[i]["createdBy"] = ret2[0]["createdBy"]
+	// 	// fmt.Println("ret2:", ret[i])
+	// 	if ret[i]["taskUpdateInfo"] != nil {
+	// 		ret[i]["taskUpdateInfo"] = getTaskUpdateInfo(ret[i]["taskUpdateInfo"])
+	// 	}
+	// }
 
-	return ret
+	// return ret
 }
 
-func (t *TaskInfo) GetTaskByProjectID(id string) []map[string]interface{} {
-	result := curd.Find("taskInfo", "project", id)
+func (t *TaskInfo) GetTaskByProjectID(name string) []map[string]interface{} {
+	result := curd.Find("taskInfo", "project", name)
 	return result
 }
 

@@ -12,7 +12,6 @@ const TaskCreatedByMe = () => {
   const [userName, setUserName] = useState({});
   const [project, setProject] = useState({});
   const [myTasks, setMyTasks] = useState([]);
-  const [createdBy, setCreatedBy] = useState(0);
   useEffect(() => {
     getAllUserInfo().then((res) => {
       let ret = {};
@@ -35,20 +34,25 @@ const TaskCreatedByMe = () => {
       setProject(ret);
     });
     getInitialState().then((res) => {
-      if (res?.currentUser?.id) {
-        setCreatedBy(res?.currentUser?.id);
+      if (res?.currentUser?.name) {
+        getTaskInfoByCreatedBy(res?.currentUser?.name).then((res) => {
+          if (res.data) {
+            setMyTasks(res?.data);
+          }
+        });
+
       }
     });
     // console.log('TaskProtable');
   }, []);
 
-  useEffect(() => {
-    getTaskInfoByCreatedBy(createdBy).then((res) => {
-      if (res.data) {
-        setMyTasks(res?.data);
-      }
-    });
-  }, [createdBy]);
+  // useEffect(() => {
+  //   getTaskInfoByCreatedBy(createdBy).then((res) => {
+  //     if (res.data) {
+  //       setMyTasks(res?.data);
+  //     }
+  //   });
+  // }, [createdBy]);
 
   const columns: ProColumns<API.TaskInfo>[] = [
     {

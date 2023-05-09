@@ -23,7 +23,7 @@ type UserInfo struct {
 	Name     *string `json:"name" form:"name"`            //真实姓名
 	Email    *string `json:"email" form:"email"`          //电子邮件
 	Phone    *string `json:"phone" form:"phone"`          //电话
-	RoleInfo *int    `json:"roleInfo" form:"roleInfo"`    //对应角色ID
+	RoleInfo *string `json:"roleInfo" form:"roleInfo"`    //对应角色ID
 	Salt     *string `json:"salt"   form:"salt" `         //盐，用于加密
 	Birthday *string `json:"birthday"   form:"birthday" ` //生日
 	Job      *string `json:"job"   form:"job" `           //职位
@@ -36,7 +36,7 @@ type UserUpdateInfo struct {
 	Name     *string `json:"name" form:"name"`            //真实姓名
 	Email    *string `json:"email" form:"email"`          //电子邮件
 	Phone    *string `json:"phone" form:"phone"`          //电话
-	RoleInfo *int    `json:"roleInfo" form:"roleInfo"`    //对应角色ID
+	RoleInfo *string `json:"roleInfo" form:"roleInfo"`    //对应角色ID
 	Birthday *string `json:"birthday"   form:"birthday" ` //生日
 	Job      *string `json:"job"   form:"job" `           //职位
 }
@@ -45,7 +45,7 @@ type UserAddInfo struct {
 	Account  *string `json:"account" form:"account"`   //登录账号
 	Password *string `json:"password" form:"password"` //登录密码（加密）
 	Name     *string `json:"name" form:"name"`         //真实姓名
-	RoleInfo *int    `json:"roleInfo" form:"roleInfo"` //对应角色ID
+	RoleInfo *string `json:"roleInfo" form:"roleInfo"` //对应角色ID
 	Job      *string `json:"job"   form:"job" `        //职位
 }
 
@@ -81,16 +81,16 @@ func (l *Login) Login(db *sql.DB) (id int, err error) {
 func (p *UserInfo) GetAll(db *sql.DB) (ret []map[string]interface{}, err error) {
 	ret = curd.GetAll("userInfo")
 	// 覆盖roleInfo
-	for i := 0; i < len(ret); i++ {
-		// fmt.Println("ret:", ret[i])
-		sqlStr2 := "select r.name as roleInfo from roleInfo as r where r.id=?"
-		rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["roleInfo"])
-		if err != nil {
-			fmt.Println(err)
-		}
-		ret2 := curd.HandleSQL(rows2)
-		ret[i]["roleInfo"] = ret2[0]["roleInfo"]
-	}
+	// for i := 0; i < len(ret); i++ {
+	// 	// fmt.Println("ret:", ret[i])
+	// 	sqlStr2 := "select r.name as roleInfo from roleInfo as r where r.id=?"
+	// 	rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["roleInfo"])
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	ret2 := curd.HandleSQL(rows2)
+	// 	ret[i]["roleInfo"] = ret2[0]["roleInfo"]
+	// }
 	return
 }
 

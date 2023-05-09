@@ -23,26 +23,26 @@ type WikiInfoUpdate struct {
 	Id         *int    `json:"id" form:"id"`                  //唯一识别、主键自增
 	Title      *string `json:"title" form:"title"`            //标题
 	Content    *string `json:"content"   form:"content" `     //HTML内容
-	Project    *int    `json:"project" form:"project" `       //所属项目
+	Project    *string `json:"project" form:"project" `       //所属项目
 	UpdateInfo *int    `json:"updateInfo" form:"updateInfo" ` //更新的信息ID
 	UpdateTime *string `json:"updateTime" form:"updateTime" ` //最新的更新时间
-	Parent     *int    `json:"parent" form:"parent" `         //父级wiki
+	Parent     *string `json:"parent" form:"parent" `         //父级wiki
 }
 
 func (w *WikiInfo) GetAll() []map[string]interface{} {
 	ret := curd.GetAll("wikiInfo", "id", "desc")
 
 	// 覆盖createrdBy
-	for i := 0; i < len(ret); i++ {
-		// fmt.Println("ret:", ret[i])
-		sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"
-		rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["createdBy"])
-		if err != nil {
-			fmt.Println(err)
-		}
-		ret2 := curd.HandleSQL(rows2)
-		ret[i]["createdBy"] = ret2[0]["createdBy"]
-	}
+	// for i := 0; i < len(ret); i++ {
+	// 	// fmt.Println("ret:", ret[i])
+	// 	sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"
+	// 	rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["createdBy"])
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	ret2 := curd.HandleSQL(rows2)
+	// 	ret[i]["createdBy"] = ret2[0]["createdBy"]
+	// }
 	return ret
 }
 
@@ -66,16 +66,16 @@ func (w *WikiInfo) GetWikiByProjectID(id string) []map[string]interface{} {
 	}
 	ret := curd.HandleSQL(rows)
 	// 覆盖createrdBy
-	for i := 0; i < len(ret); i++ {
-		// fmt.Println("ret:", ret[i])
-		sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"
-		rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["createdBy"])
-		if err != nil {
-			fmt.Println(err)
-		}
-		ret2 := curd.HandleSQL(rows2)
-		ret[i]["createdBy"] = ret2[0]["createdBy"]
-	}
+	// for i := 0; i < len(ret); i++ {
+	// 	// fmt.Println("ret:", ret[i])
+	// 	sqlStr2 := "select u.name as createdBy from userInfo as u where u.id=?"
+	// 	rows2, err := database.MysqlDB.Query(sqlStr2, ret[i]["createdBy"])
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	ret2 := curd.HandleSQL(rows2)
+	// 	ret[i]["createdBy"] = ret2[0]["createdBy"]
+	// }
 	return ret
 }
 

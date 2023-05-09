@@ -14,10 +14,10 @@ type RoleInfo struct {
 	Desc       *string `json:"desc" form:"desc"`
 }
 
-func (r *RoleInfo) GetRoleInfoByID(id string) (ret map[string]interface{}, err error) {
-	sqlStr := "select * from roleInfo where id=?"
+func (r *RoleInfo) GetRoleInfoByID(name string) (ret map[string]interface{}, err error) {
+	sqlStr := "select * from roleInfo where name=?"
 	//查询数据，取所有字段
-	rows, err := database.MysqlDB.Query(sqlStr, id)
+	rows, err := database.MysqlDB.Query(sqlStr, name)
 	if err != nil {
 		fmt.Println(err)
 	}

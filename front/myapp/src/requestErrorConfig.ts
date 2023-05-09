@@ -125,6 +125,7 @@ export const errorConfig: RequestConfig = {
   errorConfig: {
     // 错误抛出
     errorThrower: (res) => {
+      console.log('errorThrowerRes:',res);
       const { success, data, msg } = res as unknown as ResponseStructure;
       if (!success) {
         const error: any = new Error(msg);
@@ -165,6 +166,8 @@ export const errorConfig: RequestConfig = {
           //   default:
           //     message.error(errorMessage);
           // }
+        } else {
+          message.error(error);
         }
       } else if (error.response) {
         // Axios 的错误

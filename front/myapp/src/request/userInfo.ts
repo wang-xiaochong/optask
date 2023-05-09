@@ -80,9 +80,9 @@ export async function addUserInfo(body: any, options?: { [key: string]: any }) {
 }
 
 /** 查找用户信息接口 POST /api/login/account */
-export async function getRoleInfoByUserRoleInfo(id: number, options?: { [key: string]: any }) {
-  if (id !== undefined) {
-    return request<API.RoleInfo>(`/api/user/getRoleInfoByUserRoleInfo?id=${id}`, {
+export async function getRoleInfoByUserRoleInfo(name: string, options?: { [key: string]: any }) {
+  if (name !== undefined) {
+    return request<API.RoleInfo>(`/api/user/getRoleInfoByUserRoleInfo?name=${name}`, {
       method: 'GET',
       // data: id,
       ...(options || {}),

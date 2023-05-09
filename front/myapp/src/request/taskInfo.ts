@@ -14,12 +14,9 @@ export async function getAllTaskInfo(options?: { [key: string]: any }) {
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function getTaskInfoByCreatedBy(
-  createdBy: number | string,
+  createdBy: string,
   options?: { [key: string]: any },
 ) {
-  if (typeof createdBy == 'number') {
-    createdBy = createdBy.toString();
-  }
   return request<{
     data: API.TaskInfo[];
   }>('/api/task/getTasksByCreatedBy', {
@@ -33,12 +30,9 @@ export async function getTaskInfoByCreatedBy(
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function getTaskInfoByAppoint(
-  appoint: number | string,
+  appoint: string,
   options?: { [key: string]: any },
 ) {
-  if (typeof appoint == 'number') {
-    appoint = appoint.toString();
-  }
   return request<{
     data: API.TaskInfo[];
   }>('/api/task/getTasksByAppoint', {
@@ -68,18 +62,15 @@ export async function getTaskInfoByID(id: number | string, options?: { [key: str
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function getTaskInfoByProjectID(
-  id: number | string,
+  name: string,
   options?: { [key: string]: any },
 ) {
-  if (typeof id == 'number') {
-    id = id.toString();
-  }
   return request<{
     data: API.TaskInfo[];
   }>('/api/task/getTaskInfoByProjectID', {
     method: 'GET',
     params: {
-      id: id,
+      name: name,
     },
     ...(options || {}),
   });

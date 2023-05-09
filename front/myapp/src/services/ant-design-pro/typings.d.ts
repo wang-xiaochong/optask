@@ -31,7 +31,7 @@ declare namespace API {
     email?: string;
     phone?: string;
     password?: string;
-    roleInfo?: number;
+    roleInfo?: string;
     birthday?: string;
     job?: string;
   };
