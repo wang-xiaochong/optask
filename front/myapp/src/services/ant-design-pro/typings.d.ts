@@ -59,7 +59,7 @@ declare namespace API {
   type ProjectInfo = {
     id?: number;
     name?: string;
-    parent?: number;
+    parent?: string;
     status?: ProjectInfoStatus;
     userInfo?: { id: string; name: string; avatar: string }[];
     desc?: string;

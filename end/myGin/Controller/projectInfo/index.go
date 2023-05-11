@@ -4,6 +4,7 @@ import (
 	project "Example/Model/project"
 	utils "Example/Utils"
 	res "Example/Utils/response"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,4 +30,16 @@ func GetProjectByID(context *gin.Context) {
 		res.Return(context, utils.ERROR, project)
 	}
 
+}
+
+func AddProjectInfo(context *gin.Context) {
+
+	p := project.ProjectAddInfo{}
+	err := context.Bind(&p)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	p.AddProjectInfo(p, context)
+	res.Return(context, utils.SUCCESS, "")
 }

@@ -4,12 +4,16 @@ import { ProList } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { useEffect, useState } from 'react';
 import { pageSize } from '../Components/unitConfig';
+import ProjectAdd from "./components/ProjectAdd";
 
 const Project = () => {
   const [cardActionProps, setCardActionProps] = useState<'actions' | 'extra'>('extra');
   const [project, setProject] = useState<Array<API.ProjectInfo>>([]);
   const [projectRender, setProjectRender] = useState<any>([]);
-  useEffect(() => {
+
+
+  const refreshProject = () => {
+    console.log('refreshProject');
     getAllProjectInfo().then((res) => {
       let ret = [];
       for (let i = 0; i < res?.data?.length; i++) {
@@ -21,6 +25,11 @@ const Project = () => {
       // console.log('project:', ret);
       setProject(ret);
     });
+
+  }
+
+  useEffect(() => {
+    refreshProject();
   }, []);
   useEffect(() => {
     let ret = project.map((item) => {
@@ -63,12 +72,22 @@ const Project = () => {
         // ),
       };
     });
+    console.log('ret', ret);
     setProjectRender(ret);
   }, [project]);
 
   return (
     <>
+
       <ProList<any>
+        toolBarRender={() => {
+          return [
+            // <Button key="add" type="primary">
+            //   新建
+            // </Button>,
+            <ProjectAdd key="add" refreshProject={refreshProject} />
+          ];
+        }}
         pagination={{
           defaultPageSize: pageSize,
           showSizeChanger: false,

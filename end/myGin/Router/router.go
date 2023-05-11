@@ -59,6 +59,7 @@ func InitRouter(e *gin.Engine) {
 	{
 		project.GET("/getAllProjectInfo", projectInfo.GetAllProjects)
 		project.GET("/getProjectInfoByID", projectInfo.GetProjectByID)
+		project.POST("/addProjectInfo", projectInfo.AddProjectInfo)
 	}
 
 	myRouter := pre.Group("/router")

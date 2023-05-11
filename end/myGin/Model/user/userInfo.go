@@ -106,6 +106,7 @@ func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {
 
 func (w *UserUpdateInfo) UpdateUserInfoByID(u UserUpdateInfo, context *gin.Context) (rows int, err error) {
 
+	// fmt.Println("=======")
 	stmt, err := database.MysqlDB.Prepare("update userInfo set account=?,name=?,avatar=?,email=?,phone=?,roleInfo=?,birthday=?,job=? where id=?")
 	if err != nil {
 		fmt.Println(err)

@@ -4,16 +4,26 @@ import (
 	database "Example/Database"
 	curd "Example/Utils/curd"
 	"fmt"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Person 自定义Person类
 type ProjectInfo struct {
-	Id       *int    `json:"id" form:"id"`              //唯一识别、主键自增
-	Name     *string `json:"name" form:"name"`          //项目名称
-	Parent   *string `json:"parent"   form:"parent" `   //父级项目
-	Status   *string `json:"status" form:"status" `     //项目状态
-	UserInfo *string `json:"userInfo" form:"userInfo" ` //项目组成员
-	Desc     *string `json:"desc" form:"desc" `         //项目简介
+	Id          *int    `json:"id" form:"id"`                    //唯一识别、主键自增
+	Name        *string `json:"name" form:"name"`                //项目名称
+	Parent      *string `json:"parent"   form:"parent" `         //父级项目
+	Status      *string `json:"status" form:"status" `           //项目状态
+	UserInfo    *string `json:"userInfo" form:"userInfo" `       //项目组成员
+	Description *string `json:"description" form:"description" ` //项目简介
+}
+
+// Person 自定义Person类
+type ProjectAddInfo struct {
+	Name        *string `json:"name" form:"name"`                //项目名称
+	Parent      *string `json:"parent"   form:"parent" `         //父级项目
+	Status      *string `json:"status" form:"status" `           //项目状态
+	Description *string `json:"description" form:"description" ` //项目简介
 }
 
 func (p *ProjectInfo) GetAll() []map[string]interface{} {
@@ -55,4 +65,22 @@ func (p *ProjectInfo) GetProjectByID(name string) interface{} {
 	// }
 
 	return ret[0]
+}
+
+func (w *ProjectAddInfo) AddProjectInfo(u ProjectAddInfo, context *gin.Context) (Id int, err error) {
+	stmt, err := database.MysqlDB.Prepare("insert into projectInfo(name,status,parent,description) values (?,?,?,?)")
+	if err != nil {
+		fmt.Println(err)
+	}
+	rs, err := stmt.Exec(*u.Name, *u.Status, *u.Parent, *u.Description)
+	if err != nil {
+		fmt.Println(err)
+	}
+	id, err := rs.LastInsertId()
+	if err != nil {
+		fmt.Println(err)
+	}
+	Id = int(id)
+	defer stmt.Close()
+	return
 }

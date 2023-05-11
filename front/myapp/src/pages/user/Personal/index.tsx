@@ -62,7 +62,7 @@ const Personal = () => {
           values['id'] = user?.id;
           values['avatar'] = user?.avatar;
           values['birthday'] = values?.birthday?.split('T')[0];
-          // console.log(values);
+          console.log(values);
           await updateUserInfoByID(values);
           message.success('提交成功');
           setEditEnable(!editEnable);

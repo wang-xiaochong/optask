@@ -20,7 +20,7 @@
   },
   // ts、js、json文件自动按照prettier规范修复格式(如果不加此配置，无法自动格式化)
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

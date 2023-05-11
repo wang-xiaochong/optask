@@ -27,7 +27,7 @@ declare namespace API {
   type ProjectInfo = {
     id?: number;
     name?: string;
-    parent?: number;
+    parent?: string;
     status?: ProjectInfoStatus;
   };
 
