@@ -8,6 +8,7 @@ import { history } from '@umijs/max';
 import { useEffect, useState } from 'react';
 import { TaskInfoStatus, TaskInfoType } from '../Components/Task';
 import { pageSize } from '../Components/unitConfig';
+import TaskAdd from './components/TaskAdd';
 
 const TaskProtable = () => {
   const [userName, setUserName] = useState({});
@@ -160,6 +161,14 @@ const TaskProtable = () => {
   };
   return (
     <ProTable<API.TaskInfo>
+      toolBarRender={() => {
+        return [
+          // <Button key="add" type="primary">
+          //   新建
+          // </Button>,
+          <TaskAdd key="add" />
+        ];
+      }}
       columns={columns}
       editable={{
         type: 'multiple',
