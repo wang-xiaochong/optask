@@ -13,7 +13,6 @@ const Project = () => {
 
 
   const refreshProject = () => {
-    console.log('refreshProject');
     getAllProjectInfo().then((res) => {
       let ret = [];
       for (let i = 0; i < res?.data?.length; i++) {
@@ -72,7 +71,6 @@ const Project = () => {
         // ),
       };
     });
-    console.log('ret', ret);
     setProjectRender(ret);
   }, [project]);
 

@@ -11,10 +11,11 @@ import {
 import { Button, Form, message } from 'antd';
 import { useEffect, useState } from 'react';
 
-const ProjectAdd = () => {
+const ProjectAdd = (props: any) => {
 
   const [form] = Form.useForm<{ name: string; status: string; parent: string; description: string; }>();
   const [projectName, setProjectName] = useState<{ value: string, label: string }[]>();
+  const { refreshProject } = props;
 
   useEffect(() => {
     getAllProjectInfo().then((res) => {
@@ -56,6 +57,7 @@ const ProjectAdd = () => {
         console.log(values);
         await addProjectInfo(values);
         message.success('提交成功');
+        refreshProject();
         return true;
       }}
     >
