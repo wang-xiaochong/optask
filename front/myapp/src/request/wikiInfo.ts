@@ -81,3 +81,14 @@ export async function updateWikiInfoByID(
     ...(options || {}),
   });
 }
+
+
+/** Updated user This can only be done by the logged in user. PUT /user/${param0} */
+export async function addWikiInfo(body: any, options?: { [key: string]: any }) {
+  return request<any>(`/api/wiki/addWikiInfo`, {
+    method: 'POST',
+    // params: { ...queryParams },
+    data: body,
+    ...(options || {}),
+  });
+}

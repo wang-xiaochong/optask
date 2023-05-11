@@ -54,6 +54,7 @@ func InitRouter(e *gin.Engine) {
 		wiki.GET("/getWikiInfoByProjectID", wikiInfo.GetWikiByProjectID)
 		wiki.POST("/update", wikiInfo.UpdateContent)
 		wiki.POST("/updateWikiInfoByID", wikiInfo.UpdateWikiInfoByID)
+		wiki.POST("/addWikiInfo", wikiInfo.AddWikiInfo)
 	}
 	project := pre.Group("/project")
 	{

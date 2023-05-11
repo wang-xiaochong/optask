@@ -7,12 +7,20 @@ import { history } from '@umijs/max';
 import { Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { pageSize } from '../Components/unitConfig';
+import WikiAdd from './components/WikiAdd';
 
 const WikiProtable = () => {
   const [userName, setUserName] = useState({});
   const [project, setProject] = useState<any>([]);
   const [projectID, setProjectID] = useState<any>();
   const [wikiList, setWikiList] = useState<API.WikiInfo[]>([]);
+
+  const refrehWikiList = () => {
+    getAllWikiInfo().then((res) => {
+      setWikiList(res.data);
+    });
+  }
+
   useEffect(() => {
     getAllUserInfo().then((res) => {
       let ret = {};
@@ -34,9 +42,7 @@ const WikiProtable = () => {
       // console.log('project:', ret);
       setProject(ret);
     });
-    getAllWikiInfo().then((res) => {
-      setWikiList(res.data);
-    });
+    refrehWikiList();
     // console.log('TaskProtable');
   }, []);
 
@@ -184,6 +190,14 @@ const WikiProtable = () => {
 
   return (
     <ProTable<API.WikiInfo>
+      toolBarRender={() => {
+        return [
+          // <Button key="add" type="primary">
+          //   新建
+          // </Button>,
+          <WikiAdd key="add" refrehWikiList={refrehWikiList} />
+        ];
+      }}
       columns={columns}
       editable={{
         type: 'multiple',

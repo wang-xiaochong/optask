@@ -4,6 +4,8 @@ import (
 	database "Example/Database"
 	curd "Example/Utils/curd"
 	"fmt"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Person 自定义Person类
@@ -27,6 +29,11 @@ type WikiInfoUpdate struct {
 	UpdateInfo *int    `json:"updateInfo" form:"updateInfo" ` //更新的信息ID
 	UpdateTime *string `json:"updateTime" form:"updateTime" ` //最新的更新时间
 	Parent     *string `json:"parent" form:"parent" `         //父级wiki
+}
+
+type WikiAddInfo struct {
+	Title   *string `json:"title" form:"title"`      //标题
+	Project *string `json:"project" form:"project" ` //所属项目
 }
 
 func (w *WikiInfo) GetAll() []map[string]interface{} {
@@ -120,6 +127,24 @@ func (w *WikiInfo) UpdateWikiInfoByID(wu WikiInfo) (rows int, err error) {
 		fmt.Println(err)
 	}
 	rows = int(row)
+	defer stmt.Close()
+	return
+}
+
+func (f *WikiAddInfo) AddWikiInfo(w WikiAddInfo, context *gin.Context) (Id int, err error) {
+	stmt, err := database.MysqlDB.Prepare("insert into wikiInfo(title,project) values (?,?)")
+	if err != nil {
+		fmt.Println(err)
+	}
+	rs, err := stmt.Exec(*w.Title, *w.Project)
+	if err != nil {
+		fmt.Println(err)
+	}
+	id, err := rs.LastInsertId()
+	if err != nil {
+		fmt.Println(err)
+	}
+	Id = int(id)
 	defer stmt.Close()
 	return
 }

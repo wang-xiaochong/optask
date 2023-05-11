@@ -74,3 +74,15 @@ func GetWikiByProjectID(context *gin.Context) {
 		res.Return(context, utils.ERROR, wikis)
 	}
 }
+
+func AddWikiInfo(context *gin.Context) {
+
+	w := wiki.WikiAddInfo{}
+	err := context.Bind(&w)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	w.AddWikiInfo(w, context)
+	res.Return(context, utils.SUCCESS, "")
+}
