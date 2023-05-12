@@ -1,36 +1,58 @@
-import { TaskInfoStatus, TaskInfoType } from '@/request/enum';
-import { getProjectInfoByID } from '@/request/projectInfo';
-import { getTaskInfoByProjectID } from '@/request/taskInfo';
-import { getUserInfoById } from '@/request/userInfo';
-// import { Bar } from '@ant-design/charts';
-import { Bar } from '@ant-design/plots';
-import { ProCard } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
+import { ProjectInfoStatus, TaskInfoStatus, TaskInfoType } from '@/request/enum';
+import { Bar } from '@ant-design/charts';
+import {
+  ProCard,
+  ProForm,
+  ProFormGroup,
+  ProFormSelect,
+  ProFormText,
+} from '@ant-design/pro-components';
+import { Switch } from 'antd';
 import { useEffect, useState } from 'react';
+import { getTaskInfoByProjectID } from '@/request/taskInfo';
+import { getProjectInfoByID } from '@/request/projectInfo';
+
 const ProjectDetail = () => {
-  // const [state, setState] = useState<ProFieldFCMode>('read');
-  // const [plain, setPlain] = useState<boolean>(false);
-  const [projectDetail, setProjectDetail] = useState<API.ProjectInfo>({});
+  const [readonly, setReadonly] = useState(true);
   const [tasksInfo, setTasksInfo] = useState<API.TaskInfo[]>([]);
   const [tasksInfoRender, setTasksInfoRender] = useState<
     { value: number; type: TaskInfoType; status: TaskInfoStatus }[]
   >([]);
-  const [userInfo, setUserInfo] = useState<API.CurrentUser[]>([]);
-
+  const [projectName, setProjectName] = useState<string>();
+  const [projectStatus, setProjectStatus] = useState<string>();
+  const [projectDescription, setProjectDescription] = useState<string>();
+  const [projectUserInfo, setProjectUserInfo] = useState<Array<any>>([]);
   const projectID = history.location.state?.title;
+
+  const TaskBar = () => {
+    const config = {
+      data: tasksInfoRender,
+      xField: 'value',
+      yField: 'type',
+      seriesField: 'status',
+      isStack: true,
+      legend: {
+        position: 'top-left',
+      },
+    };
+    return <Bar {...config} />;
+  };
 
   const getProject = async () => {
     const projectInfo: API.ProjectInfo = (await getProjectInfoByID(projectID))?.data;
     console.log('项目详情：', projectInfo);
-    setProjectDetail(projectInfo);
+    setProjectName(projectInfo?.name);
+    setProjectStatus(projectInfo?.status);
+    setProjectDescription(projectInfo?.description);
   }
-
 
   useEffect(() => {
     console.log('history.location.state', history.location.state);
+
     if (projectID) {
       getTaskInfoByProjectID(projectID).then((res: { data: API.TaskInfo[] }) => {
-        console.log('对应项目任务列表：', res);
+        // console.log('对应项目任务列表：', res);
         setTasksInfo(res?.data);
       });
       // console.log('项目ID: ', projectID);
@@ -56,88 +78,75 @@ const ProjectDetail = () => {
     setTasksInfoRender(ret);
   }, [tasksInfo]);
 
-  const getUserInfo = async () => {
-    if (projectDetail.userInfo) {
-      const userIdArr = projectDetail.userInfo?.split(",");
-      const userArr: API.CurrentUser[] = [];
-      for (let index = 0; index < userIdArr.length; index++) {
-        const userRes = await getUserInfoById(Number(userIdArr[index]))
-        userArr.push(userRes.data);
-      }
-      setUserInfo(userArr);
-    }
-  }
-
-  useEffect(() => {
-    getUserInfo();
-  }, [projectDetail])
-
-  const TaskBar = () => {
-    const config = {
-      data: tasksInfoRender,
-      xField: 'value',
-      yField: 'type',
-      seriesField: 'status',
-      isStack: true,
-      legend: {
-        position: 'top-left',
-      },
-    };
-    return <Bar {...config} />;
-  };
-
   return (
-    <ProCard>
-      <>
-        {/* <Space>
-          <Radio.Group onChange={(e) => setState(e.target.value as ProFieldFCMode)} value={state}>
-            <Radio value="read">只读</Radio>
-            <Radio value="edit">编辑</Radio>
-          </Radio.Group>
-          简约模式
-          <Switch checked={plain} onChange={(checked) => setPlain(checked)} />
-        </Space> */}
-        <br />
-        <br />
+    <div
+      style={{
+        padding: 24,
+      }}
+    >
+      <Switch
+        style={{
+          marginBlockEnd: 16,
+        }}
+        checked={readonly}
+        checkedChildren="编辑"
+        unCheckedChildren="只读"
+        onChange={setReadonly}
+      />
+      <ProForm
+        readonly={readonly}
+        name="validate_other"
+        initialValues={{
+          name: projectName,
+          status: projectStatus,
+          description: projectDescription,
+          'select-multiple': ['green', 'blue'],
+        }}
+        onValuesChange={(_, values) => {
+          console.log(values);
+        }}
+        onFinish={async (value) => console.log(value)}
+      >
+        <ProFormGroup
+          title="文本类"
+          collapsible
+          style={{
+            gap: '0 32px',
+          }}
+        >
+          <ProFormText width="md" name="name" label="名称" />
+          <ProFormSelect
+            name="status"
+            label="状态"
+            valueEnum={ProjectInfoStatus}
+            // placeholder="Please select a country"
+            rules={[{ required: true, message: '请选择项目状态' }]}
+          />
+          <ProFormSelect
+            name="userInfo"
+            label="成员"
+            valueEnum={{
+              red: 'Red',
+              green: 'Green',
+              blue: 'Blue',
+            }}
+            fieldProps={{
+              mode: 'multiple',
+            }}
+            // placeholder="Please select favorite colors"
+            rules={[
+              {
+                required: true,
+                message: 'Please select your favorite colors!',
+                type: 'array',
+              },
+            ]}
+          />
+          <ProFormText width={740} name="description" label="简介" />
 
-        <ProCard style={{ marginBlockStart: 8 }} gutter={8} title="">
-          {projectDetail && (
-            <ProCard
-              layout="center"
-              title={projectDetail.name}
-              extra={projectDetail.status}
-              // tooltip="这是提示"
-              bordered
-              style={{ minHeight: 300, maxWidth: 300, marginBlockStart: 24 }}
-              size="small"
-            >
-              <div>{projectDetail.description}</div>
-            </ProCard>
-          )}
-          {userInfo && (
-            <ProCard
-              layout="center"
-              title="成员"
-              // extra={projectDetail.status}
-              // tooltip="这是提示"
-              bordered
-              style={{ minHeight: 300, maxWidth: 300, marginBlockStart: 24 }}
-              size="small"
-            >
-              <div>
-                {userInfo?.map((item) => {
-                  return (
-                    <div style={{ display: 'flex', margin: '5px' }} key={item.name}>
-                      <img src={item.avatar} alt="头像" />
-                      <span style={{ textAlign: 'center', lineHeight: '40px' }}>{item.name}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </ProCard>
-          )}
-        </ProCard>
-
+        </ProFormGroup>
+      </ProForm>
+      <div>
         {tasksInfo && (
           <ProCard style={{ marginBlockStart: 8 }} gutter={8} title="">
             <ProCard
@@ -155,8 +164,9 @@ const ProjectDetail = () => {
             </ProCard>
           </ProCard>
         )}
-      </>
-    </ProCard>
+      </div>
+    </div>
   );
 };
+
 export default ProjectDetail;

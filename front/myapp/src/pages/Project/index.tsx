@@ -74,10 +74,14 @@ const Project = () => {
     setProjectRender(ret);
   }, [project]);
 
+  const updateProject = async (values: any) => {
+    console.log('values', values);
+  }
+
   return (
     <>
 
-      <ProList<any>
+      <ProList editable={{ type: "multiple" }}
         toolBarRender={() => {
           return [
             // <Button key="add" type="primary">
@@ -115,6 +119,7 @@ const Project = () => {
             cardActionProps,
           },
         }}
+
         headerTitle="项目列表"
         dataSource={projectRender}
       />
