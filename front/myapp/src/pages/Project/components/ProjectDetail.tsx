@@ -28,12 +28,14 @@ const ProjectDetail = () => {
 
   useEffect(() => {
     console.log('history.location.state', history.location.state);
-    getTaskInfoByProjectID(projectID).then((res: { data: API.TaskInfo[] }) => {
-      console.log('对应项目任务列表：', res);
-      setTasksInfo(res?.data);
-    });
-    // console.log('项目ID: ', projectID);
-    getProject();
+    if (projectID) {
+      getTaskInfoByProjectID(projectID).then((res: { data: API.TaskInfo[] }) => {
+        console.log('对应项目任务列表：', res);
+        setTasksInfo(res?.data);
+      });
+      // console.log('项目ID: ', projectID);
+      getProject();
+    }
   }, []);
 
   useEffect(() => {

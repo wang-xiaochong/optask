@@ -56,11 +56,6 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
-  type projectRender = {
-    value?: string;
-    label?: string;
-    disabled?: boolean;
-  };
   const [menuItems, setMenuItems] = useState<Array<API.RouterInfo>>([]);
   const [isShowSide, setIsShowSide] = useState<boolean>(false);
   const [routerInfo, setRouterInfo] = useState<any>([]);
@@ -81,6 +76,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       // console.log('location.pathname', location.pathname);
       message.error('非法跳转');
       history.back();
+      return
     }
     hasPath = false;
     // 验证是否有路由权限
@@ -150,20 +146,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       let menuType = sessionStorage.getItem('menuType');
       getRouterInfoByMenuType(menuType as RouterInfoType, false);
     }
-    // getAllProjectInfo().then((res) => {
-    //   let data = res?.data;
-    //   let ret: Array<projectRender> = [];
-    //   if (data) {
-    //     ret = data.reduce((prev, current) => {
-    //       return prev.concat({
-    //         value: current?.id,
-    //         label: current?.name,
-    //         disabled: current?.status === ProjectInfoStatus.关闭,
-    //       } as projectRender);
-    //     }, ret);
-    //     setProjects(ret);
-    //   }
-    // });
   }, []);
   return {
     // menutype: menuType,
@@ -223,11 +205,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     links: isDev
       ? [
-          <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-        ]
+        <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
+          <LinkOutlined />
+          <span>OpenAPI 文档</span>
+        </Link>,
+      ]
       : [],
     // 侧边栏菜单头部
     menuHeaderRender: undefined,
