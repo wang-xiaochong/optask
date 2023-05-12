@@ -13,6 +13,19 @@ import TaskAdd from './components/TaskAdd';
 const TaskProtable = () => {
   const [userName, setUserName] = useState({});
   const [project, setProject] = useState({});
+  const [allTaskInfo, setAllTaskInfo] = useState<Array<any>>([])
+
+
+  const refreshTaskInfo = async () => {
+    console.log('refreshTaskInfo');
+    addKeyToFnDataArray(getAllTaskInfo).then(res => {
+      if (res.data) {
+        console.log('res.data');
+        setAllTaskInfo(res.data);
+      }
+    })
+  }
+
   useEffect(() => {
     getAllUserInfo().then((res) => {
       let ret = {};
@@ -34,6 +47,8 @@ const TaskProtable = () => {
       }
       setProject(ret);
     });
+
+    refreshTaskInfo();
 
     // console.log('TaskProtable');
   }, []);
@@ -159,6 +174,9 @@ const TaskProtable = () => {
     console.log('newLineConfig', newLineConfig);
     // record sent to end
   };
+  // const refreshTaskInfo = ()=>{
+
+  // }
   return (
     <ProTable<API.TaskInfo>
       toolBarRender={() => {
@@ -166,7 +184,7 @@ const TaskProtable = () => {
           // <Button key="add" type="primary">
           //   新建
           // </Button>,
-          <TaskAdd key="add" />
+          <TaskAdd key="add" refreshTaskInfo={refreshTaskInfo} />
         ];
       }}
       columns={columns}
@@ -179,15 +197,16 @@ const TaskProtable = () => {
           await updateTaskInfo(rows, record, originRow, newLineConfig);
         },
       }}
-      request={(params, sorter, filter) => {
-        // 表单搜索项会从 params 传入，传递给后端接口。
-        console.log(params, sorter, filter);
-        // return Promise.resolve({
-        //   data: tableListDataSource,
-        //   success: true,
-        // });
-        return addKeyToFnDataArray(getAllTaskInfo);
-      }}
+      dataSource={allTaskInfo}
+      // request={async (params, sorter, filter) => {
+      //   // 表单搜索项会从 params 传入，传递给后端接口。
+      //   console.log(params, sorter, filter);
+      //   // return Promise.resolve({
+      //   //   data: tableListDataSource,
+      //   //   success: true,
+      //   // });
+      //   return addKeyToFnDataArray(getAllTaskInfo);
+      // }}
       ErrorBoundary={false}
       rowKey="id"
       search={false}

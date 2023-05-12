@@ -92,3 +92,13 @@ export async function updateTaskContent(
     ...(options || {}),
   });
 }
+
+/** Updated user This can only be done by the logged in user. PUT /user/${param0} */
+export async function addTaskInfo(body: any, options?: { [key: string]: any }) {
+  return request<any>(`/api/task/addTaskInfo`, {
+    method: 'POST',
+    // params: { ...queryParams },
+    data: body,
+    ...(options || {}),
+  });
+}

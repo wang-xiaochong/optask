@@ -38,4 +38,11 @@ const TaskInfoStatusOptions = [
   { value: '已关闭', label: '已关闭' },
 ];
 
-export { TaskInfoType, TaskInfoStatus, TaskInfoStatusOptions, TaskInfoTypeOptions };
+const TaskInfoLevalOptions = [
+  { value: '高', label: '高' },
+  { value: '中', label: '中' },
+  { value: '低', label: '低' },
+  { value: '最高级', label: '最高级' }
+];
+
+export { TaskInfoType, TaskInfoStatus, TaskInfoStatusOptions, TaskInfoTypeOptions, TaskInfoLevalOptions };

@@ -1,5 +1,6 @@
+import { TaskInfoLevalOptions, TaskInfoStatusOptions, TaskInfoTypeOptions } from '@/pages/Components/Task';
 import { getAllProjectInfo } from '@/request/projectInfo';
-import { addWikiInfo } from '@/request/wikiInfo';
+import { addTaskInfo } from '@/request/taskInfo';
 import { waitTime } from '@/utils/utils';
 import { PlusOutlined } from '@ant-design/icons';
 import {
@@ -14,8 +15,8 @@ import { useEffect, useState } from 'react';
 const TaskAdd = (props: any) => {
 
   const [form] = Form.useForm<{ name: string; type: string; status: string; leval: string; project: string; appoint: string }>();
-  const [projectName, setProjectName] = useState<{ value: string, label: string }[]>();
-  // const { refrehWikiList } = props;
+  const [projectName, setProjectName] = useState<{ value: string, label: string }[]>([]);
+  const { refreshTaskInfo } = props;
 
   useEffect(() => {
     getAllProjectInfo().then((res) => {
@@ -56,23 +57,41 @@ const TaskAdd = (props: any) => {
       onFinish={async (values) => {
         await waitTime(500);
         console.log(values);
-        // await addWikiInfo(values);
+        await addTaskInfo(values);
         message.success('提交成功');
-        // await refrehWikiList();
+        await refreshTaskInfo();
         return true;
       }}
     >
       <ProForm.Group>
         <ProFormText
           width="xl"
-          name="title"
-          label="wiki名称"
+          name="name"
+          label="任务名称"
           tooltip="最长为 24 位"
           placeholder="请输入名称"
         />
       </ProForm.Group>
 
       <ProForm.Group>
+        <ProFormSelect
+          request={async () => TaskInfoTypeOptions}
+          width="md"
+          name="type"
+          label="类型"
+        />
+        <ProFormSelect
+          request={async () => TaskInfoStatusOptions}
+          width="md"
+          name="status"
+          label="状态"
+        />
+        <ProFormSelect
+          request={async () => TaskInfoLevalOptions}
+          width="md"
+          name="leval"
+          label="优先级"
+        />
         <ProFormSelect
           request={async () => projectName}
           width="md"

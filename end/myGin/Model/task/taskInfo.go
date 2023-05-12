@@ -7,6 +7,8 @@ import (
 	curd "Example/Utils/curd"
 	"fmt"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Person 自定义Person类
@@ -47,6 +49,14 @@ type TaskUpdateInfo struct {
 	LeftTime      *int    `json:"leftTime"   form:"leftTime" `           //剩余时间
 	Detail        *string `json:"detail"   form:"detail" `               //任务详情
 	Parent        *string `json:"parent"   form:"parent" `               //父级任务
+}
+
+type TaskAddInfo struct {
+	Name    *string `json:"name" form:"name"`        //任务名称
+	Type    *string `json:"type" form:"type"`        //任务类型
+	Status  *string `json:"status" form:"status"`    //状态
+	Leval   *string `json:"leval" form:"leval"`      //优先级
+	Project *string `json:"project" form:"project" ` //所属项目
 }
 
 func (t *TaskInfo) GetAll() []map[string]interface{} {
@@ -251,6 +261,24 @@ func (tu *TaskUpdateInfo) UpdateContent(t TaskUpdateInfo) (rows int, err error) 
 	}
 	// fmt.Println("ModealSqlErr:", err)
 	rows = int(row)
+	defer stmt.Close()
+	return
+}
+
+func (q *TaskAddInfo) AddWikiInfo(t TaskAddInfo, context *gin.Context) (Id int, err error) {
+	stmt, err := database.MysqlDB.Prepare("insert into taskInfo(name,type,status,leval,project) values (?,?,?,?,?)")
+	if err != nil {
+		fmt.Println(err)
+	}
+	rs, err := stmt.Exec(*t.Name, *t.Type, *t.Status, *t.Leval, *t.Project)
+	if err != nil {
+		fmt.Println(err)
+	}
+	id, err := rs.LastInsertId()
+	if err != nil {
+		fmt.Println(err)
+	}
+	Id = int(id)
 	defer stmt.Close()
 	return
 }

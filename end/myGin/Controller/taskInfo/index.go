@@ -144,6 +144,18 @@ func UpdateContent(context *gin.Context) {
 	res.Return(context, utils.SUCCESS, "")
 }
 
+func AddTaskInfo(context *gin.Context) {
+
+	t := task.TaskAddInfo{}
+	err := context.Bind(&t)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	t.AddWikiInfo(t, context)
+	res.Return(context, utils.SUCCESS, "")
+}
+
 // func GetUserInfoById(context *gin.Context) {
 // 	// var result gin.H
 // 	id := context.Query("id")
