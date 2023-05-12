@@ -1,6 +1,7 @@
 import { TaskInfoStatus, TaskInfoType } from '@/request/enum';
 import { getProjectInfoByID } from '@/request/projectInfo';
 import { getTaskInfoByProjectID } from '@/request/taskInfo';
+import { getUserInfoById } from '@/request/userInfo';
 // import { Bar } from '@ant-design/charts';
 import { Bar } from '@ant-design/plots';
 import { ProCard } from '@ant-design/pro-components';
@@ -14,19 +15,25 @@ const ProjectDetail = () => {
   const [tasksInfoRender, setTasksInfoRender] = useState<
     { value: number; type: TaskInfoType; status: TaskInfoStatus }[]
   >([]);
+  const [userInfo, setUserInfo] = useState<API.CurrentUser[]>([]);
+
+  const projectID = history.location.state?.title;
+
+  const getProject = async () => {
+    const projectInfo: API.ProjectInfo = (await getProjectInfoByID(projectID))?.data;
+    console.log('项目详情：', projectInfo);
+    setProjectDetail(projectInfo);
+  }
+
 
   useEffect(() => {
     console.log('history.location.state', history.location.state);
-    const projectID = history.location.state?.title;
     getTaskInfoByProjectID(projectID).then((res: { data: API.TaskInfo[] }) => {
-      // console.log('对应项目任务列表：', res);
+      console.log('对应项目任务列表：', res);
       setTasksInfo(res?.data);
     });
     // console.log('项目ID: ', projectID);
-    getProjectInfoByID(projectID).then((res: { data: API.ProjectInfo }) => {
-      // console.log('项目详情：', res);
-      setProjectDetail(res.data);
-    });
+    getProject();
   }, []);
 
   useEffect(() => {
@@ -46,6 +53,22 @@ const ProjectDetail = () => {
     // console.log('ret', ret);
     setTasksInfoRender(ret);
   }, [tasksInfo]);
+
+  const getUserInfo = async () => {
+    if (projectDetail.userInfo) {
+      const userIdArr = projectDetail.userInfo?.split(",");
+      const userArr: API.CurrentUser[] = [];
+      for (let index = 0; index < userIdArr.length; index++) {
+        const userRes = await getUserInfoById(Number(userIdArr[index]))
+        userArr.push(userRes.data);
+      }
+      setUserInfo(userArr);
+    }
+  }
+
+  useEffect(() => {
+    getUserInfo();
+  }, [projectDetail])
 
   const TaskBar = () => {
     const config = {
@@ -86,10 +109,10 @@ const ProjectDetail = () => {
               style={{ minHeight: 300, maxWidth: 300, marginBlockStart: 24 }}
               size="small"
             >
-              <div>{projectDetail.desc}</div>
+              <div>{projectDetail.description}</div>
             </ProCard>
           )}
-          {projectDetail?.userInfo && (
+          {userInfo && (
             <ProCard
               layout="center"
               title="成员"
@@ -99,8 +122,8 @@ const ProjectDetail = () => {
               style={{ minHeight: 300, maxWidth: 300, marginBlockStart: 24 }}
               size="small"
             >
-              {/* <div>
-                {projectDetail.userInfo?.map((item) => {
+              <div>
+                {userInfo?.map((item) => {
                   return (
                     <div style={{ display: 'flex', margin: '5px' }} key={item.name}>
                       <img src={item.avatar} alt="头像" />
@@ -108,7 +131,7 @@ const ProjectDetail = () => {
                     </div>
                   );
                 })}
-              </div> */}
+              </div>
             </ProCard>
           )}
         </ProCard>

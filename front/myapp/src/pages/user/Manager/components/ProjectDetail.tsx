@@ -88,7 +88,7 @@ const TaskDetail = () => {
               style={{ minHeight: 300, maxWidth: 300, marginBlockStart: 24 }}
               size="small"
             >
-              <div>{projectDetail.desc}</div>
+              <div>{projectDetail.description}</div>
             </ProCard>
           )}
           {projectDetail?.userInfo && (

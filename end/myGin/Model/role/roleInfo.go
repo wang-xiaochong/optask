@@ -8,10 +8,10 @@ import (
 
 // Role 模型
 type RoleInfo struct {
-	Id         *int    `json:"id" form:"id"`
-	Name       *string `json:"name" form:"name"`
-	RouterInfo *string `json:"routerInfo" form:"routerInfo"`
-	Desc       *string `json:"desc" form:"desc"`
+	Id          *int    `json:"id" form:"id"`
+	Name        *string `json:"name" form:"name"`
+	RouterInfo  *string `json:"routerInfo" form:"routerInfo"`
+	Description *string `json:"description" form:"description"`
 }
 
 func (r *RoleInfo) GetRoleInfoByID(name string) (ret map[string]interface{}, err error) {

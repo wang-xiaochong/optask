@@ -37,7 +37,7 @@ declare namespace API {
     component?: string;
     path?: string;
     type?: RouterInfoType;
-    desc?: string;
+    description?: string;
   };
 
   // type CurrentUser = {

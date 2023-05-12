@@ -61,8 +61,8 @@ declare namespace API {
     name?: string;
     parent?: string;
     status?: ProjectInfoStatus;
-    userInfo?: { id: string; name: string; avatar: string }[];
-    desc?: string;
+    userInfo?: string;
+    description?: string;
   };
 
   type RouterInfo = {
@@ -71,13 +71,13 @@ declare namespace API {
     component?: string;
     path?: string;
     type?: RouterInfoType;
-    desc?: string;
+    description?: string;
   };
   type RoleInfo = {
     id?: number;
     name?: string;
     routerInfo?: string;
-    desc?: string;
+    description?: string;
   };
   type WikiInfo = {
     id?: number;
@@ -112,7 +112,7 @@ declare namespace API {
     avatar?: string;
     name?: string;
     owner?: string;
-    desc?: string;
+    description?: string;
     callNo?: number;
     status?: number;
     updatedAt?: string;
@@ -166,7 +166,7 @@ declare namespace API {
     title?: string;
     status?: string;
     datetime?: string;
-    description?: string;
+    descriptionription?: string;
     type?: NoticeIconItemType;
   };
 }

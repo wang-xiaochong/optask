@@ -44,7 +44,7 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
 
 /** 查找用户信息接口 POST /api/login/account */
 export async function getUserInfoById(id: number, options?: { [key: string]: any }) {
-  return request<API.CurrentUser>(`/api/user/getUserInfoById?id=${id}`, {
+  return request<{ data: API.CurrentUser }>(`/api/user/getUserInfoById?id=${id}`, {
     method: 'GET',
     // data: id,
     ...(options || {}),
