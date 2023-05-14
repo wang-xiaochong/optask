@@ -12,17 +12,15 @@ import { Switch } from 'antd';
 import { useEffect, useState } from 'react';
 import { getTaskInfoByProjectID } from '@/request/taskInfo';
 import { getProjectInfoByID } from '@/request/projectInfo';
+import { getAllUserInfo, getUserInfoById } from '@/request/userInfo';
 
 const ProjectDetail = () => {
-  const [readonly, setReadonly] = useState(true);
+  const [readonly, setReadonly] = useState(false);
   const [tasksInfo, setTasksInfo] = useState<API.TaskInfo[]>([]);
+  const [userName, setUserName] = useState();
   const [tasksInfoRender, setTasksInfoRender] = useState<
     { value: number; type: TaskInfoType; status: TaskInfoStatus }[]
   >([]);
-  const [projectName, setProjectName] = useState<string>();
-  const [projectStatus, setProjectStatus] = useState<string>();
-  const [projectDescription, setProjectDescription] = useState<string>();
-  const [projectUserInfo, setProjectUserInfo] = useState<Array<any>>([]);
   const projectID = history.location.state?.title;
 
   const TaskBar = () => {
@@ -41,10 +39,21 @@ const ProjectDetail = () => {
 
   const getProject = async () => {
     const projectInfo: API.ProjectInfo = (await getProjectInfoByID(projectID))?.data;
-    console.log('项目详情：', projectInfo);
-    setProjectName(projectInfo?.name);
-    setProjectStatus(projectInfo?.status);
-    setProjectDescription(projectInfo?.description);
+    // console.log('项目详情：', projectInfo);
+    const userInfo = projectInfo.userInfo?.split(",");
+    projectInfo.userInfo = userInfo as any;
+    return projectInfo;
+  }
+
+  const getAllUser = async () => {
+    let userData = await getAllUserInfo();
+    let tmp = {};
+    userData.data.forEach((user) => {
+      tmp[user.id] = user.name
+    })
+    console.log('tmp', tmp);
+    setUserName(tmp);
+
   }
 
   useEffect(() => {
@@ -58,6 +67,8 @@ const ProjectDetail = () => {
       // console.log('项目ID: ', projectID);
       getProject();
     }
+    getAllUser();
+
   }, []);
 
   useEffect(() => {
@@ -94,22 +105,17 @@ const ProjectDetail = () => {
         onChange={setReadonly}
       />
       <ProForm
-        readonly={readonly}
+        readonly={!readonly}
         name="validate_other"
-        initialValues={{
-          name: projectName,
-          status: projectStatus,
-          description: projectDescription,
-          'select-multiple': ['green', 'blue'],
-        }}
+        request={getProject}
         onValuesChange={(_, values) => {
           console.log(values);
         }}
         onFinish={async (value) => console.log(value)}
       >
         <ProFormGroup
-          title="文本类"
-          collapsible
+          // title="文本类"
+          // collapsible
           style={{
             gap: '0 32px',
           }}
@@ -125,11 +131,13 @@ const ProjectDetail = () => {
           <ProFormSelect
             name="userInfo"
             label="成员"
-            valueEnum={{
-              red: 'Red',
-              green: 'Green',
-              blue: 'Blue',
-            }}
+            // valueEnum={{
+            //   "red": 'Red',
+            //   green: 'Green',
+            //   blue: 'Blue',
+            // }}
+            width="xl"
+            valueEnum={userName}
             fieldProps={{
               mode: 'multiple',
             }}
