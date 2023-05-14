@@ -8,10 +8,10 @@ import {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Switch } from 'antd';
+import { message, Switch } from 'antd';
 import { useEffect, useState } from 'react';
 import { getTaskInfoByProjectID } from '@/request/taskInfo';
-import { getProjectInfoByID } from '@/request/projectInfo';
+import { getProjectInfoByID, updateProjectInfoByID } from '@/request/projectInfo';
 import { getAllUserInfo, getUserInfoById } from '@/request/userInfo';
 
 const ProjectDetail = () => {
@@ -39,7 +39,7 @@ const ProjectDetail = () => {
 
   const getProject = async () => {
     const projectInfo: API.ProjectInfo = (await getProjectInfoByID(projectID))?.data;
-    // console.log('项目详情：', projectInfo);
+    console.log('项目详情：', projectInfo);
     const userInfo = projectInfo.userInfo?.split(",");
     projectInfo.userInfo = userInfo as any;
     return projectInfo;
@@ -54,6 +54,15 @@ const ProjectDetail = () => {
     console.log('tmp', tmp);
     setUserName(tmp);
 
+  }
+
+  const updateProjectInfo = async (value: API.ProjectInfo) => {
+    console.log('value', value);
+    value.userInfo = (value.userInfo as any)!.join(",");
+    const res = await updateProjectInfoByID(value);
+    if (res.success) {
+      message.success("提交成功");
+    }
   }
 
   useEffect(() => {
@@ -111,7 +120,7 @@ const ProjectDetail = () => {
         onValuesChange={(_, values) => {
           console.log(values);
         }}
-        onFinish={async (value) => console.log(value)}
+        onFinish={async (value) => updateProjectInfo(value)}
         submitter={{
           render: (_, doms) => (
             <span className={!readonly ? 'none' : undefined}>
@@ -133,6 +142,7 @@ const ProjectDetail = () => {
             gap: '0 32px',
           }}
         >
+          <ProFormText hidden name="id" label="id" />
           <ProFormText width="md" name="name" label="名称" />
           <ProFormSelect
             name="status"
