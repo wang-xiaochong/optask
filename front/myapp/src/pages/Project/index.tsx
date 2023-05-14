@@ -74,10 +74,6 @@ const Project = () => {
     setProjectRender(ret);
   }, [project]);
 
-  const updateProject = async (values: any) => {
-    console.log('values', values);
-  }
-
   return (
     <>
 

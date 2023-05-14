@@ -17,10 +17,10 @@ const TaskProtable = () => {
 
 
   const refreshTaskInfo = async () => {
-    console.log('refreshTaskInfo');
+    // console.log('refreshTaskInfo');
     addKeyToFnDataArray(getAllTaskInfo).then(res => {
       if (res.data) {
-        console.log('res.data');
+        // console.log('res.data');
         setAllTaskInfo(res.data);
       }
     })

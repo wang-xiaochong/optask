@@ -39,7 +39,7 @@ const ProjectDetail = () => {
 
   const getProject = async () => {
     const projectInfo: API.ProjectInfo = (await getProjectInfoByID(projectID))?.data;
-    console.log('项目详情：', projectInfo);
+    // console.log('项目详情：', projectInfo);
     const userInfo = projectInfo.userInfo?.split(",");
     projectInfo.userInfo = userInfo as any;
     return projectInfo;
@@ -51,7 +51,7 @@ const ProjectDetail = () => {
     userData.data.forEach((user) => {
       tmp[user.id] = user.name
     })
-    console.log('tmp', tmp);
+    // console.log('tmp', tmp);
     setUserName(tmp);
 
   }

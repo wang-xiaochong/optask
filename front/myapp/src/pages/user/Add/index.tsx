@@ -38,7 +38,7 @@ const UserAdd = () => {
           }}
           onFinish={async (values) => {
             // await waitTime(2000);
-            console.log('values', values);
+            // console.log('values', values);
             await addUserInfo(values);
             message.success('添加成功');
             formRef.current?.resetFields(['account', 'password', 'name', 'roleInfo', 'job']);

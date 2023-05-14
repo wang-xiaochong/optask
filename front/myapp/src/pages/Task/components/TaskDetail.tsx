@@ -47,7 +47,7 @@ const TaskDetail = () => {
     const taskInfoRes = await getTaskInfoByID(taskInfoID);
     setFormData(taskInfoRes.data);
     setEditor(BraftEditor.createEditorState(taskInfoRes.data?.detail));
-    console.log('taskInfoRes.data', taskInfoRes.data);
+    // console.log('taskInfoRes.data', taskInfoRes.data);
     return taskInfoRes.data;
   };
   const updateFormData = async (values: any) => {
@@ -58,7 +58,7 @@ const TaskDetail = () => {
     values['parent'] = formData?.parent;
     values['project'] = formData?.project;
     values['updateTime'] = getNowFormatDate();
-    console.log(values);
+    // console.log(values);
     await updateTaskContent(values);
     setMode('read');
   };

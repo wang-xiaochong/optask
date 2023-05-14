@@ -54,7 +54,7 @@ const ProjectAdd = (props: any) => {
       submitTimeout={2000}
       onFinish={async (values) => {
         await waitTime(500);
-        console.log(values);
+        // console.log(values);
         await addProjectInfo(values);
         message.success('提交成功');
         refreshProject();
