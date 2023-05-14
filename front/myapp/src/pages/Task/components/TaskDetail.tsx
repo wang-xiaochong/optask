@@ -97,7 +97,7 @@ const TaskDetail = () => {
             // }}
             submitter={{
               render: (_, doms) => (
-                <span style={{ visibility: mode === 'read' ? 'hidden' : 'visible' }}>
+                <span className={mode === 'read' ? 'none' : undefined}>
                   {doms.map((dom) => {
                     return (
                       <span style={{ margin: '0 10px 0 10px' }} key={dom.key}>

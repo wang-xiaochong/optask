@@ -112,6 +112,19 @@ const ProjectDetail = () => {
           console.log(values);
         }}
         onFinish={async (value) => console.log(value)}
+        submitter={{
+          render: (_, doms) => (
+            <span className={!readonly ? 'none' : undefined}>
+              {doms.map((dom) => {
+                return (
+                  <span style={{ margin: '0 10px 0 10px' }} key={dom.key}>
+                    {dom}
+                  </span>
+                );
+              })}
+            </span>
+          ),
+        }}
       >
         <ProFormGroup
           // title="文本类"
