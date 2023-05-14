@@ -71,7 +71,7 @@ const ProjectDetail = () => {
     if (projectID) {
       getTaskInfoByProjectID(projectID).then((res: { data: API.TaskInfo[] }) => {
         // console.log('对应项目任务列表：', res);
-        setTasksInfo(res?.data);
+        setTasksInfo(res?.data || []);
       });
       // console.log('项目ID: ', projectID);
       getProject();

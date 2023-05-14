@@ -108,7 +108,7 @@ func GetTaskByProjectID(context *gin.Context) {
 	if task != nil {
 		res.Return(context, utils.SUCCESS, task)
 	} else {
-		res.Return(context, utils.ERROR, task)
+		res.Return(context, utils.ERROR, "")
 	}
 }
 
