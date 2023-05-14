@@ -70,7 +70,7 @@ const TaskCreatedByMe = () => {
                 history.push(`${pathname}/detail`, record);
               }}
             >
-              #{1000 + Number(text?.toString())}
+              #{Number(text?.toString())}
             </span>
           </a>
         );

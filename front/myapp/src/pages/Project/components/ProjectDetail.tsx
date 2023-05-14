@@ -168,7 +168,7 @@ const ProjectDetail = () => {
             rules={[
               {
                 required: true,
-                message: 'Please select your favorite colors!',
+                message: '请选择成员!',
                 type: 'array',
               },
             ]}
