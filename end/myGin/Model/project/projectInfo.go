@@ -26,6 +26,15 @@ type ProjectAddInfo struct {
 	Description *string `json:"description" form:"description" ` //项目简介
 }
 
+// Person 自定义Person类
+type ProjectUpdateInfo struct {
+	Id          *int    `json:"id" form:"id"`                    //唯一识别、主键自增
+	Name        *string `json:"name" form:"name"`                //项目名称
+	Status      *string `json:"status" form:"status" `           //项目状态
+	UserInfo    *string `json:"userInfo" form:"userInfo" `       //项目组成员
+	Description *string `json:"description" form:"description" ` //项目简介
+}
+
 func (p *ProjectInfo) GetAll() []map[string]interface{} {
 	ret := curd.GetAll("projectInfo")
 	return ret
@@ -81,6 +90,24 @@ func (w *ProjectAddInfo) AddProjectInfo(u ProjectAddInfo, context *gin.Context) 
 		fmt.Println(err)
 	}
 	Id = int(id)
+	defer stmt.Close()
+	return
+}
+
+func (w *ProjectUpdateInfo) UpdateUserInfoByID(p ProjectUpdateInfo, context *gin.Context) (rows int, err error) {
+	stmt, err := database.MysqlDB.Prepare("update projectInfo set name=?,status=?,userInfo=?,description=? where id=?")
+	if err != nil {
+		fmt.Println(err)
+	}
+	rs, err := stmt.Exec(*p.Name, *p.Status, *p.UserInfo, *p.Description, *p.Id)
+	if err != nil {
+		fmt.Println(err)
+	}
+	row, err := rs.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+	}
+	rows = int(row)
 	defer stmt.Close()
 	return
 }

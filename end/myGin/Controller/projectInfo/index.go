@@ -43,3 +43,13 @@ func AddProjectInfo(context *gin.Context) {
 	p.AddProjectInfo(p, context)
 	res.Return(context, utils.SUCCESS, "")
 }
+
+func UpdateProjectInfoByID(context *gin.Context) {
+	u := project.ProjectUpdateInfo{}
+	err := context.Bind(&u)
+	if err != nil {
+		fmt.Println(err)
+	}
+	u.UpdateUserInfoByID(u, context)
+	res.Return(context, utils.SUCCESS, "")
+}
