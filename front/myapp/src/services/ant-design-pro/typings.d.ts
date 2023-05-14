@@ -43,16 +43,16 @@ declare namespace API {
     status?: TaskInfoStatus;
     leval?: string;
     createdBy?: string;
-    createdTime?: Date;
+    createdTime?: Date | string;
     appoint?: string;
     project?: string;
     taskUpdateInfo?: number;
-    updateTime?: Date;
-    estimatedTime?: Date;
-    consumeTime?: Date;
-    leftTime?: Date;
+    updateTime?: Date | string;
+    estimatedTime?: Date | string;
+    consumeTime?: Date | string;
+    leftTime?: Date | string;
     detail?: string;
-    date?: Date;
+    date?: Date | string;
     parent?: number;
   };
 

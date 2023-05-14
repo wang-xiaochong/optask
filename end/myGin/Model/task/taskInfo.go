@@ -51,6 +51,17 @@ type TaskUpdateInfo struct {
 	Parent        *string `json:"parent"   form:"parent" `               //父级任务
 }
 
+type TaskInfoUpdate struct {
+	Id         *int    `json:"id" form:"id"`                    //唯一识别、主键自增
+	Name       *string `json:"name" form:"name"`                //任务名称
+	Type       *string `json:"type" form:"type"`                //任务类型
+	Status     *string `json:"status" form:"status"`            //状态
+	CreatedBy  *string `json:"createdBy" form:"createdBy"`      //创建人
+	Appoint    *string `json:"appoint" form:"appoint"`          //指定人
+	UpdateTime *string `json:"updateTime"   form:"updateTime" ` //最新更新时间
+	Project    *string `json:"project"   form:"project" `       //所属项目
+}
+
 type TaskAddInfo struct {
 	Name    *string `json:"name" form:"name"`        //任务名称
 	Type    *string `json:"type" form:"type"`        //任务类型
@@ -279,6 +290,26 @@ func (q *TaskAddInfo) AddWikiInfo(t TaskAddInfo, context *gin.Context) (Id int, 
 		fmt.Println(err)
 	}
 	Id = int(id)
+	defer stmt.Close()
+	return
+}
+
+func (tu *TaskInfoUpdate) UpdateTaskInfo(t TaskInfoUpdate) (rows int, err error) {
+
+	stmt, err := database.MysqlDB.Prepare("update taskInfo set name=?,type=?,status=?,createdBy=?,appoint=?,updateTime=?,project=? where id=?")
+	if err != nil {
+		fmt.Println("ModealSqlErr:", err)
+	}
+	rs, err := stmt.Exec(*t.Name, *t.Type, *t.Status, *t.CreatedBy, *t.Appoint, *t.UpdateTime, *t.Project, *t.Id)
+	if err != nil {
+		fmt.Println("sqlUpdateErr:", err)
+	}
+	row, err := rs.RowsAffected()
+	if err != nil {
+		fmt.Println("ModealSqlErr:", err)
+	}
+	// fmt.Println("ModealSqlErr:", err)
+	rows = int(row)
 	defer stmt.Close()
 	return
 }

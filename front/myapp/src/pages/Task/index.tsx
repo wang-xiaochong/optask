@@ -1,11 +1,12 @@
 import { getAllProjectInfo } from '@/request/projectInfo';
-import { getAllTaskInfo } from '@/request/taskInfo';
+import { getAllTaskInfo, updateTaskInfo } from '@/request/taskInfo';
 import { getAllUserInfo } from '@/request/userInfo';
-import { addKeyToFnDataArray } from '@/utils/utils';
-import { ProColumns, ProTable } from '@ant-design/pro-components';
+import { getNowFormatDate } from '@/utils/utils';
+import { ProColumns, ProTable, RequestData } from '@ant-design/pro-components';
 import { NewLineConfig, RecordKey } from '@ant-design/pro-utils/es/useEditableArray';
 import { history } from '@umijs/max';
-import { useEffect, useState } from 'react';
+import { message } from 'antd';
+import { useEffect, useRef, useState } from 'react';
 import { TaskInfoStatus, TaskInfoType } from '../Components/Task';
 import { pageSize } from '../Components/unitConfig';
 import TaskAdd from './components/TaskAdd';
@@ -13,15 +14,15 @@ import TaskAdd from './components/TaskAdd';
 const TaskProtable = () => {
   const [userName, setUserName] = useState({});
   const [project, setProject] = useState({});
-  const [allTaskInfo, setAllTaskInfo] = useState<Array<any>>([])
-
+  const [allTaskInfo, setAllTaskInfo] = useState<Array<any>>([]);
+  const allTaskInfoRef = useRef<any>([]);
 
   const refreshTaskInfo = async () => {
-    // console.log('refreshTaskInfo');
-    addKeyToFnDataArray(getAllTaskInfo).then(res => {
+    getAllTaskInfo().then(res => {
       if (res.data) {
         // console.log('res.data');
         setAllTaskInfo(res.data);
+        allTaskInfoRef.current = res.data;
       }
     })
   }
@@ -162,7 +163,7 @@ const TaskProtable = () => {
       },
     },
   ];
-  const updateTaskInfo = async (
+  const onSaveTaskInfo = async (
     rows: RecordKey,
     record: API.TaskInfo & { index?: number | undefined },
     originRow: API.TaskInfo & { index?: number | undefined },
@@ -172,11 +173,17 @@ const TaskProtable = () => {
     console.log('record', record);
     console.log('originRow', originRow);
     console.log('newLineConfig', newLineConfig);
+    record.updateTime = getNowFormatDate() as any;
+    // console.log('time', time);
     // record sent to end
-  };
-  // const refreshTaskInfo = ()=>{
 
-  // }
+    const res = await updateTaskInfo(record);
+    if (res.success) {
+      message.success("更新成功");
+    }
+    refreshTaskInfo();
+  };
+
   return (
     <ProTable<API.TaskInfo>
       toolBarRender={() => {
@@ -194,7 +201,7 @@ const TaskProtable = () => {
           return [defaultDoms.save, defaultDoms.cancel];
         },
         onSave: async (rows, record, originRow, newLineConfig) => {
-          await updateTaskInfo(rows, record, originRow, newLineConfig);
+          await onSaveTaskInfo(rows, record, originRow, newLineConfig);
         },
       }}
       dataSource={allTaskInfo}
@@ -209,7 +216,32 @@ const TaskProtable = () => {
       // }}
       ErrorBoundary={false}
       rowKey="id"
-      search={false}
+      search={{}}
+      // request={async (params, sorter, filter) => {
+      //   // 表单搜索项会从 params 传入，传递给后端接口。
+      //   console.log(params, sorter, filter);
+      //   // return Promise.resolve({
+      //   //   data: tableListDataSource,
+      //   //   success: true,
+      //   // });
+      //   delete params.current;
+      //   delete params.pageSize;
+
+      //   const nowTaskInfo: any[] | Partial<RequestData<API.TaskInfo>> | PromiseLike<Partial<RequestData<API.TaskInfo>>> = [];
+      //   allTaskInfoRef.current.forEach((taskInfo: { [x: string]: any; }) => {
+      //     for (const key in params) {
+      //       if (params.hasOwnProperty(key)) {
+      //         if (taskInfo[key] === params[key]) {
+      //           nowTaskInfo.push(taskInfo);
+      //         }
+      //       }
+      //     }
+      //   });
+      //   console.log('nowTaskInfo', nowTaskInfo);
+      //   setAllTaskInfo(nowTaskInfo);
+      //   // return addKeyToFnDataArray(getAllTaskInfo);
+      // }}
+
       pagination={{
         pageSize: pageSize,
         // onChange: (page) => console.log(page),

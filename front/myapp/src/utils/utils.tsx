@@ -42,8 +42,8 @@ export const waitTime = (time: number = 100) => {
 
 export function getNowFormatDate() {
   let date = new Date(); //获取当前时间
-  let month = date.getMonth() + 1; //月份处理
-  let day = date.getDate();
+  let month: any = date.getMonth() + 1; //月份处理
+  let day: any = date.getDate();
   month = month < 10 ? '0' + month : month; //月份为1-9月,在其前面加0
   day = day < 10 ? '0' + day : day; //日期为1-9号,在其前面加了0
   let s1 = '-'; //定义年月日分隔符-

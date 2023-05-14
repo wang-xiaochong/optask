@@ -144,6 +144,16 @@ func UpdateContent(context *gin.Context) {
 	res.Return(context, utils.SUCCESS, "")
 }
 
+func UpdateTaskInfo(context *gin.Context) {
+	t := task.TaskInfoUpdate{}
+	err := context.Bind(&t)
+	if err != nil {
+		fmt.Println("Controller:UpdateContent", err)
+	}
+	t.UpdateTaskInfo(t)
+	res.Return(context, utils.SUCCESS, "")
+}
+
 func AddTaskInfo(context *gin.Context) {
 
 	t := task.TaskAddInfo{}

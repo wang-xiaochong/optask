@@ -1,17 +1,32 @@
 import { getInitialState } from '@/app';
 import { getAllProjectInfo } from '@/request/projectInfo';
-import { getTaskInfoByCreatedBy } from '@/request/taskInfo';
+import { getTaskInfoByCreatedBy, updateTaskInfo } from '@/request/taskInfo';
 import { getAllUserInfo } from '@/request/userInfo';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { NewLineConfig, RecordKey } from '@ant-design/pro-utils/es/useEditableArray';
 import { history } from '@umijs/max';
+import { message } from 'antd';
 import { useEffect, useState } from 'react';
 import { TaskInfoStatus, TaskInfoType } from '../../Components/Task';
+import TaskAdd from './TaskAdd';
 
 const TaskCreatedByMe = () => {
   const [userName, setUserName] = useState({});
   const [project, setProject] = useState({});
   const [myTasks, setMyTasks] = useState([]);
+
+
+  const refreshTaskInfo = async () => {
+    const userRes = await getInitialState();
+    if (userRes?.currentUser?.name) {
+      getTaskInfoByCreatedBy(userRes?.currentUser?.name).then((res) => {
+        if (res.data) {
+          setMyTasks(res?.data);
+        }
+      });
+    }
+  }
+
   useEffect(() => {
     getAllUserInfo().then((res) => {
       let ret = {};
@@ -33,16 +48,8 @@ const TaskCreatedByMe = () => {
       }
       setProject(ret);
     });
-    getInitialState().then((res) => {
-      if (res?.currentUser?.name) {
-        getTaskInfoByCreatedBy(res?.currentUser?.name).then((res) => {
-          if (res.data) {
-            setMyTasks(res?.data);
-          }
-        });
 
-      }
-    });
+    refreshTaskInfo();
     // console.log('TaskProtable');
   }, []);
 
@@ -156,7 +163,7 @@ const TaskCreatedByMe = () => {
       },
     },
   ];
-  const updateTaskInfo = async (
+  const onSaveTaskInfo = async (
     rows: RecordKey,
     record: API.TaskInfo & { index?: number | undefined },
     originRow: API.TaskInfo & { index?: number | undefined },
@@ -167,9 +174,22 @@ const TaskCreatedByMe = () => {
     console.log('originRow', originRow);
     console.log('newLineConfig', newLineConfig);
     // record sent to end
+    const res = await updateTaskInfo(record);
+    refreshTaskInfo();
+    if (res.success) {
+      message.success("更新成功");
+    }
   };
   return (
     <ProTable<API.TaskInfo>
+      toolBarRender={() => {
+        return [
+          // <Button key="add" type="primary">
+          //   新建
+          // </Button>,
+          <TaskAdd key="add" refreshTaskInfo={refreshTaskInfo} />
+        ];
+      }}
       columns={columns}
       editable={{
         type: 'multiple',
@@ -177,7 +197,7 @@ const TaskCreatedByMe = () => {
           return [defaultDoms.save, defaultDoms.cancel];
         },
         onSave: async (rows, record, originRow, newLineConfig) => {
-          await updateTaskInfo(rows, record, originRow, newLineConfig);
+          await onSaveTaskInfo(rows, record, originRow, newLineConfig);
         },
       }}
       dataSource={myTasks}
