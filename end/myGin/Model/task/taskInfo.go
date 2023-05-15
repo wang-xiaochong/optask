@@ -71,7 +71,7 @@ type TaskAddInfo struct {
 }
 
 func (t *TaskInfo) GetAll() []map[string]interface{} {
-	ret := curd.GetAll("taskInfo")
+	ret := curd.GetAll("taskInfo", "id", "desc")
 	return ret
 
 	// sqlStr := "select t.*,p.name as project from taskInfo as t join projectInfo as p on t.project=p.id"
@@ -202,34 +202,34 @@ func getTaskUpdateInfo(id interface{}) interface{} {
 }
 
 func (t *TaskInfo) GetTaskByID(id string) interface{} {
-	// result := curd.Find("taskInfo", "id", id)
-	// return result[0]
+	result := curd.Find("taskInfo", "id", id)
+	return result[0]
 
-	sqlStr := "select t.*,p.name as project,u.name as createdBy from taskInfo as t,projectInfo as p,userInfo as u where t.id=? and t.project=p.id and t.createdBy=u.id"
-	//查询数据，取所有字段
-	rows, err := database.MysqlDB.Query(sqlStr, id)
-	if err != nil {
-		fmt.Println(err)
-	}
-	ret := curd.HandleSQL(rows)
+	// sqlStr := "select t.*,p.name as project,u.name as createdBy from taskInfo as t,projectInfo as p,userInfo as u where t.id=? and t.project=p.id and t.createdBy=u.id"
+	// //查询数据，取所有字段
+	// rows, err := database.MysqlDB.Query(sqlStr, id)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// ret := curd.HandleSQL(rows)
 
-	// 查找appoint
-	sqlStr2 := "select u.name as appoint from userInfo as u where u.id=?"
-	rows2, err := database.MysqlDB.Query(sqlStr2, ret[0]["appoint"])
-	if err != nil {
-		fmt.Println(err)
-	}
-	ret2 := curd.HandleSQL(rows2)
-	ret[0]["appoint"] = ret2[0]["appoint"]
+	// // 查找appoint
+	// sqlStr2 := "select u.name as appoint from userInfo as u where u.id=?"
+	// rows2, err := database.MysqlDB.Query(sqlStr2, ret[0]["appoint"])
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// ret2 := curd.HandleSQL(rows2)
+	// ret[0]["appoint"] = ret2[0]["appoint"]
 
-	if ret[0]["taskUpdateInfo"] != nil {
-		ret[0]["taskUpdateInfo"] = getTaskUpdateInfo(ret[0]["taskUpdateInfo"])
-	}
+	// if ret[0]["taskUpdateInfo"] != nil {
+	// 	ret[0]["taskUpdateInfo"] = getTaskUpdateInfo(ret[0]["taskUpdateInfo"])
+	// }
 
-	// fmt.Println("ret", ret)
-	// fmt.Println("ret2", ret2)
+	// // fmt.Println("ret", ret)
+	// // fmt.Println("ret2", ret2)
 
-	return ret[0]
+	// return ret[0]
 }
 
 func (tu *TaskUpdateInfo) UpdateContent(t TaskUpdateInfo) (rows int, err error) {

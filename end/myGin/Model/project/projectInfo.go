@@ -36,7 +36,7 @@ type ProjectUpdateInfo struct {
 }
 
 func (p *ProjectInfo) GetAll() []map[string]interface{} {
-	ret := curd.GetAll("projectInfo")
+	ret := curd.GetAll("projectInfo", "id", "desc")
 	return ret
 }
 

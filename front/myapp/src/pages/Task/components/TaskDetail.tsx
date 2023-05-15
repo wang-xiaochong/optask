@@ -58,7 +58,7 @@ const TaskDetail = () => {
     values['parent'] = formData?.parent;
     values['project'] = formData?.project;
     values['updateTime'] = getNowFormatDate();
-    // console.log(values);
+    console.log(values);
     await updateTaskContent(values);
     setMode('read');
   };

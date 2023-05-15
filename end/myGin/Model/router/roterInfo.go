@@ -14,6 +14,6 @@ type RouterInfo struct {
 }
 
 func (r *RouterInfo) GetAll() []map[string]interface{} {
-	ret := curd.GetAll("routerInfo")
+	ret := curd.GetAll("routerInfo", "id", "desc")
 	return ret
 }
