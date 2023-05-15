@@ -14,17 +14,59 @@ import TaskAdd from './components/TaskAdd';
 const TaskProtable = () => {
   const [userName, setUserName] = useState({});
   const [project, setProject] = useState({});
-  const [allTaskInfo, setAllTaskInfo] = useState<Array<any>>([]);
-  const allTaskInfoRef = useRef<any>([]);
+  // const [allTaskInfo, setAllTaskInfo] = useState<Array<any>>([]);
+  const allTaskInfoRef = useRef<Array<any>>([]);
+  const taskRef = useRef<any>();
 
-  const refreshTaskInfo = async () => {
-    getAllTaskInfo().then(res => {
-      if (res.data) {
-        // console.log('res.data');
-        setAllTaskInfo(res.data);
-        allTaskInfoRef.current = res.data;
+  // const refreshTaskInfo = async () => {
+  //   getAllTaskInfo().then(res => {
+  //     if (res.data) {
+  //       // console.log('res.data');
+  //       setAllTaskInfo(res.data);
+  //       allTaskInfoRef.current = res.data;
+  //     }
+  //   })
+  // }
+
+  const refreshTaskInfo = async (params?: any, sorter?: any, filter?: any) => {
+    delete params?.current;
+    delete params?.pageSize;
+
+
+    if (params && Object.keys(params).length === 0) {
+      return getAllTaskInfo();
+    }
+    if (!params) {
+      taskRef.current.submit();
+    }
+
+    if (allTaskInfoRef.current.length === 0) {
+      allTaskInfoRef.current = (await getAllTaskInfo())?.data;
+    }
+    // 表单搜索项会从 params 传入，传递给后端接口。
+    console.log(params, sorter, filter);
+    // return Promise.resolve({
+    //   data: tableListDataSource,
+    //   success: true,
+    // });
+    const nowTaskInfo = [...allTaskInfoRef.current];
+    if (params && Object.keys(params).length !== 0) {
+      for (let i = 0; i < nowTaskInfo.length; i++) {
+        const taskInfo = nowTaskInfo[i];
+        for (const key in params) {
+          if (params.hasOwnProperty(key)) {
+            if (!taskInfo[key] || params[key] !== taskInfo[key]) {
+              nowTaskInfo.splice(i, 1);
+              i--;
+              break;
+            }
+          }
+        }
       }
-    })
+    }
+    // console.log('nowTaskInfo', nowTaskInfo);
+    // setAllTaskInfo(nowTaskInfo);
+    return { data: nowTaskInfo, success: true, total: nowTaskInfo.length };
   }
 
   useEffect(() => {
@@ -49,7 +91,7 @@ const TaskProtable = () => {
       setProject(ret);
     });
 
-    refreshTaskInfo();
+    // refreshTaskInfo();
 
     // console.log('TaskProtable');
   }, []);
@@ -186,6 +228,7 @@ const TaskProtable = () => {
 
   return (
     <ProTable<API.TaskInfo>
+      formRef={taskRef}
       toolBarRender={() => {
         return [
           // <Button key="add" type="primary">
@@ -204,7 +247,7 @@ const TaskProtable = () => {
           await onSaveTaskInfo(rows, record, originRow, newLineConfig);
         },
       }}
-      dataSource={allTaskInfo}
+      // dataSource={allTaskInfo}
       // request={async (params, sorter, filter) => {
       //   // 表单搜索项会从 params 传入，传递给后端接口。
       //   console.log(params, sorter, filter);
@@ -217,31 +260,7 @@ const TaskProtable = () => {
       ErrorBoundary={false}
       rowKey="id"
       search={{}}
-      // request={async (params, sorter, filter) => {
-      //   // 表单搜索项会从 params 传入，传递给后端接口。
-      //   console.log(params, sorter, filter);
-      //   // return Promise.resolve({
-      //   //   data: tableListDataSource,
-      //   //   success: true,
-      //   // });
-      //   delete params.current;
-      //   delete params.pageSize;
-
-      //   const nowTaskInfo: any[] | Partial<RequestData<API.TaskInfo>> | PromiseLike<Partial<RequestData<API.TaskInfo>>> = [];
-      //   allTaskInfoRef.current.forEach((taskInfo: { [x: string]: any; }) => {
-      //     for (const key in params) {
-      //       if (params.hasOwnProperty(key)) {
-      //         if (taskInfo[key] === params[key]) {
-      //           nowTaskInfo.push(taskInfo);
-      //         }
-      //       }
-      //     }
-      //   });
-      //   console.log('nowTaskInfo', nowTaskInfo);
-      //   setAllTaskInfo(nowTaskInfo);
-      //   // return addKeyToFnDataArray(getAllTaskInfo);
-      // }}
-
+      request={refreshTaskInfo}
       pagination={{
         pageSize: pageSize,
         // onChange: (page) => console.log(page),
