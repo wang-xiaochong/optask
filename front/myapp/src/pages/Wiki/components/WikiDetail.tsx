@@ -2,6 +2,7 @@ import { currentUser } from '@/request/userInfo';
 import { updateWikiContent } from '@/request/wikiInfo';
 import { getNowFormatDate } from '@/utils/utils';
 import { history } from '@umijs/max';
+import { message } from 'antd';
 import Editor from './Editor';
 import './index.css';
 const Wiki = () => {
@@ -17,7 +18,10 @@ const Wiki = () => {
       updateInfo: user.data.id,
       parent: history.location.state.parent,
     };
-    updateWikiContent(data);
+    const res = await updateWikiContent(data);
+    if (res.success) {
+      message.success("更新成功")
+    }
   };
 
   // useEffect(() => {

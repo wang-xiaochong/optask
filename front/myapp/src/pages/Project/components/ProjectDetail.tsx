@@ -63,6 +63,7 @@ const ProjectDetail = () => {
     if (res.success) {
       message.success("提交成功");
     }
+    setReadonly(!readonly);
   }
 
   useEffect(() => {

@@ -13,7 +13,7 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { Card, Radio, Space } from 'antd';
+import { Card, message, Radio, Space } from 'antd';
 import BraftEditor from 'braft-editor';
 import { useEffect, useState } from 'react';
 
@@ -59,7 +59,10 @@ const TaskDetail = () => {
     values['project'] = formData?.project;
     values['updateTime'] = getNowFormatDate();
     console.log(values);
-    await updateTaskContent(values);
+    const res = await updateTaskContent(values);
+    if (res.success) {
+      message.success("提交成功");
+    }
     setMode('read');
   };
   const handleEditorChange = (editor: any) => {

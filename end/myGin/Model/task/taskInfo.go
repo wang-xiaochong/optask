@@ -233,36 +233,39 @@ func (t *TaskInfo) GetTaskByID(id string) interface{} {
 }
 
 func (tu *TaskUpdateInfo) UpdateContent(t TaskUpdateInfo) (rows int, err error) {
-	sqlStr2 := "select id from userInfo as u where u.name=?"
-	rows2, err := database.MysqlDB.Query(sqlStr2, t.CreatedBy)
-	if err != nil {
-		fmt.Println("ModelErr:", err)
-	}
-	ret2 := curd.HandleSQL(rows2)
-	var createdById = ret2[0]["id"]
+	// sqlStr2 := "select id from userInfo as u where u.name=?"
+	// rows2, err := database.MysqlDB.Query(sqlStr2, t.CreatedBy)
+	// if err != nil {
+	// 	fmt.Println("ModelErr:", err)
+	// }
+	// ret2 := curd.HandleSQL(rows2)
+	// var createdById = ret2[0]["id"]
 
-	sqlStr3 := "select id from userInfo as u where u.name=?"
-	rows3, err := database.MysqlDB.Query(sqlStr3, t.Appoint)
-	if err != nil {
-		fmt.Println(err)
-	}
-	ret3 := curd.HandleSQL(rows3)
-	var appointId = ret3[0]["id"]
+	// sqlStr3 := "select id from userInfo as u where u.name=?"
+	// rows3, err := database.MysqlDB.Query(sqlStr3, t.Appoint)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// ret3 := curd.HandleSQL(rows3)
+	// var appointId = ret3[0]["id"]
 
-	sqlStr4 := "select id from projectInfo as p where p.name=?"
-	rows4, err := database.MysqlDB.Query(sqlStr4, t.Project)
-	if err != nil {
-		fmt.Println(err)
-	}
-	ret4 := curd.HandleSQL(rows4)
-	var projectId = ret4[0]["id"]
+	// sqlStr4 := "select id from projectInfo as p where p.name=?"
+	// rows4, err := database.MysqlDB.Query(sqlStr4, t.Project)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// ret4 := curd.HandleSQL(rows4)
+	// var projectId = ret4[0]["id"]
 
 	stmt, err := database.MysqlDB.Prepare("update taskInfo set name=?,type=?,status=?,leval=?,createdBy=?,createdTime=?,endTime=?,appoint=?,project=?,updateTime=?,estimatedTime=?,consumeTime=?,leftTime=?,detail=? where id=?")
 	if err != nil {
 		fmt.Println("ModealSqlErr:", err)
 	}
 	// fmt.Println(*t.Name, *t.Type, *t.Status, *t.Leval, createdById, *t.CreatedTime, appointId, projectId, *t.UpdateTime, *t.Detail, *t.Id)
-	rs, err := stmt.Exec(*t.Name, *t.Type, *t.Status, *t.Leval, createdById, *t.CreatedTime, *t.EndTime, appointId, projectId, *t.UpdateTime, *t.EstimatedTime, *t.ConsumeTime, *t.LeftTime, *t.Detail, *t.Id)
+
+	// rs, err := stmt.Exec(*t.Name, *t.Type, *t.Status, *t.Leval, createdById, *t.CreatedTime, *t.EndTime, appointId, projectId, *t.UpdateTime, *t.EstimatedTime, *t.ConsumeTime, *t.LeftTime, *t.Detail, *t.Id)
+	rs, err := stmt.Exec(*t.Name, *t.Type, *t.Status, *t.Leval, *t.CreatedBy, *t.CreatedTime, *t.EndTime, t.Appoint, t.Project, *t.UpdateTime, *t.EstimatedTime, *t.ConsumeTime, *t.LeftTime, *t.Detail, *t.Id)
+
 	if err != nil {
 		fmt.Println("sqlUpdateErr:", err)
 	}
