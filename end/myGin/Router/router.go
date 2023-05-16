@@ -3,6 +3,7 @@ package router
 import (
 	controller "Example/Controller"
 	projectInfo "Example/Controller/projectInfo"
+	roleInfo "Example/Controller/roleInfo"
 	routerInfo "Example/Controller/routerInfo"
 	taskInfo "Example/Controller/taskInfo"
 	userInfo "Example/Controller/userInfo"
@@ -25,6 +26,7 @@ func InitRouter(e *gin.Engine) {
 		user.POST("/login", userInfo.MyLogin)
 		user.POST("/logout", userInfo.MyLogout)
 		user.POST("/updateUserInfoByID", userInfo.UpdateUserInfoByID)
+		user.POST("/updateUserRoleAndJob", userInfo.UpdateUserRoleAndJob)
 		user.GET("/getRoleInfoByUserRoleInfo", userInfo.GetRoleInfoByUserRoleInfo)
 		user.POST("/addUserInfo", userInfo.AddUserInfo)
 		// user.POST("/add", controller.AddPerson)
@@ -69,6 +71,10 @@ func InitRouter(e *gin.Engine) {
 	myRouter := pre.Group("/router")
 	{
 		myRouter.GET("/getAllRouterInfo", routerInfo.GetAllRouters)
+	}
+	role := pre.Group("/role")
+	{
+		role.GET("/getAllRoleInfo", roleInfo.GetAllRoles)
 	}
 
 	person := pre.Group("/person")

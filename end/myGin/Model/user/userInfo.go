@@ -41,6 +41,12 @@ type UserUpdateInfo struct {
 	Job      *string `json:"job"   form:"job" `           //职位
 }
 
+type UpdateUserRoleAndJob struct {
+	Id       *int    `json:"id" form:"id"`             //唯一识别、主键自增
+	RoleInfo *string `json:"roleInfo" form:"roleInfo"` //对应角色ID
+	Job      *string `json:"job"   form:"job" `        //职位
+}
+
 type UserAddInfo struct {
 	Account  *string `json:"account" form:"account"`   //登录账号
 	Password *string `json:"password" form:"password"` //登录密码（加密）
@@ -79,7 +85,7 @@ func (l *Login) Login(db *sql.DB) (id int, err error) {
 // }
 
 func (p *UserInfo) GetAll(db *sql.DB) (ret []map[string]interface{}, err error) {
-	ret = curd.GetAll("userInfo")
+	ret = curd.GetAll("userInfo", "id", "desc")
 	// 覆盖roleInfo
 	// for i := 0; i < len(ret); i++ {
 	// 	// fmt.Println("ret:", ret[i])
@@ -101,6 +107,27 @@ func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {
 		fmt.Println(err)
 		return
 	}
+	return
+}
+
+func (w *UpdateUserRoleAndJob) UpdateUserRoleAndJob(u UpdateUserRoleAndJob, context *gin.Context) (rows int, err error) {
+
+	stmt, err := database.MysqlDB.Prepare("update userInfo set roleInfo=?,job=? where id=?")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	rs, err := stmt.Exec(*u.RoleInfo, *u.Job, *u.Id)
+	if err != nil {
+		fmt.Println(err)
+
+	}
+	row, err := rs.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+	}
+	rows = int(row)
+	defer stmt.Close()
 	return
 }
 

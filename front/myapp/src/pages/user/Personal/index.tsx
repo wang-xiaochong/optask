@@ -1,3 +1,4 @@
+import { UserJob } from '@/pages/Components/User';
 import { currentUser, updateUserInfoByID } from '@/request/userInfo';
 import {
   ProCard,
@@ -87,11 +88,7 @@ const Personal = () => {
           colProps={{ xl: 8, md: 12 }}
           label="职位"
           name="job"
-          valueEnum={{
-            前端工程师: '前端工程师',
-            后端工程师: '后端工程师',
-            实习生: '实习生',
-          }}
+          valueEnum={UserJob}
         />
       </ProForm>
     </ProCard>

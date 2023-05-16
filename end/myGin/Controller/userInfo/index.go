@@ -129,6 +129,16 @@ func UpdateUserInfoByID(context *gin.Context) {
 	res.Return(context, utils.SUCCESS, "")
 }
 
+func UpdateUserRoleAndJob(context *gin.Context) {
+	u := user.UpdateUserRoleAndJob{}
+	err := context.Bind(&u)
+	if err != nil {
+		fmt.Println(err)
+	}
+	u.UpdateUserRoleAndJob(u, context)
+	res.Return(context, utils.SUCCESS, "")
+}
+
 func AddUserInfo(context *gin.Context) {
 	u := user.UserAddInfo{}
 	err := context.Bind(&u)

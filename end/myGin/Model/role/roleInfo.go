@@ -14,6 +14,11 @@ type RoleInfo struct {
 	Description *string `json:"description" form:"description"`
 }
 
+func (r *RoleInfo) GetAll() []map[string]interface{} {
+	ret := curd.GetAll("roleInfo")
+	return ret
+}
+
 func (r *RoleInfo) GetRoleInfoByID(name string) (ret map[string]interface{}, err error) {
 	sqlStr := "select * from roleInfo where name=?"
 	//查询数据，取所有字段
