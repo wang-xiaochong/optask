@@ -31,6 +31,11 @@ type WikiInfoUpdate struct {
 	Parent     *string `json:"parent" form:"parent" `         //父级wiki
 }
 
+type WikiTitleUpdate struct {
+	Id    *int    `json:"id" form:"id"`       //唯一识别、主键自增
+	Title *string `json:"title" form:"title"` //标题
+}
+
 type WikiAddInfo struct {
 	Title   *string `json:"title" form:"title"`      //标题
 	Project *string `json:"project" form:"project" ` //所属项目
@@ -104,21 +109,21 @@ func (w *WikiInfoUpdate) UpdateContent(wu WikiInfoUpdate) (rows int, err error) 
 	return
 }
 
-func (w *WikiInfo) UpdateWikiInfoByID(wu WikiInfo) (rows int, err error) {
+func (w *WikiTitleUpdate) WikiTitleUpdate(wu WikiTitleUpdate) (rows int, err error) {
 	//查询数据，取所有字段
-	sqlStr := "select id from userInfo where name=?;"
-	rows1, err := database.MysqlDB.Query(sqlStr, *wu.CreatedBy)
-	if err != nil {
-		fmt.Println("GetAllErr:", err)
-	}
-	ret := curd.HandleSQL(rows1)
-	var createdBy = ret[0]["id"]
+	// sqlStr := "select id from userInfo where name=?;"
+	// rows1, err := database.MysqlDB.Query(sqlStr, *wu.CreatedBy)
+	// if err != nil {
+	// 	fmt.Println("GetAllErr:", err)
+	// }
+	// ret := curd.HandleSQL(rows1)
+	// var createdBy = ret[0]["id"]
 
-	stmt, err := database.MysqlDB.Prepare("update wikiInfo set title=?,content=?,project=?,createdBy=?,createdTime=?,updateInfo=?,updateTime=?,parent=? where id=?")
+	stmt, err := database.MysqlDB.Prepare("update wikiInfo set title=? where id=?")
 	if err != nil {
 		fmt.Println(err)
 	}
-	rs, err := stmt.Exec(*wu.Title, *wu.Content, *wu.Project, createdBy, *wu.CreatedTime, *wu.UpdateInfo, *wu.UpdateTime, *wu.Parent, *wu.Id)
+	rs, err := stmt.Exec(*wu.Title, *wu.Id)
 	if err != nil {
 		fmt.Println(err)
 	}

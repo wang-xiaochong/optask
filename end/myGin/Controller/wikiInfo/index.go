@@ -54,13 +54,13 @@ func UpdateContent(context *gin.Context) {
 	res.Return(context, utils.SUCCESS, "")
 }
 
-func UpdateWikiInfoByID(context *gin.Context) {
-	w := wiki.WikiInfo{}
+func WikiTitleUpdateByID(context *gin.Context) {
+	w := wiki.WikiTitleUpdate{}
 	err := context.Bind(&w)
 	if err != nil {
 		fmt.Println(err)
 	}
-	w.UpdateWikiInfoByID(w)
+	w.WikiTitleUpdate(w)
 	res.Return(context, utils.SUCCESS, "")
 }
 
