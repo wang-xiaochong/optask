@@ -1,4 +1,5 @@
 import { getInitialState } from '@/app';
+import { pageSize } from '@/pages/Components/unitConfig';
 import { getAllProjectInfo } from '@/request/projectInfo';
 import { getTaskInfoByAppoint, updateTaskInfo } from '@/request/taskInfo';
 import { getAllUserInfo } from '@/request/userInfo';
@@ -206,7 +207,9 @@ const MyTask = () => {
       rowKey="id"
       search={false}
       options={false}
-      pagination={false}
+      pagination={{
+        pageSize: pageSize
+      }}
     />
   );
 };

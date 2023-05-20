@@ -114,7 +114,7 @@ const TaskDetail = () => {
             onFinish={updateFormData}
           >
             <h6>
-              <span> #id:{1000 + formData?.id}</span>
+              <span> #id:{formData?.id}</span>
               <span>最后更新日期：{formData?.updateTime}</span>
             </h6>
 

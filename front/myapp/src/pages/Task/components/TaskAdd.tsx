@@ -1,6 +1,7 @@
 import { TaskInfoLevalOptions, TaskInfoStatusOptions, TaskInfoTypeOptions } from '@/pages/Components/Task';
 import { getAllProjectInfo } from '@/request/projectInfo';
 import { addTaskInfo } from '@/request/taskInfo';
+import { currentUser } from '@/request/userInfo';
 import { waitTime } from '@/utils/utils';
 import { PlusOutlined } from '@ant-design/icons';
 import {
@@ -14,9 +15,10 @@ import { useEffect, useState } from 'react';
 
 const TaskAdd = (props: any) => {
 
-  const [form] = Form.useForm<{ name: string; type: string; status: string; leval: string; project: string; appoint: string }>();
+  const [form] = Form.useForm<{ name: string; type: string; status: string; leval: string; project: string; appoint: string, createdBy: string }>();
   const [projectName, setProjectName] = useState<{ value: string, label: string }[]>([]);
   const { refreshTaskInfo } = props;
+  const [createdBy, setCreatedBy] = useState<string>();
 
   useEffect(() => {
     getAllProjectInfo().then((res) => {
@@ -30,6 +32,12 @@ const TaskAdd = (props: any) => {
       // console.log('project:', ret);
       setProjectName(ret);
     });
+    currentUser().then((res) => {
+      if (res?.data.name) {
+        setCreatedBy(res?.data.name);
+      }
+    })
+
   }, [])
 
   return (
@@ -39,6 +47,7 @@ const TaskAdd = (props: any) => {
       status: string;
       leval: string;
       appoint: string;
+      createdBy: string;
     }>
       title="新建"
       trigger={
@@ -56,6 +65,7 @@ const TaskAdd = (props: any) => {
       submitTimeout={2000}
       onFinish={async (values) => {
         await waitTime(500);
+        values["createdBy"] = createdBy!;
         // console.log(values);
         await addTaskInfo(values);
         message.success('提交成功');
@@ -74,6 +84,12 @@ const TaskAdd = (props: any) => {
       </ProForm.Group>
 
       <ProForm.Group>
+        <ProFormSelect
+          width="md"
+          name="createdBy"
+          label="创建人"
+          hidden
+        />
         <ProFormSelect
           request={async () => TaskInfoTypeOptions}
           width="md"

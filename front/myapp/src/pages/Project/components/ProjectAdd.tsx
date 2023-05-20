@@ -9,33 +9,33 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { Button, Form, message } from 'antd';
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 
 const ProjectAdd = (props: any) => {
 
-  const [form] = Form.useForm<{ name: string; status: string; parent: string; description: string; }>();
-  const [projectName, setProjectName] = useState<{ value: string, label: string }[]>();
+  const [form] = Form.useForm<{ name: string; status: string; description: string; }>();
+  // const [projectName, setProjectName] = useState<{ value: string, label: string }[]>();
   const { refreshProject } = props;
 
-  useEffect(() => {
-    getAllProjectInfo().then((res) => {
-      let ret = [];
-      for (let i = 0; i < res?.data?.length; i++) {
-        const project = res?.data[i] as API.ProjectInfo;
-        if (project?.name) {
-          ret.push({ value: project?.name, label: project?.name });
-        }
-      }
-      // console.log('project:', ret);
-      setProjectName(ret);
-    });
-  }, [])
+  // useEffect(() => {
+  //   getAllProjectInfo().then((res) => {
+  //     let ret = [];
+  //     for (let i = 0; i < res?.data?.length; i++) {
+  //       const project = res?.data[i] as API.ProjectInfo;
+  //       if (project?.name) {
+  //         ret.push({ value: project?.name, label: project?.name });
+  //       }
+  //     }
+  //     // console.log('project:', ret);
+  //     setProjectName(ret);
+  //   });
+  // }, [])
 
   return (
     <ModalForm<{
       name: string;
       status: string;
-      parent: string;
+      // parent: string;
       description: string;
     }>
       title="新建"
@@ -51,7 +51,7 @@ const ProjectAdd = (props: any) => {
         destroyOnClose: true,
         onCancel: () => console.log('run'),
       }}
-      submitTimeout={2000}
+      submitTimeout={1000}
       onFinish={async (values) => {
         await waitTime(500);
         // console.log(values);
@@ -63,34 +63,38 @@ const ProjectAdd = (props: any) => {
     >
       <ProForm.Group>
         <ProFormText
-          width="xl"
+          width="md"
           name="name"
           label="项目名称"
           tooltip="最长为 24 位"
           placeholder="请输入名称"
+          required
+        />
+        <ProFormSelect
+          request={async () => ProjectInfoStatusOptions}
+          width="sm"
+          name="status"
+          label="状态"
+          required
         />
       </ProForm.Group>
 
       <ProForm.Group>
-        <ProFormSelect
-          request={async () => ProjectInfoStatusOptions}
-          width="xs"
-          name="status"
-          label="状态"
-        />
 
-        <ProFormSelect
+
+        {/* <ProFormSelect
           request={async () => projectName}
           width="md"
           name="parent"
           label="父级"
-        />
+        /> */}
       </ProForm.Group>
       <ProForm.Group>
         <ProFormText
           width="xl"
           name="description"
           label="简介"
+          required
         />
       </ProForm.Group>
     </ModalForm>

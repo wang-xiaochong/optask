@@ -63,11 +63,12 @@ type TaskInfoUpdate struct {
 }
 
 type TaskAddInfo struct {
-	Name    *string `json:"name" form:"name"`        //任务名称
-	Type    *string `json:"type" form:"type"`        //任务类型
-	Status  *string `json:"status" form:"status"`    //状态
-	Leval   *string `json:"leval" form:"leval"`      //优先级
-	Project *string `json:"project" form:"project" ` //所属项目
+	Name      *string `json:"name" form:"name"`           //任务名称
+	Type      *string `json:"type" form:"type"`           //任务类型
+	Status    *string `json:"status" form:"status"`       //状态
+	Leval     *string `json:"leval" form:"leval"`         //优先级
+	Project   *string `json:"project" form:"project" `    //所属项目
+	CreatedBy *string `json:"createdBy" form:"createdBy"` //创建人
 }
 
 func (t *TaskInfo) GetAll() []map[string]interface{} {
@@ -280,11 +281,11 @@ func (tu *TaskUpdateInfo) UpdateContent(t TaskUpdateInfo) (rows int, err error) 
 }
 
 func (q *TaskAddInfo) AddWikiInfo(t TaskAddInfo, context *gin.Context) (Id int, err error) {
-	stmt, err := database.MysqlDB.Prepare("insert into taskInfo(name,type,status,leval,project) values (?,?,?,?,?)")
+	stmt, err := database.MysqlDB.Prepare("insert into taskInfo(name,type,status,leval,project,createdBy) values (?,?,?,?,?,?)")
 	if err != nil {
 		fmt.Println(err)
 	}
-	rs, err := stmt.Exec(*t.Name, *t.Type, *t.Status, *t.Leval, *t.Project)
+	rs, err := stmt.Exec(*t.Name, *t.Type, *t.Status, *t.Leval, *t.Project, *t.CreatedBy)
 	if err != nil {
 		fmt.Println(err)
 	}

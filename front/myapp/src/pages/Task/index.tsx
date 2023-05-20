@@ -261,6 +261,7 @@ const TaskProtable = () => {
       rowKey="id"
       search={{}}
       request={refreshTaskInfo}
+      // search={false}
       pagination={{
         pageSize: pageSize,
         // onChange: (page) => console.log(page),

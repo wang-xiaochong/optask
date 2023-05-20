@@ -20,8 +20,8 @@ type ProjectInfo struct {
 
 // Person 自定义Person类
 type ProjectAddInfo struct {
-	Name        *string `json:"name" form:"name"`                //项目名称
-	Parent      *string `json:"parent"   form:"parent" `         //父级项目
+	Name *string `json:"name" form:"name"` //项目名称
+	// Parent      *string `json:"parent"   form:"parent" `         //父级项目
 	Status      *string `json:"status" form:"status" `           //项目状态
 	Description *string `json:"description" form:"description" ` //项目简介
 }
@@ -77,11 +77,11 @@ func (p *ProjectInfo) GetProjectByID(name string) interface{} {
 }
 
 func (w *ProjectAddInfo) AddProjectInfo(u ProjectAddInfo, context *gin.Context) (Id int, err error) {
-	stmt, err := database.MysqlDB.Prepare("insert into projectInfo(name,status,parent,description) values (?,?,?,?)")
+	stmt, err := database.MysqlDB.Prepare("insert into projectInfo(name,status,description) values (?,?,?,?)")
 	if err != nil {
 		fmt.Println(err)
 	}
-	rs, err := stmt.Exec(*u.Name, *u.Status, *u.Parent, *u.Description)
+	rs, err := stmt.Exec(*u.Name, *u.Status, *u.Description)
 	if err != nil {
 		fmt.Println(err)
 	}

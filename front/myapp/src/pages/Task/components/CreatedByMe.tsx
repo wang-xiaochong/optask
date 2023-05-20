@@ -1,4 +1,5 @@
 import { getInitialState } from '@/app';
+import { pageSize } from '@/pages/Components/unitConfig';
 import { getAllProjectInfo } from '@/request/projectInfo';
 import { getTaskInfoByCreatedBy, updateTaskInfo } from '@/request/taskInfo';
 import { getAllUserInfo } from '@/request/userInfo';
@@ -215,7 +216,9 @@ const TaskCreatedByMe = () => {
       rowKey="id"
       search={false}
       options={false}
-      pagination={false}
+      pagination={{
+        pageSize: pageSize
+      }}
     />
   );
 };
