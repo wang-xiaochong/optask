@@ -1,3 +1,5 @@
+import { UserJob } from '@/pages/Components/User';
+import { getAllRoleInfo } from '@/request/roleInfo';
 import { addUserInfo } from '@/request/userInfo';
 import {
   ProCard,
@@ -7,14 +9,31 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { Card, Col, message, Row, Space } from 'antd';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const UserAdd = () => {
   const formLayoutType = 'horizontal';
   const formRef: any = useRef();
+  const [role, setRole] = useState({});
+
+  useEffect(() => {
+    getAllRoleInfo().then((res) => {
+      // console.log('res', res);
+      let ret = {};
+      for (let i = 0; i < res?.data?.length; i++) {
+        const role = res?.data[i] as API.RoleInfo;
+        if (role?.name) {
+          ret[role.name] = role.name;
+        }
+      }
+      setRole(ret);
+    });
+  })
+
+
   return (
     <ProCard>
-      <Card>
+      <Card style={{ width: "50%" }}>
         <ProForm
           readonly={false}
           layout={formLayoutType}
@@ -59,16 +78,12 @@ const UserAdd = () => {
             initialValue={'123456'}
           />
           <ProFormText colProps={{ md: 12, xl: 8 }} name="name" label="姓名" />
-          <ProFormDigit colProps={{ md: 12, xl: 8 }} name="roleInfo" label="角色" />
+          <ProFormSelect colProps={{ md: 12, xl: 8 }} name="roleInfo" label="角色" valueEnum={role} />
           <ProFormSelect
             colProps={{ xl: 8, md: 12 }}
             label="职位"
             name="job"
-            valueEnum={{
-              前端工程师: '前端工程师',
-              后端工程师: '后端工程师',
-              实习生: '实习生',
-            }}
+            valueEnum={UserJob}
           />
         </ProForm>
       </Card>

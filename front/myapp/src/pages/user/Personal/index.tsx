@@ -75,7 +75,7 @@ const Personal = () => {
           头像：
           <Avatar size={64} src={user?.avatar} />
         </div>
-        <ProFormText name="account" label="账号" tooltip="最长为 24 位" placeholder="请输入账号" />
+        <ProFormText name="account" label="账号" tooltip="最长为 24 位" placeholder="请输入账号" readonly />
         <ProFormText colProps={{ md: 12, xl: 8 }} name="name" label="姓名" />
         {/* <ProFormDigit colProps={{ md: 12, xl: 8 }} name="email" label="邮箱" /> */}
         <ProFormText colProps={{ md: 12, xl: 8 }} name="email" label="邮箱" />
@@ -89,6 +89,7 @@ const Personal = () => {
           label="职位"
           name="job"
           valueEnum={UserJob}
+          readonly
         />
       </ProForm>
     </ProCard>
