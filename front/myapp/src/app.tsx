@@ -5,6 +5,7 @@ import { PageLoading, Settings as LayoutSettings } from '@ant-design/pro-compone
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import { message } from 'antd';
+import React from 'react';
 import { useEffect, useState } from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
@@ -266,23 +267,26 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
-    childrenRender: (children) => {
+    childrenRender: (children, props) => {
       if (initialState?.loading) return <PageLoading />;
+      console.log('props', props);
       return (
-        <>
-          {children}
-          {/* <SettingDrawer
-            disableUrlParams
-            enableDarkTheme
-            settings={initialState?.settings}
-            onSettingChange={(settings) => {
-              setInitialState((preInitialState) => ({
-                ...preInitialState,
-                settings,
-              }));
-            }}
-          /> */}
-        </>
+        React.cloneElement(children, { getRouterInfoByMenuType: getRouterInfoByMenuType })
+        // <>
+
+        //   {children}
+        //   {/* <SettingDrawer
+        //     disableUrlParams
+        //     enableDarkTheme
+        //     settings={initialState?.settings}
+        //     onSettingChange={(settings) => {
+        //       setInitialState((preInitialState) => ({
+        //         ...preInitialState,
+        //         settings,
+        //       }));
+        //     }}
+        //   /> */}
+        // </>
       );
     },
 
