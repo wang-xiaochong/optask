@@ -110,6 +110,19 @@ func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {
 	return
 }
 
+func (p *UserInfo) CheckAccount(db *sql.DB) (isHasAccount bool, err error) {
+	fmt.Println("p.Account:", *p.Account)
+	row := db.QueryRow("select name from userInfo where account=?", *p.Account)
+	err = row.Scan(&p.Name)
+	if err != nil {
+		// fmt.Println(err)
+		isHasAccount = false
+		return
+	}
+	isHasAccount = true
+	return
+}
+
 func (w *UpdateUserRoleAndJob) UpdateUserRoleAndJob(u UpdateUserRoleAndJob, context *gin.Context) (rows int, err error) {
 
 	stmt, err := database.MysqlDB.Prepare("update userInfo set roleInfo=?,job=? where id=?")

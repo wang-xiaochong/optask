@@ -33,6 +33,7 @@ const Personal = () => {
   return (
     <ProCard>
       <ProForm
+        style={{ width: "50%" }}
         readonly={!editEnable}
         layout={formLayoutType}
         // grid={grid}

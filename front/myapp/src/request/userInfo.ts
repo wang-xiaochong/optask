@@ -51,6 +51,17 @@ export async function getUserInfoById(id: number, options?: { [key: string]: any
   });
 }
 
+/** 查找用户信息接口 POST /api/login/account */
+export async function checkAccount(account: string, options?: { [key: string]: any }) {
+  return request<{ data: boolean }>(`/api/user/checkAccount?account=${account}`, {
+    method: 'GET',
+    // data: id,
+    ...(options || {}),
+  });
+}
+
+
+
 /** Updated user This can only be done by the logged in user. PUT /user/${param0} */
 export async function updateUserInfoByID(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -78,6 +89,8 @@ export async function addUserInfo(body: any, options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+
+
 
 /** 查找用户信息接口 POST /api/login/account */
 export async function getRoleInfoByUserRoleInfo(name: string, options?: { [key: string]: any }) {

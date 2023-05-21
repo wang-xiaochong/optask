@@ -64,7 +64,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 
   const routingPermissionVerification = async (menuType?: RouterInfoType, push = true) => {
     let allRouterInfo = await getAllRouterInfo();
-    // console.log('res:', res);
+    console.log('allRouterInfores:', allRouterInfo.data);
     let routerInfoData = allRouterInfo?.data as Array<API.RouterInfo>;
     let hasPath = false;
     // 验证是否包含路由

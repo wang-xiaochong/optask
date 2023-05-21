@@ -1,6 +1,6 @@
 import { UserJob } from '@/pages/Components/User';
 import { getAllRoleInfo } from '@/request/roleInfo';
-import { addUserInfo } from '@/request/userInfo';
+import { addUserInfo, checkAccount } from '@/request/userInfo';
 import {
   ProCard,
   ProForm,
@@ -28,7 +28,7 @@ const UserAdd = () => {
       }
       setRole(ret);
     });
-  })
+  }, [])
 
 
   return (
@@ -58,9 +58,13 @@ const UserAdd = () => {
           onFinish={async (values) => {
             // await waitTime(2000);
             // console.log('values', values);
-            await addUserInfo(values);
-            message.success('添加成功');
-            formRef.current?.resetFields(['account', 'password', 'name', 'roleInfo', 'job']);
+            const checkRet = await checkAccount(values["account"]);
+            if (!checkRet.data) {
+              await addUserInfo(values);
+              message.success('添加成功');
+              formRef.current?.resetFields(['account', 'password', 'name', 'roleInfo', 'job']);
+            }
+
           }}
           params={{}}
         >

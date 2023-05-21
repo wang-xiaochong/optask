@@ -23,6 +23,7 @@ func InitRouter(e *gin.Engine) {
 		user.GET("/getCurrentUser", userInfo.GetCurrentUser)
 		user.GET("/getAllUserInfo", userInfo.GetAllUsers)
 		user.GET("/getUserInfoById", userInfo.GetUserInfoById)
+		user.GET("/checkAccount", userInfo.CheckAccount)
 		user.POST("/login", userInfo.MyLogin)
 		user.POST("/logout", userInfo.MyLogout)
 		user.POST("/updateUserInfoByID", userInfo.UpdateUserInfoByID)

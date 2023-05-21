@@ -88,6 +88,20 @@ func GetUserInfoById(context *gin.Context) {
 
 }
 
+func CheckAccount(context *gin.Context) {
+	// var result gin.H
+	account := context.Query("account")
+	p := user.UserInfo{
+		Account: &account,
+	}
+	isHasAccount, err := p.CheckAccount(database.MysqlDB)
+	if err != nil {
+		res.Return(context, utils.SUCCESS, isHasAccount)
+	} else {
+		res.Return(context, utils.ERROR, isHasAccount)
+	}
+}
+
 func GetRoleInfoByUserRoleInfo(context *gin.Context) {
 	// var result gin.H
 	name := context.Query("name")
