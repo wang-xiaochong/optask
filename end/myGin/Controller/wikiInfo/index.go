@@ -28,7 +28,7 @@ func GetAllWikis(context *gin.Context) {
 	if wikis != nil {
 		res.Return(context, utils.SUCCESS, wikis)
 	} else {
-		res.Return(context, utils.ERROR, wikis)
+		res.Return(context, utils.NONE_FOUND, wikis)
 	}
 }
 
@@ -39,7 +39,7 @@ func GetWikiByID(context *gin.Context) {
 	if wikis != nil {
 		res.Return(context, utils.SUCCESS, wikis)
 	} else {
-		res.Return(context, utils.ERROR, wikis)
+		res.Return(context, utils.NONE_FOUND, wikis)
 	}
 
 }
@@ -71,7 +71,7 @@ func GetWikiByProjectID(context *gin.Context) {
 	if wikis != nil {
 		res.Return(context, utils.SUCCESS, wikis)
 	} else {
-		res.Return(context, utils.ERROR, wikis)
+		res.Return(context, utils.NONE_FOUND, wikis)
 	}
 }
 

@@ -51,7 +51,7 @@ func GetAllUsers(context *gin.Context) {
 	users, err := p.GetAll(database.MysqlDB)
 	if err != nil {
 		fmt.Println(err)
-		res.Return(context, utils.ERROR, users)
+		res.Return(context, utils.NONE_FOUND, users)
 	} else {
 		res.Return(context, utils.SUCCESS, users)
 	}
@@ -74,7 +74,7 @@ func GetUserInfoById(context *gin.Context) {
 	}
 	user, err := p.GetUserInfoById(database.MysqlDB)
 	if err != nil {
-		res.Return(context, utils.ERROR, user)
+		res.Return(context, utils.NONE_FOUND, user)
 	} else {
 		userjson, _ := json.Marshal(user)
 		reqIP := context.ClientIP()
@@ -94,11 +94,11 @@ func CheckAccount(context *gin.Context) {
 	p := user.UserInfo{
 		Account: &account,
 	}
-	isHasAccount, err := p.CheckAccount(database.MysqlDB)
-	if err != nil {
-		res.Return(context, utils.SUCCESS, isHasAccount)
+	isHasAccount, _ := p.CheckAccount(database.MysqlDB)
+	if isHasAccount != false {
+		res.Return(context, utils.HAS_EXIST, isHasAccount)
 	} else {
-		res.Return(context, utils.ERROR, isHasAccount)
+		res.Return(context, utils.SUCCESS, isHasAccount)
 	}
 }
 
@@ -108,7 +108,7 @@ func GetRoleInfoByUserRoleInfo(context *gin.Context) {
 	r := role.RoleInfo{}
 	roleInfo, err := r.GetRoleInfoByID(name)
 	if err != nil {
-		res.Return(context, utils.ERROR, roleInfo)
+		res.Return(context, utils.NONE_FOUND, roleInfo)
 	} else {
 		res.Return(context, utils.SUCCESS, roleInfo)
 	}

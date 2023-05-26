@@ -14,7 +14,7 @@ func GetAllRoles(context *gin.Context) {
 	if roles != nil {
 		res.Return(context, utils.SUCCESS, roles)
 	} else {
-		res.Return(context, utils.ERROR, roles)
+		res.Return(context, utils.NONE_FOUND, roles)
 	}
 
 }

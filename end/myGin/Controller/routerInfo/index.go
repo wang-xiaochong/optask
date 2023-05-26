@@ -14,7 +14,7 @@ func GetAllRouters(context *gin.Context) {
 	if routers != nil {
 		res.Return(context, utils.SUCCESS, routers)
 	} else {
-		res.Return(context, utils.ERROR, routers)
+		res.Return(context, utils.NONE_FOUND, routers)
 	}
 
 }

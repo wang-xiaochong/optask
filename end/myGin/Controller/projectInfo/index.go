@@ -15,7 +15,7 @@ func GetAllProjects(context *gin.Context) {
 	if projects != nil {
 		res.Return(context, utils.SUCCESS, projects)
 	} else {
-		res.Return(context, utils.ERROR, projects)
+		res.Return(context, utils.NONE_FOUND, projects)
 	}
 
 }
@@ -27,7 +27,7 @@ func GetProjectByID(context *gin.Context) {
 	if project != nil {
 		res.Return(context, utils.SUCCESS, project)
 	} else {
-		res.Return(context, utils.ERROR, project)
+		res.Return(context, utils.NONE_FOUND, project)
 	}
 
 }
@@ -39,7 +39,6 @@ func AddProjectInfo(context *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	p.AddProjectInfo(p, context)
 	res.Return(context, utils.SUCCESS, "")
 }

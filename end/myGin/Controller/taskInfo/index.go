@@ -53,7 +53,7 @@ import (
 // 	users, err := p.GetAll(database.MysqlDB)
 // 	if err != nil {
 // 		fmt.Println(err)
-// 		res.Return(context, utils.ERROR, users)
+// 		res.Return(context, utils.NONE_FOUND, users)
 // 	} else {
 // 		res.Return(context, utils.SUCCESS, users)
 // 	}
@@ -74,7 +74,7 @@ func GetAllTasks(context *gin.Context) {
 	if tasks != nil {
 		res.Return(context, utils.SUCCESS, tasks)
 	} else {
-		res.Return(context, utils.ERROR, tasks)
+		res.Return(context, utils.NONE_FOUND, tasks)
 	}
 }
 
@@ -84,7 +84,7 @@ func GetAllTasks(context *gin.Context) {
 // 	if tasks != nil {
 // 		res.Return(context, utils.SUCCESS, tasks)
 // 	} else {
-// 		res.Return(context, utils.ERROR, tasks)
+// 		res.Return(context, utils.NONE_FOUND, tasks)
 // 	}
 
 // }
@@ -96,7 +96,7 @@ func GetTaskByID(context *gin.Context) {
 	if task != nil {
 		res.Return(context, utils.SUCCESS, task)
 	} else {
-		res.Return(context, utils.ERROR, task)
+		res.Return(context, utils.NONE_FOUND, task)
 	}
 
 }
@@ -108,7 +108,7 @@ func GetTaskByProjectID(context *gin.Context) {
 	if task != nil {
 		res.Return(context, utils.SUCCESS, task)
 	} else {
-		res.Return(context, utils.ERROR, "")
+		res.Return(context, utils.NONE_FOUND, "")
 	}
 }
 
@@ -119,7 +119,7 @@ func GetTasksByCreatedBy(context *gin.Context) {
 	if task != nil {
 		res.Return(context, utils.SUCCESS, task)
 	} else {
-		res.Return(context, utils.ERROR, task)
+		res.Return(context, utils.NONE_FOUND, task)
 	}
 }
 
@@ -130,7 +130,7 @@ func GetTasksByAppoint(context *gin.Context) {
 	if task != nil {
 		res.Return(context, utils.SUCCESS, task)
 	} else {
-		res.Return(context, utils.ERROR, task)
+		res.Return(context, utils.NONE_FOUND, task)
 	}
 }
 
@@ -179,7 +179,7 @@ func AddTaskInfo(context *gin.Context) {
 // 	}
 // 	user, err := p.GetUserInfoById(database.MysqlDB)
 // 	if err != nil {
-// 		res.Return(context, utils.ERROR, user)
+// 		res.Return(context, utils.NONE_FOUND, user)
 // 	} else {
 // 		userjson, _ := json.Marshal(user)
 // 		reqIP := context.ClientIP()

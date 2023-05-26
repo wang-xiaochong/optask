@@ -111,7 +111,7 @@ func (p *UserInfo) GetUserInfoById(db *sql.DB) (user UserInfo, err error) {
 }
 
 func (p *UserInfo) CheckAccount(db *sql.DB) (isHasAccount bool, err error) {
-	fmt.Println("p.Account:", *p.Account)
+	// fmt.Println("p.Account:", *p.Account)
 	row := db.QueryRow("select name from userInfo where account=?", *p.Account)
 	err = row.Scan(&p.Name)
 	if err != nil {
