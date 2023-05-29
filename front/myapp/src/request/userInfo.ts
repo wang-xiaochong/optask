@@ -42,6 +42,18 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
   });
 }
 
+/** 登录接口 POST /api/login/account */
+export async function resetPassword(body: API.ResetPasswordParams, options?: { [key: string]: any }) {
+  return request<API.ResetPasswordResult>('/api/user/resetPass', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 查找用户信息接口 POST /api/login/account */
 export async function getUserInfoById(id: number, options?: { [key: string]: any }) {
   return request<{ data: API.CurrentUser }>(`/api/user/getUserInfoById?id=${id}`, {

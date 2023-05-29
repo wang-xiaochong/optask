@@ -35,6 +35,7 @@ const (
 	TOKEN_EXPIRE = 1046 //Token过期
 	Token_Faild  = 1048 //Token格式错误
 	DBError      = 3001 //数据库操作错误
+	PhoneError   = 3002 //手机号错误
 	/*
 		InformError    = 5001
 		ArgumentsError = 5002 //参数错误*/

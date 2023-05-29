@@ -30,6 +30,8 @@ func InitRouter(e *gin.Engine) {
 		user.POST("/updateUserRoleAndJob", userInfo.UpdateUserRoleAndJob)
 		user.GET("/getRoleInfoByUserRoleInfo", userInfo.GetRoleInfoByUserRoleInfo)
 		user.POST("/addUserInfo", userInfo.AddUserInfo)
+		user.POST("/resetPass", userInfo.ResetPassword)
+		
 		// user.POST("/add", controller.AddPerson)
 		// user.PUT("/update", controller.UpdatePerson)
 		// user.DELETE("/delete", controller.DeletePerson)

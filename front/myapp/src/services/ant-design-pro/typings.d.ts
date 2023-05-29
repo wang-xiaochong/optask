@@ -95,7 +95,16 @@ declare namespace API {
     // status?: string;
     // type?: string;
     // currentAuthority?: string;
-    data: numner;
+    data: number;
+    msg: string;
+    success: boolean;
+  };
+
+  type ResetPasswordResult = {
+    // status?: string;
+    // type?: string;
+    // currentAuthority?: string;
+    data: number;
     msg: string;
     success: boolean;
   };
@@ -137,6 +146,12 @@ declare namespace API {
     password?: string;
     autoLogin?: boolean;
     type?: string;
+  };
+
+  type ResetPasswordParams = {
+    account: string;
+    password: string;
+    phone: string;
   };
 
   type ErrorResponse = {

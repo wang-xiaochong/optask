@@ -29,6 +29,7 @@ var MsgFlags = map[int]string{
 	// TOKEN_NOT_FOUND:      "查无此token",
 	TOKEN_INVALID: "token不匹配",
 	DBError:       "数据库操作错误",
+	PhoneError:    "手机号错误",
 
 	TOKEN_EXPIRE: "Token过期",
 	Token_Faild:  "Token格式错误",

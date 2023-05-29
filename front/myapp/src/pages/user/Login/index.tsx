@@ -19,6 +19,7 @@ import { FormattedMessage, history, useIntl, useModel } from '@umijs/max';
 import { message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
+import ForgetPassword from './ForgetPassword';
 
 const ActionIcons = () => {
   const langClassName = useEmotionCss(({ token }) => {
@@ -41,13 +42,13 @@ const ActionIcons = () => {
       <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={langClassName} />
       <WeiboCircleOutlined key="WeiboCircleOutlined" className={langClassName} /> */}
       <a href="https://graph.qq.com/oauth2.0/show?which=Login&display=pc&client_id=101995223&response_type=token&scope=all&redirect_uri=https%3A%2F%2Fxscloud.ltd%2Fgames"
-          className="btn" >
-          <img
-            style={{ width: '10px' }}
-            alt='QQ'
-            src='/icons/qq.png' />
-          登录
-        </a>
+        className="btn" >
+        <img
+          style={{ width: '10px' }}
+          alt='QQ'
+          src='/icons/qq.png' />
+        登录
+      </a>
     </>
   );
 };
@@ -190,7 +191,7 @@ const Login: React.FC = () => {
             maxWidth: '75vw',
           }}
           // logo={<img alt="logo" src="/logo.svg" />}
-          title="OpenProject"
+          title="Open Project"
           // subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
           initialValues={{
             autoLogin: true,
@@ -208,7 +209,7 @@ const Login: React.FC = () => {
             await handleSubmit(values as API.LoginParams);
           }}
         >
-          <Tabs
+          {/* <Tabs
             activeKey={type}
             onChange={setType}
             centered
@@ -220,15 +221,15 @@ const Login: React.FC = () => {
                   defaultMessage: '账户密码登录',
                 }),
               },
-              {
-                key: 'mobile',
-                label: intl.formatMessage({
-                  id: 'pages.login.phoneLogin.tab',
-                  defaultMessage: '手机号登录',
-                }),
-              },
+              // {
+              //   key: 'mobile',
+              //   label: intl.formatMessage({
+              //     id: 'pages.login.phoneLogin.tab',
+              //     defaultMessage: '手机号登录',
+              //   }),
+              // },
             ]}
-          />
+          /> */}
 
           {/* {status === 'error' && loginType === 'account' && (
             <LoginMessage
@@ -239,7 +240,7 @@ const Login: React.FC = () => {
             />
           )} */}
           {type === 'account' && (
-            <>
+            <div style={{ paddingTop: 50 }}>
               <ProFormText
                 // name="username"
                 name="account"
@@ -285,11 +286,11 @@ const Login: React.FC = () => {
                   },
                 ]}
               />
-            </>
+            </div>
           )}
 
           {/* {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />} */}
-          {type === 'mobile' && (
+          {/* {type === 'mobile' && (
             <>
               <ProFormText
                 fieldProps={{
@@ -369,22 +370,26 @@ const Login: React.FC = () => {
                 }}
               />
             </>
-          )}
+          )} */}
           <div
             style={{
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
+            {/* <ProFormCheckbox noStyle name="autoLogin">
               <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
-            </ProFormCheckbox>
-            <a
+            </ProFormCheckbox> */}
+            {/* <a
               style={{
                 float: 'right',
+                display: "inline-block",
+                height: 30,
               }}
+              onClick={forgetPassword}
             >
               <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
-            </a>
+            </a> */}
+            <ForgetPassword />
           </div>
         </LoginForm>
       </div>

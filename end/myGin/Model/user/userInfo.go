@@ -61,6 +61,13 @@ type Login struct {
 	Password *string `  form:"password" json:"password" `
 }
 
+// ResetPassword 模型
+type ResetPassword struct {
+	Account  *string `  form:"account" json:"account"  `
+	Password *string `  form:"password" json:"password" `
+	Phone    *string `json:"phone" form:"phone"` //电话
+}
+
 func (l *Login) Login(db *sql.DB) (id int, err error) {
 	row := db.QueryRow("select id from userInfo where account=?&&password=?", *&l.Account, *l.Password)
 	err = row.Scan(&id)
@@ -68,6 +75,34 @@ func (l *Login) Login(db *sql.DB) (id int, err error) {
 		fmt.Println(err)
 	}
 	return id, err
+}
+
+func (l *ResetPassword) ResetPassword(db *sql.DB) (rows int, err error) {
+	row := db.QueryRow("select id from userInfo where account=?&&phone=?", *&l.Account, *l.Phone)
+	var id int
+	err = row.Scan(&id)
+	if err != nil {
+		fmt.Println(err)
+		return rows, err
+	}
+
+	stmt, err := database.MysqlDB.Prepare("update userInfo set password=? where id=?")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	rs, err := stmt.Exec(*l.Password, id)
+	if err != nil {
+		fmt.Println(err)
+	}
+	rowint64, err := rs.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+	}
+	rows = int(rowint64)
+	defer stmt.Close()
+
+	return rows, err
 }
 
 // func (p *UserInfo) GetAll(db *sql.DB) (userInfos []UserInfo, err error) {

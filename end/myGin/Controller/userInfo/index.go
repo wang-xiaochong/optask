@@ -133,6 +133,29 @@ func MyLogin(context *gin.Context) {
 
 }
 
+func ResetPassword(context *gin.Context) {
+	var (
+		l user.ResetPassword
+	)
+	err := context.Bind(&l)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	rows, err := l.ResetPassword(database.MysqlDB)
+	if err != nil {
+		fmt.Println(err)
+		if rows == 0 {
+			res.Return(context, utils.PhoneError, rows)
+		} else {
+			res.Return(context, utils.SUCCESS, rows)
+		}
+	} else {
+		res.Return(context, utils.SUCCESS, rows)
+	}
+
+}
+
 func UpdateUserInfoByID(context *gin.Context) {
 	u := user.UserUpdateInfo{}
 	err := context.Bind(&u)
